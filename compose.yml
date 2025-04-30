@@ -1,0 +1,15 @@
+name: merema-server
+
+networks:
+  default:
+    name: merema-server-default-network
+    driver: bridge
+
+services:
+  db:
+    extends:
+      file: docker/db-compose.yaml
+      service: db
+
+volumes:
+  pgdata:
