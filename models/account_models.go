@@ -13,8 +13,8 @@ import "time"
 // }
 
 type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	CitizenID string `json:"citizen_id" db:"citizen_id"`
+	Password  string `json:"password"`
 }
 
 type LoginResponse struct {

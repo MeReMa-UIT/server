@@ -2,16 +2,25 @@ package repo
 
 import (
 	"context"
+	"log"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 const DATABASE_URL = "postgres://postgres:pg@localhost:5432/merema"
 
-func ConnectToDB(ctx context.Context, connString string) (*pgx.Conn, error) {
-	conn, err := pgx.Connect(ctx, connString)
+var dbpool *pgxpool.Pool
+var err error
+
+func ConnectToDB(ctx context.Context, connString string) {
+	dbpool, err = pgxpool.New(ctx, connString)
 	if err != nil {
-		return nil, err
+		log.Println("Unable to connect to database:", err)
 	}
-	return conn, nil
+}
+
+func CloseDB() {
+	if dbpool != nil {
+		dbpool.Close()
+	}
 }

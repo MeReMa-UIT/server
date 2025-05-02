@@ -17,14 +17,10 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	err := register.RegisterPatientAccount(context.Background(), req)
+	err := register.RegisterAccount(context.Background(), req)
 
 	if err != nil {
 		log.Println("Register error:", err)
-		// if err == models.ErrUsernameExists {
-		// 	ctx.JSON(http.StatusConflict, gin.H{"error": "Username already exists"})
-		// 	return
-		// }
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}

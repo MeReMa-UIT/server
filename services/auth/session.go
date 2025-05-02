@@ -9,14 +9,14 @@ import (
 )
 
 func NewSession(ctx context.Context, req models.LoginRequest) (string, error) {
-	creds, err := repo.GetCredentialsByCitizenID(context.Background(), req.Username)
+	creds, err := repo.GetCredentialsByCitizenID(context.Background(), req.CitizenID)
 	if err != nil {
 		return "", err
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(creds.PasswordHash), []byte(req.Password)); err != nil {
 		return "", models.ErrPasswordIncorrect
 	}
-	token, err := GenerateJWT(creds.Username, creds.PasswordHash, JWT_SECRET, JWT_EXPIRY)
+	token, err := GenerateJWT(creds.CitizenID, creds.Role, JWT_SECRET, JWT_EXPIRY)
 	if err != nil {
 		return "", err
 	}
