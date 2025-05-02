@@ -21,11 +21,10 @@ SET default_table_access_method = heap;
 CREATE TABLE public.accounts (
     acc_id integer NOT NULL,
     citizen_id character(12) NOT NULL,
-    username character varying(20) NOT NULL,
-    password_hash character varying(20) NOT NULL,
+    password_hash character(60) NOT NULL,
     phone character(10) NOT NULL,
     email text,
-    role character varying(10) NOT NULL,
+    role character varying(12) NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
@@ -428,6 +427,14 @@ ALTER TABLE ONLY public.staffs
 
 
 --
+-- Name: accounts unique_citizen_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT unique_citizen_id UNIQUE (citizen_id);
+
+
+--
 -- Name: messages messages_from_acc_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -509,4 +516,5 @@ ALTER TABLE ONLY public.staffs
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20250501114344');
+    ('20250501114344'),
+    ('20250502100638');

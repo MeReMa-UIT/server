@@ -5,14 +5,15 @@ import (
 
 	"github.com/merema-uit/server/models"
 	"github.com/merema-uit/server/repo"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func NewSession(ctx context.Context, req models.LoginRequest) (string, error) {
-	creds, err := repo.GetCredentialsByUsername(context.Background(), req.Username)
+	creds, err := repo.GetCredentialsByCitizenID(context.Background(), req.Username)
 	if err != nil {
 		return "", err
 	}
-	if creds.PasswordHash != req.Password {
+	if err := bcrypt.CompareHashAndPassword([]byte(creds.PasswordHash), []byte(req.Password)); err != nil {
 		return "", models.ErrPasswordIncorrect
 	}
 	token, err := GenerateJWT(creds.Username, creds.PasswordHash, JWT_SECRET, JWT_EXPIRY)

@@ -2,11 +2,10 @@
 create    table "accounts" (
           "acc_id" serial primary KEY not null,
           "citizen_id" char(12) not null,
-          "username" varchar(20) not null,
-          "password_hash" varchar(20) not null,
+          "password_hash" char(60) not null,
           "phone" char(10) not null,
           "email" text,
-          "role" varchar(10) not null,
+          "role" varchar(12) not null,
           "created_at" timestamptz not null default (now ())
           );
 

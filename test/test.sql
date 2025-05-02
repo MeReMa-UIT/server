@@ -8,7 +8,6 @@ insert    into accounts (
           )
 values    (
           '123456123456',
-          'admin',
           'merema-admin',
           '0123456789',
           'adu@gmail.com',
@@ -16,4 +15,7 @@ values    (
           );
 
 select    *
-from      accounts
+from      accounts;
+
+delete    from accounts
+where     acc_id >= 1;
