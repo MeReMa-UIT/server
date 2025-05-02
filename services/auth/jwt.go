@@ -11,13 +11,15 @@ const JWT_EXPIRY = 10 * time.Second
 
 type Claims struct {
 	Username string `json:"username"`
+	Role     string `json:"role"`
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(username string, secret string, expiry time.Duration) (string, error) {
+func GenerateJWT(username string, role string, secret string, expiry time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiry)
 	claims := &Claims{
 		Username: username,
+		Role:     role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},

@@ -2,7 +2,7 @@ package api
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,18 +17,17 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := auth.Auth(context.Background(), req)
+	token, err := auth.NewSession(context.Background(), req)
+
 	if err != nil {
-		fmt.Println(err)
+		log.Println("Login error:", err)
+		if err == models.ErrPasswordIncorrect || err == models.ErrUsernameNotExists {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong username or password"})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
-	if token == "wrong" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
-		return
-	}
-
 	ctx.JSON(http.StatusOK, models.LoginResponse{Token: token})
-
 }
