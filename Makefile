@@ -10,3 +10,7 @@ migrate-up:
 
 migrate-down:
 	dbmate -d ${MIGRATIONS_DIR} -u ${DB_URL} -s ${SCHEMA_DIR} down
+
+run:
+	export DB_URL=${DB_URL} && \
+	go run .

@@ -20,7 +20,7 @@
 ## Devs
 ### Setup
 - Run `docker compose up -d`
-- If db isn't update with the lastest schema, run `make migrate-up` (need to install `dbmate`)
+- If db isn't updated with the lastest schema, run `make migrate-up` (need to install `dbmate`)
 - Connect to db via sql tools (already setup in .vscode, password is "pg")
+- Run `make run`
 - Check `/test` 
-- Run `go run .` and test

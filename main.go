@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/api"
@@ -10,7 +11,7 @@ import (
 
 func main() {
 	r := gin.Default()
-	repo.ConnectToDB(context.Background(), repo.DATABASE_URL)
+	repo.ConnectToDB(context.Background(), os.Getenv("DB_URL"))
 	defer repo.CloseDB()
 	r.POST("/api/login", api.Login)
 	r.POST("/api/register", api.Register)

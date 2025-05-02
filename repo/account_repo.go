@@ -21,12 +21,12 @@ func GetCredentialsByCitizenID(ctx context.Context, citizenID string) (Credentia
 	`
 
 	var creds Credentials
-	err = dbpool.QueryRow(ctx, query, citizenID).Scan(&creds.PasswordHash, &creds.Role)
+	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&creds.PasswordHash, &creds.Role)
 	creds.CitizenID = citizenID
 
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return Credentials{}, models.ErrUsernameNotExists
+			return Credentials{}, models.ErrCitizenIDNotExists
 		}
 	}
 
@@ -35,7 +35,7 @@ func GetCredentialsByCitizenID(ctx context.Context, citizenID string) (Credentia
 
 func CheckCitizenIDExists(ctx context.Context, citizenID string) error {
 	var citizenIDExists bool
-	err = dbpool.QueryRow(ctx,
+	err := dbpool.QueryRow(ctx,
 		"SELECT EXISTS(SELECT 1 FROM accounts WHERE citizen_id = $1)",
 		citizenID,
 	).Scan(&citizenIDExists)
@@ -53,6 +53,6 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) er
 		RETURNING citizen_id
 	`
 	var createdUsername string
-	err = dbpool.QueryRow(ctx, query, req.CitizenID, req.Password, req.Phone, req.Email, req.Role).Scan(&createdUsername)
+	err := dbpool.QueryRow(ctx, query, req.CitizenID, req.Password, req.Phone, req.Email, req.Role).Scan(&createdUsername)
 	return err
 }

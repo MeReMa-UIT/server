@@ -21,8 +21,8 @@ func Login(ctx *gin.Context) {
 
 	if err != nil {
 		log.Println("Login error:", err)
-		if err == models.ErrPasswordIncorrect || err == models.ErrUsernameNotExists {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong username or password"})
+		if err == models.ErrPasswordIncorrect || err == models.ErrCitizenIDExists {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong citizen ID or password"})
 			return
 		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
