@@ -2,17 +2,32 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/api"
 	"github.com/merema-uit/server/repo"
+
+	"github.com/merema-uit/server/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title Account API
+// @version 1.0
+// @description API for user authentication and registration
+// @host localhost:8080
+// @BasePath /api/v1
 func main() {
-	r := gin.Default()
 	repo.ConnectToDB(context.Background(), os.Getenv("DB_URL"))
 	defer repo.CloseDB()
+
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	r := gin.Default()
 	api.RegisterRoutesV1(r)
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	fmt.Println("Swagger UI available at http://localhost:8080/swagger/index.html")
+
 	r.Run(":8080")
 }

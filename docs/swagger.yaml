@@ -1,0 +1,99 @@
+basePath: /api/v1
+definitions:
+  models.AccountRegisterRequest:
+    properties:
+      citizen_id:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      role:
+        type: string
+    type: object
+  models.LoginRequest:
+    properties:
+      citizen_id:
+        type: string
+      password:
+        type: string
+    type: object
+  models.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for user authentication and registration
+  title: Account API
+  version: "1.0"
+paths:
+  /accounts/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LoginResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - accounts
+  /accounts/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account
+      parameters:
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.AccountRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register new user
+      tags:
+      - accounts
+swagger: "2.0"

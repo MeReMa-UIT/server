@@ -23,4 +23,5 @@
 - If db isn't updated with the lastest schema, run `make migrate-up` (need to install `dbmate`)
 - Connect to db via sql tools (already setup in .vscode, password is "pg")
 - Run `make run`
-- Check `/test` 
+- Check `/test` for testing cmd
+- swagger is also available, check it for frontend  
