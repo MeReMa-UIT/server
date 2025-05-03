@@ -80,7 +80,7 @@ func RecoveryConfirmHandler(ctx *gin.Context) {
 // @Failure 401 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /accounts/recovery/reset [post]
+// @Router /accounts/recovery/reset [put]
 func ResetPasswordHandler(ctx *gin.Context) {
 	var req models.PasswordResetRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {

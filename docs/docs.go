@@ -196,7 +196,7 @@ const docTemplate = `{
             }
         },
         "/accounts/recovery/reset": {
-            "post": {
+            "put": {
                 "description": "Reset password after OTP verification",
                 "consumes": [
                     "application/json"

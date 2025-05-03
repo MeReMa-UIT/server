@@ -172,7 +172,7 @@ paths:
       tags:
       - accounts
   /accounts/recovery/reset:
-    post:
+    put:
       consumes:
       - application/json
       description: Reset password after OTP verification
