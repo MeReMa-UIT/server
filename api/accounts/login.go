@@ -1,4 +1,4 @@
-package api
+package accounts_api
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/merema-uit/server/services/auth"
 )
 
-func Login(ctx *gin.Context) {
+func LoginHandler(ctx *gin.Context) {
 	var req models.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})

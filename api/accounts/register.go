@@ -1,4 +1,4 @@
-package api
+package accounts_api
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/merema-uit/server/services/register"
 )
 
-func Register(ctx *gin.Context) {
+func RegisterHandler(ctx *gin.Context) {
 	var req models.AccountRegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})

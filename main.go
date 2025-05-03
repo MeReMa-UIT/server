@@ -13,7 +13,6 @@ func main() {
 	r := gin.Default()
 	repo.ConnectToDB(context.Background(), os.Getenv("DB_URL"))
 	defer repo.CloseDB()
-	r.POST("/api/login", api.Login)
-	r.POST("/api/register", api.Register)
-	r.Run("0.0.0.0:8080")
+	api.RegisterRoutesV1(r)
+	r.Run(":8080")
 }
