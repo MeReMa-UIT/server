@@ -1,5 +1,19 @@
 basePath: /api/v1
 definitions:
+  models.AccountRecoverConfirmRequest:
+    properties:
+      citizen_id:
+        type: string
+      otp:
+        type: string
+    type: object
+  models.AccountRecoverRequest:
+    properties:
+      citizen_id:
+        type: string
+      email:
+        type: string
+    type: object
   models.AccountRegisterRequest:
     properties:
       citizen_id:
@@ -25,6 +39,13 @@ definitions:
       token:
         type: string
     type: object
+  models.PasswordResetRequest:
+    properties:
+      citizen_id:
+        type: string
+      new_password:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -36,7 +57,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Authenticate user and return token
+      description: Return JWT token to auth user
       parameters:
       - description: Login credentials
         in: body
@@ -57,13 +78,139 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal Server Error
           schema:
             additionalProperties:
               type: string
             type: object
-      summary: User login
+      summary: Login user
+      tags:
+      - accounts
+  /accounts/recovery:
+    post:
+      consumes:
+      - application/json
+      description: Send recovery email to user
+      parameters:
+      - description: Recovery credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.AccountRecoverRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get important info to send recovery email
+      tags:
+      - accounts
+  /accounts/recovery/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm recovery OTP
+      parameters:
+      - description: Recovery OTP
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.AccountRecoverConfirmRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Confirm recovery OTP
+      tags:
+      - accounts
+  /accounts/recovery/reset:
+    post:
+      consumes:
+      - application/json
+      description: Reset password after OTP verification
+      parameters:
+      - description: Password reset request
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.PasswordResetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Reset password
       tags:
       - accounts
   /accounts/register:
@@ -83,6 +230,12 @@ paths:
       responses:
         "201":
           description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
           schema:
             additionalProperties:
               type: string

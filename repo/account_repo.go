@@ -56,3 +56,40 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) er
 	err := dbpool.QueryRow(ctx, query, req.CitizenID, req.Password, req.Phone, req.Email, req.Role).Scan(&createdUsername)
 	return err
 }
+
+func GetEmailByCitizenID(ctx context.Context, citizenID string) (string, error) {
+	const query = `
+		SELECT email
+		FROM accounts
+		WHERE citizen_id = $1
+	`
+
+	var email string
+	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&email)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return "", models.ErrCitizenIDNotExists
+		}
+		return "", err
+	}
+
+	return email, nil
+}
+
+func UpdatePassword(ctx context.Context, req models.PasswordResetRequest) error {
+	const query = `
+		UPDATE accounts
+		SET password_hash = $1
+		WHERE citizen_id = $2
+	`
+
+	_, err := dbpool.Exec(ctx, query, req.NewPassword, req.CitizenID)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return models.ErrCitizenIDNotExists
+		}
+		return err
+	}
+
+	return nil
+}

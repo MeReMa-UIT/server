@@ -18,6 +18,7 @@ import (
 // @Produce json
 // @Param user body models.AccountRegisterRequest true "User registration data"
 // @Success 201 {object} map[string]string
+// @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /accounts/register [post]
 func RegisterHandler(ctx *gin.Context) {

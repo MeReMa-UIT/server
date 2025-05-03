@@ -49,8 +49,17 @@ type StaffRegisterRequest struct {
 	Department  string    `json:"department" db:"department"`
 }
 
-type RegisterResponse struct {
-	AccID int `json:"acc_id" db:"acc_id"`
-	// PatientID int `json:"patient_id" db:"patient_id"`
-	// StaffID  int `json:"staff_id" db:"staff_id"`
+type AccountRecoverRequest struct {
+	CitizenID string `json:"citizen_id" db:"citizen_id"`
+	Email     string `json:"email" db:"email"`
+}
+
+type AccountRecoverConfirmRequest struct {
+	CitizenID string `json:"citizen_id" db:"citizen_id"`
+	OTP       string `json:"otp" db:"otp"`
+}
+
+type PasswordResetRequest struct {
+	CitizenID   string `json:"citizen_id" db:"citizen_id"`
+	NewPassword string `json:"new_password"`
 }

@@ -7,4 +7,7 @@ import (
 func Routes(r *gin.RouterGroup) {
 	r.POST("/login", LoginHandler)
 	r.POST("/register", RegisterHandler)
+	r.POST("/recovery", RecoveryHandler)
+	r.POST("/recovery/verify", RecoveryConfirmHandler)
+	r.PUT("/recovery/reset", ResetPasswordHandler)
 }

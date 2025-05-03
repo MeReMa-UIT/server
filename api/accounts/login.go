@@ -11,14 +11,15 @@ import (
 )
 
 // Login godoc
-// @Summary User login
-// @Description Authenticate user and return token
+// @Summary Login user
+// @Description Return JWT token to auth user
 // @Tags accounts
 // @Accept json
 // @Produce json
 // @Param credentials body models.LoginRequest true "Login credentials"
 // @Success 200 {object} models.LoginResponse
 // @Failure 401 {object} map[string]string
+// @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /accounts/login [post]
 func LoginHandler(ctx *gin.Context) {

@@ -15,7 +15,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(username string, role string, secret string, expiry time.Duration) (string, error) {
+func generateJWT(username string, role string, secret string, expiry time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiry)
 	claims := &Claims{
 		Username: username,
@@ -29,7 +29,7 @@ func GenerateJWT(username string, role string, secret string, expiry time.Durati
 	return token.SignedString([]byte(secret))
 }
 
-func ParseJWT(tokenString, secret string) (*Claims, error) {
+func parseJWT(tokenString, secret string) (*Claims, error) {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
