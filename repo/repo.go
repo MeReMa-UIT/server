@@ -9,8 +9,9 @@ import (
 )
 
 var (
-	dbpool    *pgxpool.Pool
-	mutexLock sync.RWMutex
+	dbpool      *pgxpool.Pool
+	accLock     sync.RWMutex
+	patientLock sync.RWMutex
 )
 
 func ConnectToDB(ctx context.Context, connString string) {

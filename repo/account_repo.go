@@ -14,8 +14,8 @@ type Credentials struct {
 }
 
 func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentials, error) {
-	mutexLock.RLock()
-	defer mutexLock.RUnlock()
+	accLock.RLock()
+	defer accLock.RUnlock()
 
 	const query = `
 		SELECT citizen_id, password_hash, role
@@ -35,25 +35,9 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 	return creds, err
 }
 
-func CheckCitizenIDExists(ctx context.Context, citizenID string) error {
-	mutexLock.RLock()
-	defer mutexLock.RUnlock()
-
-	var citizenIDExists bool
-	err := dbpool.QueryRow(ctx,
-		"SELECT EXISTS(SELECT 1 FROM accounts WHERE citizen_id = $1)",
-		citizenID,
-	).Scan(&citizenIDExists)
-
-	if citizenIDExists {
-		return models.ErrCitizenIDExists
-	}
-	return err
-}
-
 func GetEmailByCitizenID(ctx context.Context, citizenID string) (string, error) {
-	mutexLock.RLock()
-	defer mutexLock.RUnlock()
+	accLock.RLock()
+	defer accLock.RUnlock()
 
 	const query = `
 		SELECT email
@@ -73,23 +57,58 @@ func GetEmailByCitizenID(ctx context.Context, citizenID string) (string, error) 
 	return email, nil
 }
 
-func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) error {
-	mutexLock.Lock()
-	defer mutexLock.Unlock()
+func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
+	accLock.RLock()
+	defer accLock.RUnlock()
+	const query = `
+		SELECT acc_id 
+		FROM accounts
+		WHERE citizen_id = $1
+	`
+	var accID int
+	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&accID)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return -1, models.ErrAccountNotExist
+		}
+		return -1, err
+	}
+	return accID, nil
+}
+
+func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) (int, error) {
+	accLock.Lock()
+	defer accLock.Unlock()
+
+	var emailOrPhoneExists bool
+	err := dbpool.QueryRow(ctx, "SELECT EXISTS (SELECT 1 FROM accounts WHERE email = $1 OR phone = $2)", req.Email, req.Phone).Scan(&emailOrPhoneExists)
+
+	if err != nil {
+		return -1, err
+	}
+
+	if emailOrPhoneExists {
+		return -1, models.ErrEmailOrPhoneAlreadyUsed
+	}
 
 	const query = `
 		INSERT INTO accounts (citizen_id, password_hash, phone, email, role)
 		VALUES ($1, $2, $3, $4, $5)
-		RETURNING citizen_id
+		RETURNING acc_id
 	`
-	var createdUsername string
-	err := dbpool.QueryRow(ctx, query, req.CitizenID, req.Password, req.Phone, req.Email, req.Role).Scan(&createdUsername)
-	return err
+	var createdAccID int
+	err = dbpool.QueryRow(ctx, query, req.CitizenID, req.Password, req.Phone, req.Email, req.Role).Scan(&createdAccID)
+
+	if err != nil {
+		return -1, err
+	}
+
+	return createdAccID, nil
 }
 
 func UpdatePassword(ctx context.Context, req models.PasswordResetRequest) error {
-	mutexLock.Lock()
-	defer mutexLock.Unlock()
+	accLock.Lock()
+	defer accLock.Unlock()
 
 	const query = `
 		UPDATE accounts

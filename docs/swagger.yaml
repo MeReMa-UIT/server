@@ -14,22 +14,9 @@ definitions:
       email:
         type: string
     type: object
-  models.AccountRegisterRequest:
-    properties:
-      citizen_id:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
-      role:
-        type: string
-    type: object
   models.LoginRequest:
     properties:
-      citizen_id:
+      id:
         type: string
       password:
         type: string
@@ -44,6 +31,37 @@ definitions:
       citizen_id:
         type: string
       new_password:
+        type: string
+    type: object
+  models.PatientRegisterRequest:
+    properties:
+      address:
+        type: string
+      citizen_id:
+        type: string
+      date_of_birth:
+        type: string
+      email:
+        type: string
+      emergency_contact_info:
+        type: string
+      ethnicity:
+        type: string
+      full_name:
+        type: string
+      gender:
+        type: string
+      health_insurance_expired_date:
+        type: string
+      health_insurance_number:
+        type: string
+      nationality:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      role:
         type: string
     type: object
 host: localhost:8080
@@ -213,18 +231,18 @@ paths:
       summary: Reset password
       tags:
       - accounts
-  /accounts/register:
+  /accounts/register/patients:
     post:
       consumes:
       - application/json
-      description: Create a new user account
+      description: Create a new patient account
       parameters:
       - description: User registration data
         in: body
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.AccountRegisterRequest'
+          $ref: '#/definitions/models.PatientRegisterRequest'
       produces:
       - application/json
       responses:
@@ -246,7 +264,9 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Register new user
+      security:
+      - BearerAuth: []
+      summary: Register new patient
       tags:
       - accounts
 swagger: "2.0"

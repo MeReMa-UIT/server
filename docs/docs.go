@@ -259,9 +259,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/accounts/register": {
+        "/accounts/register/patients": {
             "post": {
-                "description": "Create a new user account",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new patient account",
                 "consumes": [
                     "application/json"
                 ],
@@ -271,7 +276,7 @@ const docTemplate = `{
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Register new user",
+                "summary": "Register new patient",
                 "parameters": [
                     {
                         "description": "User registration data",
@@ -279,7 +284,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.AccountRegisterRequest"
+                            "$ref": "#/definitions/models.PatientRegisterRequest"
                         }
                     }
                 ],
@@ -338,30 +343,10 @@ const docTemplate = `{
                 }
             }
         },
-        "models.AccountRegisterRequest": {
-            "type": "object",
-            "properties": {
-                "citizen_id": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                }
-            }
-        },
         "models.LoginRequest": {
             "type": "object",
             "properties": {
-                "citizen_id": {
+                "id": {
                     "type": "string"
                 },
                 "password": {
@@ -384,6 +369,53 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "new_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.PatientRegisterRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "citizen_id": {
+                    "type": "string"
+                },
+                "date_of_birth": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "emergency_contact_info": {
+                    "type": "string"
+                },
+                "ethnicity": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "health_insurance_expired_date": {
+                    "type": "string"
+                },
+                "health_insurance_number": {
+                    "type": "string"
+                },
+                "nationality": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 }
             }

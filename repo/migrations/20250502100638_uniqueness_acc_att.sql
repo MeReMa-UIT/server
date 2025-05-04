@@ -9,6 +9,8 @@ alter     table accounts ADD constraint unique_phone unique (phone);
 alter     table accounts
 drop      constraint IF exists unique_citizen_id;
 
+alter     table accounts
 drop      constraint IF exists unique_email;
 
+alter     table accounts
 drop      constraint IF exists unique_phone;

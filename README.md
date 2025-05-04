@@ -36,3 +36,4 @@
 
 ### To-Do
 - [x] Add mutex lock for repo layer
+- [ ] Ultimate rework on error handling
