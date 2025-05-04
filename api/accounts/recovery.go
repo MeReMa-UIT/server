@@ -30,7 +30,7 @@ func RecoveryHandler(ctx *gin.Context) {
 
 	err := recovery.SendRecoveryEmail(ctx, req)
 	if err != nil {
-		if err == models.ErrEmailDoesNotMatchCitizenID || err == models.ErrCitizenIDNotExists {
+		if err == models.ErrEmailDoesNotMatchCitizenID || err == models.ErrAccountNotExist {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong citizen ID or email"})
 			return
 		}

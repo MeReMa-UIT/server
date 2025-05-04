@@ -33,8 +33,8 @@ func LoginHandler(ctx *gin.Context) {
 
 	if err != nil {
 		log.Println("Login error:", err)
-		if err == models.ErrPasswordIncorrect || err == models.ErrCitizenIDExists {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong citizen ID or password"})
+		if err == models.ErrPasswordIncorrect || err == models.ErrAccountNotExist {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong identifier (Email/Phone/Citizen ID) or Password"})
 			return
 		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})

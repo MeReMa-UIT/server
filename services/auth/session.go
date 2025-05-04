@@ -9,7 +9,7 @@ import (
 )
 
 func NewSession(ctx context.Context, req models.LoginRequest) (string, error) {
-	creds, err := repo.GetCredentialsByCitizenID(context.Background(), req.CitizenID)
+	creds, err := repo.GetAccountCredentials(context.Background(), req.Identifier)
 	if err != nil {
 		return "", err
 	}

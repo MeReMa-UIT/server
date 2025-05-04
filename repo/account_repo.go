@@ -13,23 +13,22 @@ type Credentials struct {
 	Role         string `json:"role" db:"role"`
 }
 
-func GetCredentialsByCitizenID(ctx context.Context, citizenID string) (Credentials, error) {
+func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentials, error) {
 	mutexLock.RLock()
 	defer mutexLock.RUnlock()
 
 	const query = `
-		SELECT password_hash, role
+		SELECT citizen_id, password_hash, role
 		FROM accounts
-		WHERE citizen_id = $1
+		WHERE citizen_id = $1 OR phone = $1 OR email = $1
 	`
 
 	var creds Credentials
-	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&creds.PasswordHash, &creds.Role)
-	creds.CitizenID = citizenID
+	err := dbpool.QueryRow(ctx, query, accIdentifier).Scan(&creds.CitizenID, &creds.PasswordHash, &creds.Role)
 
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return Credentials{}, models.ErrCitizenIDNotExists
+			return Credentials{}, models.ErrAccountNotExist
 		}
 	}
 
@@ -66,7 +65,7 @@ func GetEmailByCitizenID(ctx context.Context, citizenID string) (string, error) 
 	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&email)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return "", models.ErrCitizenIDNotExists
+			return "", models.ErrAccountNotExist
 		}
 		return "", err
 	}
@@ -101,7 +100,7 @@ func UpdatePassword(ctx context.Context, req models.PasswordResetRequest) error 
 	_, err := dbpool.Exec(ctx, query, req.NewPassword, req.CitizenID)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return models.ErrCitizenIDNotExists
+			return models.ErrAccountNotExist
 		}
 		return err
 	}

@@ -435,6 +435,22 @@ ALTER TABLE ONLY public.accounts
 
 
 --
+-- Name: accounts unique_email; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT unique_email UNIQUE (email);
+
+
+--
+-- Name: accounts unique_phone; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT unique_phone UNIQUE (phone);
+
+
+--
 -- Name: messages messages_from_acc_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
