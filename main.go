@@ -21,7 +21,7 @@ import (
 // @BasePath /api/v1
 func main() {
 	repo.ConnectToDB(context.Background(), os.Getenv("DB_URL"))
-	defer repo.CloseDB()
+	defer repo.CloseDBConnect()
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	r := gin.Default()

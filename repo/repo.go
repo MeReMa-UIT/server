@@ -3,11 +3,15 @@ package repo
 import (
 	"context"
 	"log"
+	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var dbpool *pgxpool.Pool
+var (
+	dbpool    *pgxpool.Pool
+	mutexLock sync.RWMutex
+)
 
 func ConnectToDB(ctx context.Context, connString string) {
 	var err error
@@ -17,7 +21,7 @@ func ConnectToDB(ctx context.Context, connString string) {
 	}
 }
 
-func CloseDB() {
+func CloseDBConnect() {
 	if dbpool != nil {
 		dbpool.Close()
 	}
