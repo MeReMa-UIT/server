@@ -1,43 +1,30 @@
 {
-  inputs = {
-    nixpkgs.url = "github:cachix/devenv-nixpkgs/rolling";
-    systems.url = "github:nix-systems/default";
-    devenv.url = "github:cachix/devenv";
-    devenv.inputs.nixpkgs.follows = "nixpkgs";
-  };
+  inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1";
 
-  nixConfig = {
-    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
-    extra-substituters = "https://devenv.cachix.org";
-  };
+  outputs = inputs: let
+    goVersion = 24;
 
-  outputs = {
-    self,
-    nixpkgs,
-    devenv,
-    systems,
-    ...
-  } @ inputs: let
-    forEachSystem = nixpkgs.lib.genAttrs (import systems);
+    supportedSystems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
+    forEachSupportedSystem = f:
+      inputs.nixpkgs.lib.genAttrs supportedSystems (system:
+        f {
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [inputs.self.overlays.default];
+          };
+        });
   in {
-    packages = forEachSystem (system: {
-      devenv-up = self.devShells.${system}.default.config.procfileScript;
-      devenv-test = self.devShells.${system}.default.config.test;
-    });
+    overlays.default = final: prev: {
+      go = final."go_1_${toString goVersion}";
+    };
 
-    devShells =
-      forEachSystem
-      (system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        default = devenv.lib.mkShell {
-          inherit inputs pkgs;
-          modules = [
-            {
-              languages.go.enable = true;
-            }
-          ];
-        };
-      });
+    devShells = forEachSupportedSystem ({pkgs}: {
+      default = pkgs.mkShell {
+        packages = with pkgs; [
+          go
+          gotools
+        ];
+      };
+    });
   };
 }
