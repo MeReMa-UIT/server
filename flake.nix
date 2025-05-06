@@ -21,6 +21,7 @@
     devShells = forEachSupportedSystem ({pkgs}: {
       default = pkgs.mkShell {
         packages = with pkgs; [
+          dbmate
           go
           gotools
         ];
