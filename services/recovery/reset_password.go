@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/merema-uit/server/models"
+	"github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
 	"github.com/merema-uit/server/services/auth"
@@ -18,18 +19,18 @@ func ResetPassword(ctx context.Context, req models.PasswordResetRequest, authHea
 		return err
 	}
 	if claims.Permission != permission.Recovery.String() {
-		return models.ErrPermissionDenied
+		return errors.ErrPermissionDenied
 	}
 	secret, ok := otpSecrets[claims.CitizenID]
 	if !ok {
-		return models.ErrExpiredOTP
+		return errors.ErrExpiredOTP
 	}
 	if time.Now().After(secret.ExpirationTime) {
 		delete(otpSecrets, claims.CitizenID)
-		return models.ErrExpiredOTP
+		return errors.ErrExpiredOTP
 	}
 	if !secret.Verified {
-		return models.ErrUnverifiedOTP
+		return errors.ErrUnverifiedOTP
 	}
 
 	newPasswordHash, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)

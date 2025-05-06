@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/merema-uit/server/models"
+	"github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
 	"github.com/merema-uit/server/services/auth"
@@ -13,14 +14,14 @@ import (
 func CheckPermission(authHeader, role string) error {
 	tokenString := auth.ExtractToken(authHeader)
 	if tokenString == "" {
-		return models.ErrInvalidToken
+		return errors.ErrInvalidToken
 	}
 	permission, err := auth.ExtractPermissionFromToken(tokenString, auth.JWT_SECRET)
 	if err != nil {
 		return err
 	}
 	if permission != role {
-		return models.ErrPermissionDenied
+		return errors.ErrPermissionDenied
 	}
 	return nil
 }
@@ -47,10 +48,10 @@ func RegisterPatient(ctx context.Context, req models.PatientRegisterRequest, aut
 		return err
 	}
 	accID, err := repo.GetAccIDByCitizenID(ctx, req.AccountRegisterRequest.CitizenID)
-	if err != nil && err != models.ErrAccountNotExist {
+	if err != nil && err != errors.ErrAccountNotExist {
 		return err
 	}
-	if err == models.ErrAccountNotExist {
+	if err == errors.ErrAccountNotExist {
 		accID, err = RegisterAccount(ctx, req.AccountRegisterRequest)
 		if err != nil {
 			return err

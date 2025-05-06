@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
+	"github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/services/recovery"
 )
 
@@ -30,7 +31,7 @@ func RecoveryHandler(ctx *gin.Context) {
 
 	err := recovery.SendRecoveryEmail(ctx, req)
 	if err != nil {
-		if err == models.ErrEmailDoesNotMatchCitizenID || err == models.ErrAccountNotExist {
+		if err == errors.ErrEmailDoesNotMatchCitizenID || err == errors.ErrAccountNotExist {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong citizen ID or email"})
 			return
 		}
@@ -97,7 +98,7 @@ func ResetPasswordHandler(ctx *gin.Context) {
 	err := recovery.ResetPassword(ctx, req, authHeader)
 	if err != nil {
 		log.Println("Reset password error:", err)
-		if err == models.ErrExpiredOTP || err == models.ErrUnverifiedOTP {
+		if err == errors.ErrExpiredOTP || err == errors.ErrUnverifiedOTP {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unverified or expired OTP"})
 			return
 		}

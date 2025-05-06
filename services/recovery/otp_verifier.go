@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/merema-uit/server/models"
+	"github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
 	"github.com/merema-uit/server/services/auth"
@@ -46,7 +47,7 @@ func SendRecoveryEmail(ctx context.Context, req models.AccountRecoverRequest) er
 	}
 
 	if trueEmail != req.Email {
-		return models.ErrEmailDoesNotMatchCitizenID
+		return errors.ErrEmailDoesNotMatchCitizenID
 	}
 
 	otp := generateOTP(req.CitizenID)

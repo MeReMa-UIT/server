@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
+	"github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/services/auth"
 )
 
@@ -34,8 +35,8 @@ func LoginHandler(ctx *gin.Context) {
 
 	if err != nil {
 		log.Println("Login error:", err)
-		if err == models.ErrPasswordIncorrect || err == models.ErrAccountNotExist {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong identifier (Email/Phone/Citizen ID) or Password"})
+		if err == errors.ErrPasswordIncorrect || err == errors.ErrAccountNotExist {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong Identifier (email/phone/citizen ID) or Password"})
 			return
 		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})

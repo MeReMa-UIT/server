@@ -1,6 +1,8 @@
-package models
+package errors
 
-import "errors"
+import (
+	"errors"
+)
 
 var ErrAccountNotExist = errors.New("Account does not exist")
 var ErrPasswordIncorrect = errors.New("Password is incorrect")

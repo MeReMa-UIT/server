@@ -5,6 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/merema-uit/server/models"
+	"github.com/merema-uit/server/models/errors"
 )
 
 type Credentials struct {
@@ -28,7 +29,7 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return Credentials{}, models.ErrAccountNotExist
+			return Credentials{}, errors.ErrAccountNotExist
 		}
 	}
 
@@ -49,7 +50,7 @@ func GetEmailByCitizenID(ctx context.Context, citizenID string) (string, error) 
 	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&email)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return "", models.ErrAccountNotExist
+			return "", errors.ErrAccountNotExist
 		}
 		return "", err
 	}
@@ -69,7 +70,7 @@ func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
 	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&accID)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return -1, models.ErrAccountNotExist
+			return -1, errors.ErrAccountNotExist
 		}
 		return -1, err
 	}
@@ -88,7 +89,7 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) (i
 	}
 
 	if emailOrPhoneExists {
-		return -1, models.ErrEmailOrPhoneAlreadyUsed
+		return -1, errors.ErrEmailOrPhoneAlreadyUsed
 	}
 
 	const query = `
@@ -119,7 +120,7 @@ func UpdatePassword(ctx context.Context, citizenID, newPassword string) error {
 	_, err := dbpool.Exec(ctx, query, newPassword, citizenID)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return models.ErrAccountNotExist
+			return errors.ErrAccountNotExist
 		}
 		return err
 	}

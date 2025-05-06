@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/merema-uit/server/models"
+	"github.com/merema-uit/server/models/errors"
 )
 
 type secret struct {
@@ -32,16 +32,16 @@ func validateOTP(citizenID, otp string) error {
 	secret, ok := otpSecrets[citizenID]
 
 	if !ok {
-		return models.ErrExpiredOTP
+		return errors.ErrExpiredOTP
 	}
 
 	if time.Now().After(secret.ExpirationTime) {
 		delete(otpSecrets, citizenID)
-		return models.ErrExpiredOTP
+		return errors.ErrExpiredOTP
 	}
 
 	if secret.OTP != otp {
-		return models.ErrWrongOTP
+		return errors.ErrWrongOTP
 	}
 
 	secret.Verified = true
