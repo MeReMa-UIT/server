@@ -2,12 +2,9 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	accounts_api "github.com/merema-uit/server/api/accounts"
+	api_v1 "github.com/merema-uit/server/api/v1"
 )
 
-func RegisterRoutesV1(r *gin.Engine) {
-	v1 := r.Group("/api/v1")
-	{
-		accounts_api.Routes(v1.Group("/accounts"))
-	}
+func RegisterRoutes(r *gin.Engine) {
+	api_v1.RegisterRoutesV1(r)
 }

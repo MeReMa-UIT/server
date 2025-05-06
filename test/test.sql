@@ -5,7 +5,7 @@ select    *
 from      patients;
 
 delete    from accounts
-where     acc_id > 1;
+where     acc_id >= 1;
 
 delete    from patients
 where     patient_id >= 1;

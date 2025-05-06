@@ -533,4 +533,5 @@ ALTER TABLE ONLY public.staffs
 
 INSERT INTO public.schema_migrations (version) VALUES
     ('20250501114344'),
-    ('20250502100638');
+    ('20250502100638'),
+    ('20250506063225');

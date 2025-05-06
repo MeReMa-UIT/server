@@ -15,8 +15,8 @@ type Credentials struct {
 }
 
 func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentials, error) {
-	accLock.RLock()
-	defer accLock.RUnlock()
+	accountTableLock.RLock()
+	defer accountTableLock.RUnlock()
 
 	const query = `
 		SELECT citizen_id, password_hash, role
@@ -36,31 +36,33 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 	return creds, err
 }
 
-func GetEmailByCitizenID(ctx context.Context, citizenID string) (string, error) {
-	accLock.RLock()
-	defer accLock.RUnlock()
+func CheckEmailAndCitizenID(ctx context.Context, req models.AccountRecoverRequest) error {
+	accountTableLock.RLock()
+	defer accountTableLock.RUnlock()
 
 	const query = `
-		SELECT email
-		FROM accounts
-		WHERE citizen_id = $1
+		SELECT EXISTS(
+			SELECT 1
+			FROM accounts
+			WHERE citizen_id = $1 AND email = $2
+		)
 	`
 
-	var email string
-	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&email)
+	var exist bool
+	err := dbpool.QueryRow(ctx, query, req.CitizenID, req.Email).Scan(&exist)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return "", errors.ErrAccountNotExist
-		}
-		return "", err
+		return err
+	}
+	if exist == false {
+		return errors.ErrAccountNotExist
 	}
 
-	return email, nil
+	return nil
 }
 
 func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
-	accLock.RLock()
-	defer accLock.RUnlock()
+	accountTableLock.RLock()
+	defer accountTableLock.RUnlock()
 	const query = `
 		SELECT acc_id 
 		FROM accounts
@@ -78,8 +80,8 @@ func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
 }
 
 func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) (int, error) {
-	accLock.Lock()
-	defer accLock.Unlock()
+	accountTableLock.Lock()
+	defer accountTableLock.Unlock()
 
 	var emailOrPhoneExists bool
 	err := dbpool.QueryRow(ctx, "SELECT EXISTS (SELECT 1 FROM accounts WHERE email = $1 OR phone = $2)", req.Email, req.Phone).Scan(&emailOrPhoneExists)
@@ -108,8 +110,8 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) (i
 }
 
 func UpdatePassword(ctx context.Context, citizenID, newPassword string) error {
-	accLock.Lock()
-	defer accLock.Unlock()
+	accountTableLock.Lock()
+	defer accountTableLock.Unlock()
 
 	const query = `
 		UPDATE accounts

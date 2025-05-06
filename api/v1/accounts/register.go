@@ -2,12 +2,12 @@ package accounts_api
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
 	"github.com/merema-uit/server/services/register"
+	"github.com/merema-uit/server/utils"
 )
 
 // Register patient godoc
@@ -19,25 +19,28 @@ import (
 // @Param user body models.PatientRegisterRequest true "User registration data"
 // @Security BearerAuth
 // @Success 201
-// @Failure 404
+// @Failure 400
+// @Failure 401
+// @Failure 403
 // @Failure 500
 // @Router /accounts/register/patients [post]
 func RegisterPatientHandler(ctx *gin.Context) {
 	var req models.PatientRegisterRequest
-	authHeader := ctx.GetHeader("Authorization")
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
 		return
 	}
-	if authHeader == "" {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization header"})
-	}
+
+	authHeader := ctx.GetHeader("Authorization")
 
 	err := register.RegisterPatient(context.Background(), req, authHeader)
 
 	if err != nil {
-		log.Println("Register error:", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		switch err {
+		default:
+			utils.Logger.Error("Can't register new patient", "error", err.Error())
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		}
 		return
 	}
 

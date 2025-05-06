@@ -31,7 +31,7 @@ func main() {
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	r := gin.Default()
-	api.RegisterRoutesV1(r)
+	api.RegisterRoutes(r)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	fmt.Println("Swagger UI available at http://localhost:8080/swagger/index.html")
 

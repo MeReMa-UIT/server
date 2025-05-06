@@ -51,10 +51,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/models.ErrorResponse"
-                        }
+                        "description": "Bad Request"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -96,11 +93,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK"
                     },
+                    "400": {
+                        "description": "Bad Request"
+                    },
                     "401": {
                         "description": "Unauthorized"
-                    },
-                    "404": {
-                        "description": "Not Found"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -134,19 +131,27 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountRecoverConfirmResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     },
                     "401": {
                         "description": "Unauthorized"
-                    },
-                    "404": {
-                        "description": "Not Found"
                     }
                 }
             }
         },
         "/accounts/recovery/reset": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Reset password after OTP verification",
                 "consumes": [
                     "application/json"
@@ -173,11 +178,14 @@ const docTemplate = `{
                     "200": {
                         "description": "OK"
                     },
+                    "400": {
+                        "description": "Bad Request"
+                    },
                     "401": {
                         "description": "Unauthorized"
                     },
-                    "404": {
-                        "description": "Not Found"
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -218,8 +226,14 @@ const docTemplate = `{
                     "201": {
                         "description": "Created"
                     },
-                    "404": {
-                        "description": "Not Found"
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -240,6 +254,14 @@ const docTemplate = `{
                 }
             }
         },
+        "models.AccountRecoverConfirmResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "models.AccountRecoverRequest": {
             "type": "object",
             "properties": {
@@ -247,14 +269,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
                     "type": "string"
                 }
             }
@@ -281,9 +295,6 @@ const docTemplate = `{
         "models.PasswordResetRequest": {
             "type": "object",
             "properties": {
-                "citizen_id": {
-                    "type": "string"
-                },
                 "new_password": {
                     "type": "string"
                 }

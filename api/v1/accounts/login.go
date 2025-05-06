@@ -2,13 +2,13 @@ package accounts_api
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
 	"github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/services/auth"
+	"github.com/merema-uit/server/utils"
 )
 
 // Login godoc
@@ -27,19 +27,20 @@ import (
 func LoginHandler(ctx *gin.Context) {
 	var req models.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
 		return
 	}
 
 	token, err := auth.NewSession(context.Background(), req)
 
 	if err != nil {
-		log.Println("Login error:", err)
-		if err == errors.ErrPasswordIncorrect || err == errors.ErrAccountNotExist {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong Identifier (email/phone/citizen ID) or Password"})
-			return
+		switch err {
+		case errors.ErrPasswordIncorrect, errors.ErrAccountNotExist:
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Identifier or Password is incorrect"})
+		default:
+			utils.Logger.Error("Can't create new session", "error", err.Error())
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		}
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 

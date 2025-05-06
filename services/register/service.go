@@ -13,9 +13,6 @@ import (
 
 func CheckPermission(authHeader, role string) error {
 	tokenString := auth.ExtractToken(authHeader)
-	if tokenString == "" {
-		return errors.ErrInvalidToken
-	}
 	permission, err := auth.ExtractPermissionFromToken(tokenString, auth.JWT_SECRET)
 	if err != nil {
 		return err

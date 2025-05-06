@@ -5,10 +5,12 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/merema-uit/server/models/errors"
 )
 
 const JWT_SECRET = "test"
-const JWT_EXPIRY = 1 * time.Hour
+const JWT_SESSION_EXPIRY = 3 * time.Hour
+const JWT_RECOVERY_EXPIRY = 5 * time.Minute
 
 type Claims struct {
 	CitizenID  string `json:"citizen_id"`
@@ -37,11 +39,18 @@ func ParseJWT(tokenString, secret string) (*Claims, error) {
 	})
 
 	if err != nil {
-		return nil, err
+		switch err {
+		case jwt.ErrTokenMalformed:
+			return nil, errors.ErrMalformedToken
+		case jwt.ErrTokenExpired:
+			return nil, errors.ErrExpiredToken
+		default:
+			return nil, errors.ErrInvalidToken
+		}
 	}
 
 	if !token.Valid {
-		return nil, jwt.ErrTokenInvalidClaims
+		return nil, errors.ErrInvalidToken
 	}
 
 	return claims, nil
@@ -57,14 +66,13 @@ func ExtractPermissionFromToken(tokenString, secret string) (string, error) {
 
 func ExtractToken(authHeader string) string {
 	if authHeader == "" {
-		return "" // No header found
+		return ""
 	}
 
-	// Split into ["Bearer", "token"]
 	parts := strings.Split(authHeader, " ")
 	if len(parts) != 2 || parts[0] != "Bearer" {
-		return "" // Malformed header
+		return ""
 	}
 
-	return parts[1] // Return just the JWT token
+	return parts[1]
 }

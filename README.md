@@ -32,8 +32,13 @@
 - Run `go mod tidy`
 - Run `make run`
 - Check `/test` for testing cmd
-- swagger is also available, check it for frontend  
+- swagger is also available, check it for frontend dev
 
 ### To-Do
 - [x] Add mutex lock for repo layer
-- [ ] Ultimate rework on error handling
+- [x] Ultimate rework on error handling
+
+### Test Accounts
+- Admin: 
+  - **ID**: 123123123123/0111222333/23520199@gm.uit.edu.vn
+  - **Password**: test

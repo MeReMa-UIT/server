@@ -7,8 +7,8 @@ import (
 )
 
 func StorePatientInfo(ctx context.Context, req models.PatientRegisterRequest, accID int) error {
-	patientLock.Lock()
-	defer patientLock.Unlock()
+	patientTableLock.Lock()
+	defer patientTableLock.Unlock()
 
 	const query = `
 		INSERT INTO patients (acc_id, full_name, date_of_birth, gender, ethnicity, nationality, address, health_insurance_expired_date, health_insurance_number, emergency_contact_info)
