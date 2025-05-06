@@ -14,11 +14,17 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Account API
+// @title MeReMa Server API
 // @version 1.0
-// @description API for user authentication and registration
+// @description API for medical records management app
 // @host localhost:8080
 // @BasePath /api/v1
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Provide the JWT token as a header with format "Authorization: Bearer \<token\>"
 func main() {
 	repo.ConnectToDB(context.Background(), os.Getenv("DB_URL"))
 	defer repo.CloseDBConnect()

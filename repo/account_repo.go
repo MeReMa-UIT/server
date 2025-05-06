@@ -106,7 +106,7 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) (i
 	return createdAccID, nil
 }
 
-func UpdatePassword(ctx context.Context, req models.PasswordResetRequest) error {
+func UpdatePassword(ctx context.Context, citizenID, newPassword string) error {
 	accLock.Lock()
 	defer accLock.Unlock()
 
@@ -116,7 +116,7 @@ func UpdatePassword(ctx context.Context, req models.PasswordResetRequest) error 
 		WHERE citizen_id = $2
 	`
 
-	_, err := dbpool.Exec(ctx, query, req.NewPassword, req.CitizenID)
+	_, err := dbpool.Exec(ctx, query, newPassword, citizenID)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			return models.ErrAccountNotExist

@@ -17,20 +17,20 @@ import (
 // @Accept json
 // @Produce json
 // @Param user body models.PatientRegisterRequest true "User registration data"
-// @Success 201 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /accounts/register/patients [post]
 // @Security BearerAuth
+// @Success 201
+// @Failure 404
+// @Failure 500
+// @Router /accounts/register/patients [post]
 func RegisterPatientHandler(ctx *gin.Context) {
 	var req models.PatientRegisterRequest
 	authHeader := ctx.GetHeader("Authorization")
-	if authHeader == "" {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization header"})
-	}
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
+	}
+	if authHeader == "" {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization header"})
 	}
 
 	err := register.RegisterPatient(context.Background(), req, authHeader)

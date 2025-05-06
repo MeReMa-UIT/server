@@ -11,15 +11,15 @@ const JWT_SECRET = "test"
 const JWT_EXPIRY = 1 * time.Hour
 
 type Claims struct {
-	Username   string `json:"username"`
+	CitizenID  string `json:"citizen_id"`
 	Permission string `json:"permission"`
 	jwt.RegisteredClaims
 }
 
-func generateJWT(username string, role string, secret string, expiry time.Duration) (string, error) {
+func GenerateJWT(citizenID string, role string, secret string, expiry time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiry)
 	claims := &Claims{
-		Username:   username,
+		CitizenID:  citizenID,
 		Permission: role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
@@ -30,7 +30,7 @@ func generateJWT(username string, role string, secret string, expiry time.Durati
 	return token.SignedString([]byte(secret))
 }
 
-func parseJWT(tokenString, secret string) (*Claims, error) {
+func ParseJWT(tokenString, secret string) (*Claims, error) {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
@@ -48,7 +48,7 @@ func parseJWT(tokenString, secret string) (*Claims, error) {
 }
 
 func ExtractPermissionFromToken(tokenString, secret string) (string, error) {
-	claims, err := parseJWT(tokenString, secret)
+	claims, err := ParseJWT(tokenString, secret)
 	if err != nil {
 		return "", err
 	}

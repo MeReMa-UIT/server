@@ -61,7 +61,10 @@ type AccountRecoverConfirmRequest struct {
 	OTP       string `json:"otp" db:"otp"`
 }
 
+type AccountRecoverConfirmResponse struct {
+	Token string `json:"token"`
+}
+
 type PasswordResetRequest struct {
-	CitizenID   string `json:"citizen_id" db:"citizen_id"`
 	NewPassword string `json:"new_password"`
 }

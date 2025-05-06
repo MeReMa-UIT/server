@@ -16,7 +16,7 @@ func NewSession(ctx context.Context, req models.LoginRequest) (string, error) {
 	if err := bcrypt.CompareHashAndPassword([]byte(creds.PasswordHash), []byte(req.Password)); err != nil {
 		return "", models.ErrPasswordIncorrect
 	}
-	token, err := generateJWT(creds.CitizenID, creds.Role, JWT_SECRET, JWT_EXPIRY)
+	token, err := GenerateJWT(creds.CitizenID, creds.Role, JWT_SECRET, JWT_EXPIRY)
 	if err != nil {
 		return "", err
 	}

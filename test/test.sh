@@ -1,18 +1,10 @@
-curl -X POST -H "Content-Type: application/json" -d '{"token":"", "citizen_id":"123456123456", "password":"test", "phone":"0123456789", "email":"23520199@gm.uit.edu.vn", "role":"patient"}'  http://localhost:8080/api/v1/accounts/register
+curl -X POST -H "Content-Type: application/json" -d '{"id":"", "password":""}'  http://localhost:8080/api/v1/accounts/login 
 
-curl -X POST -H "Content-Type: application/json" -d '{"id":"123456123456", "password":"test"}'  http://localhost:8080/api/v1/accounts/login
+curl -X POST -H "Content-Type: application/json" -d '{"citizen_id":"", "email":""}'  http://localhost:8080/api/v1/accounts/recovery
 
-curl -X POST -H "Content-Type: application/json" -d '{"token":"", "citizen_id":"123123123123", "password":"test", "phone":"0111222333", "email":"hello@gm.uit.edu.vn", "role":"admin"}'  http://localhost:8080/api/v1/accounts/register
+curl -X POST -H "Content-Type: application/json" -d '{"citizen_id":"", "otp":""}'  http://localhost:8080/api/v1/accounts/recovery/verify
 
-curl -X POST -H "Content-Type: application/json" -d '{"id":"123123123123", "password":"test"}'  http://localhost:8080/api/v1/accounts/login
-
-curl -X POST -H "Content-Type: application/json" -d '{"citizen_id":"123456123456", "email":"23520199@gm.uit.edu.vn"}'  http://localhost:8080/api/v1/accounts/recovery
-
-curl -X POST -H "Content-Type: application/json" -d '{"citizen_id":"123456123456", "otp":""}'  http://localhost:8080/api/v1/accounts/recovery/verify
-
-curl -X PUT -H "Content-Type: application/json" -d '{"citizen_id":"123456123456", "new_password":"haha"}'  http://localhost:8080/api/v1/accounts/recovery/reset
-
-curl -X POST -H "Content-Type: application/json" -d '{"id":"123456123456", "password":"haha"}'  http://localhost:8080/api/v1/accounts/login
+curl -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"new_password":""}'  http://localhost:8080/api/v1/accounts/recovery/reset
 
 
 curl -X POST \
@@ -20,11 +12,10 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer " \
   -d '{
-    "token": "",
-    "citizen_id": "123456789",
-    "password": "securePassword123",
+    "citizen_id": "123456789123",
+    "password": "adu",
     "phone": "1234567890",
-    "email": "patient@example.com",
+    "email": "23520199@gm.uit.edu.vn",
     "role": "patient",
     "full_name": "Nguyễn Văn A",
     "date_of_birth": "1990-01-15T00:00:00Z",

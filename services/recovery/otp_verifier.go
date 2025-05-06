@@ -7,7 +7,9 @@ import (
 	"os"
 
 	"github.com/merema-uit/server/models"
+	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
+	"github.com/merema-uit/server/services/auth"
 )
 
 func sendOTPEmail(recipient, otp string) error {
@@ -52,6 +54,14 @@ func SendRecoveryEmail(ctx context.Context, req models.AccountRecoverRequest) er
 	return sendOTPEmail(req.Email, otp)
 }
 
-func VerifyRecoveryOTP(ctx context.Context, req models.AccountRecoverConfirmRequest) error {
-	return validateOTP(req.CitizenID, req.OTP)
+func VerifyRecoveryOTP(ctx context.Context, req models.AccountRecoverConfirmRequest) (string, error) {
+	err := validateOTP(req.CitizenID, req.OTP)
+	if err != nil {
+		return "", err
+	}
+	token, err := auth.GenerateJWT(req.CitizenID, permission.Recovery.String(), auth.JWT_SECRET, auth.JWT_EXPIRY)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }

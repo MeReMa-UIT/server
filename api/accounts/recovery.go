@@ -16,10 +16,10 @@ import (
 // @Accept json
 // @Produce json
 // @Param credentials body models.AccountRecoverRequest true "Recovery credentials"
-// @Success 200 {object} map[string]string
-// @Failure 401 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Failure 500 {object} map[string]string
+// @Success 200
+// @Failure 401
+// @Failure 404
+// @Failure 500
 // @Router /accounts/recovery [post]
 func RecoveryHandler(ctx *gin.Context) {
 	var req models.AccountRecoverRequest
@@ -48,9 +48,9 @@ func RecoveryHandler(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param credentials body models.AccountRecoverConfirmRequest true "Recovery OTP"
-// @Success 200 {object} map[string]string
-// @Failure 401 {object} map[string]string
-// @Failure 404 {object} map[string]string
+// @Success 200 {object} models.AccountRecoverConfirmResponse
+// @Failure 401
+// @Failure 404
 // @Router /accounts/recovery/confirm [post]
 func RecoveryConfirmHandler(ctx *gin.Context) {
 	var req models.AccountRecoverConfirmRequest
@@ -59,14 +59,14 @@ func RecoveryConfirmHandler(ctx *gin.Context) {
 		return
 	}
 
-	err := recovery.VerifyRecoveryOTP(ctx, req)
+	token, err := recovery.VerifyRecoveryOTP(ctx, req)
 	if err != nil {
 		log.Println("Verifcation error:", err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid OTP"})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "OTP verified"})
+	ctx.JSON(http.StatusOK, models.AccountRecoverConfirmResponse{Token: token})
 }
 
 // ResetPassword godoc
@@ -76,10 +76,11 @@ func RecoveryConfirmHandler(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param credentials body models.PasswordResetRequest true "Password reset request"
-// @Success 200 {object} map[string]string
-// @Failure 401 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Failure 500 {object} map[string]string
+// @Security BearerAuth
+// @Success 200
+// @Failure 401
+// @Failure 404
+// @Failure 500
 // @Router /accounts/recovery/reset [put]
 func ResetPasswordHandler(ctx *gin.Context) {
 	var req models.PasswordResetRequest
@@ -88,7 +89,12 @@ func ResetPasswordHandler(ctx *gin.Context) {
 		return
 	}
 
-	err := recovery.ResetPassword(ctx, req)
+	authHeader := ctx.GetHeader("Authorization")
+	if authHeader == "" {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization header"})
+	}
+
+	err := recovery.ResetPassword(ctx, req, authHeader)
 	if err != nil {
 		log.Println("Reset password error:", err)
 		if err == models.ErrExpiredOTP || err == models.ErrUnverifiedOTP {

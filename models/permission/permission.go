@@ -7,8 +7,9 @@ const (
 	Receptionist
 	Doctor
 	Patient
+	Recovery
 )
 
 func (d Permission) String() string {
-	return [...]string{"admin", "receptionist", "doctor", "patient"}[d]
+	return [...]string{"admin", "receptionist", "doctor", "patient", "recovery"}[d]
 }

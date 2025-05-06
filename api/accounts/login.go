@@ -11,21 +11,22 @@ import (
 )
 
 // Login godoc
-// @Summary Login user
-// @Description Return JWT token to auth user
+// @Summary Login
+// @Description API for user to login
 // @Tags accounts
 // @Accept json
 // @Produce json
 // @Param credentials body models.LoginRequest true "Login credentials"
 // @Success 200 {object} models.LoginResponse
-// @Failure 401 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Failure 500 {object} map[string]string
+// @Failure 400
+// @Failure 401
+// @Failure 404
+// @Failure 500
 // @Router /accounts/login [post]
 func LoginHandler(ctx *gin.Context) {
 	var req models.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
 		return
 	}
 

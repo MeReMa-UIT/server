@@ -14,6 +14,11 @@ definitions:
       email:
         type: string
     type: object
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
   models.LoginRequest:
     properties:
       id:
@@ -67,15 +72,18 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: API for user authentication and registration
-  title: Account API
+  description: API for medical records management app
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: MeReMa Server API
   version: "1.0"
 paths:
   /accounts/login:
     post:
       consumes:
       - application/json
-      description: Return JWT token to auth user
+      description: API for user to login
       parameters:
       - description: Login credentials
         in: body
@@ -90,25 +98,17 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "401":
           description: Unauthorized
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "404":
           description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "500":
           description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Login user
+      summary: Login
       tags:
       - accounts
   /accounts/recovery:
@@ -128,28 +128,12 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "401":
           description: Unauthorized
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "404":
           description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "500":
           description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       summary: Get important info to send recovery email
       tags:
       - accounts
@@ -170,22 +154,10 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "401":
           description: Unauthorized
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "404":
           description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       summary: Confirm recovery OTP
       tags:
       - accounts
@@ -206,28 +178,12 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "401":
           description: Unauthorized
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "404":
           description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "500":
           description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       summary: Reset password
       tags:
       - accounts
@@ -248,25 +204,20 @@ paths:
       responses:
         "201":
           description: Created
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "404":
           description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
         "500":
           description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       security:
       - BearerAuth: []
       summary: Register new patient
       tags:
       - accounts
+securityDefinitions:
+  BearerAuth:
+    description: 'Provide the JWT token as a header with format "Authorization: Bearer
+      \<token\>"'
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
