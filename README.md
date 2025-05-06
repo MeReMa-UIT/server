@@ -13,10 +13,10 @@
 
 ## Main structure
 
-- `/api`: provides api for frontend
-- `/services`: handles core logic
+- `/api`: provides api for clients
+- `/services`: handles app's core logics
 - `/repo`: handles communication with db
-- `/models`: describes DTOs
+- `/models`: describes DTOs, errors, ...
 
 ## Devs
 
@@ -26,8 +26,8 @@
 
 ### Setup
 - Run `docker compose up -d`
-- If db isn't updated with the lastest schema, run `make migrate-up` (need to install `dbmate`)
-- Connect to db via sql tools (already setup in .vscode, password is "pg")
+- If db isn't updated with the lastest schema, run `make migrate-up` (need to install `dbmate`). If there is an error when running `make migrate-up`, run `make migrate-down` until db refreshs to init state, then run `make migrate-up` to update 
+- Connect to db via vscode sql tools (already setup in .vscode, password is "pg") or vimdadbob blah blah
 - Run `go get -u github.com/swaggo/swag` (if `swag` hasn't been installed yet)
 - Run `go mod tidy`
 - Run `make run`
