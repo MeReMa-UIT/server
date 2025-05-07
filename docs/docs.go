@@ -196,6 +196,115 @@ const docTemplate = `{
                 }
             }
         },
+        "/accounts/register": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Initiate registration",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Check whether the citizen ID is already registered",
+                "parameters": [
+                    {
+                        "description": "Initiate registration data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.InitRegistrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.InitRegistrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/accounts/register/create": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Register new account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Format: Bearer {token}",
+                        "name": "Authentication:Bearer",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "User registration data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountRegistrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountRegistrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/accounts/register/patients": {
             "post": {
                 "security": [
@@ -216,12 +325,60 @@ const docTemplate = `{
                 "summary": "Register new patient",
                 "parameters": [
                     {
-                        "description": "User registration data",
+                        "description": "Patient registration data",
                         "name": "user",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.PatientRegisterRequest"
+                            "$ref": "#/definitions/models.PatientRegistrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/accounts/register/staffs": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new staff account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Register new staff",
+                "parameters": [
+                    {
+                        "description": "Staff registration data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.StaffRegistrationRequest"
                         }
                     }
                 ],
@@ -276,6 +433,49 @@ const docTemplate = `{
                 }
             }
         },
+        "models.AccountRegistrationRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AccountRegistrationResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.InitRegistrationRequest": {
+            "type": "object",
+            "properties": {
+                "citizen_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.InitRegistrationResponse": {
+            "type": "object",
+            "properties": {
+                "acc_id": {
+                    "description": "Account ID (-1 means account is not registered yet)",
+                    "type": "integer"
+                },
+                "token": {
+                    "description": "JWT token, if acc ID = -1, jwt contains citizen ID to register new account, otherwise it contains acc ID",
+                    "type": "string"
+                }
+            }
+        },
         "models.LoginRequest": {
             "type": "object",
             "properties": {
@@ -303,19 +503,13 @@ const docTemplate = `{
                 }
             }
         },
-        "models.PatientRegisterRequest": {
+        "models.PatientRegistrationRequest": {
             "type": "object",
             "properties": {
                 "address": {
                     "type": "string"
                 },
-                "citizen_id": {
-                    "type": "string"
-                },
                 "date_of_birth": {
-                    "type": "string"
-                },
-                "email": {
                     "type": "string"
                 },
                 "emergency_contact_info": {
@@ -338,14 +532,22 @@ const docTemplate = `{
                 },
                 "nationality": {
                     "type": "string"
-                },
-                "password": {
+                }
+            }
+        },
+        "models.StaffRegistrationRequest": {
+            "type": "object",
+            "properties": {
+                "date_of_birth": {
                     "type": "string"
                 },
-                "phone": {
+                "department": {
                     "type": "string"
                 },
-                "role": {
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
                     "type": "string"
                 }
             }

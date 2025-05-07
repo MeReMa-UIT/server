@@ -22,6 +22,7 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 		SELECT citizen_id, password_hash, role
 		FROM accounts
 		WHERE citizen_id = $1 OR phone = $1 OR email = $1
+		LIMIT 1
 	`
 
 	var creds Credentials
@@ -67,6 +68,7 @@ func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
 		SELECT acc_id 
 		FROM accounts
 		WHERE citizen_id = $1
+		LIMIT 1
 	`
 	var accID int
 	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&accID)
@@ -79,7 +81,7 @@ func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
 	return accID, nil
 }
 
-func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) (int, error) {
+func StoreAccountInfo(ctx context.Context, req models.AccountRegistrationRequest, citizenID, password_hash string) (int, error) {
 	accountTableLock.Lock()
 	defer accountTableLock.Unlock()
 
@@ -100,7 +102,7 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegisterRequest) (i
 		RETURNING acc_id
 	`
 	var createdAccID int
-	err = dbpool.QueryRow(ctx, query, req.CitizenID, req.Password, req.Phone, req.Email, req.Role).Scan(&createdAccID)
+	err = dbpool.QueryRow(ctx, query, citizenID, password_hash, req.Phone, req.Email, req.Role).Scan(&createdAccID)
 
 	if err != nil {
 		return -1, err

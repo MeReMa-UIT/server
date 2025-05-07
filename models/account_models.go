@@ -19,19 +19,38 @@ type LoginRequest struct {
 
 type LoginResponse struct {
 	Token string `json:"token"`
-	// ExpiresAt time.Time `json:"expires_at"`
 }
 
-type AccountRegisterRequest struct {
-	CitizenID string  `json:"citizen_id" db:"citizen_id"`
-	Password  string  `json:"password"`
-	Phone     string  `json:"phone" db:"phone"`
-	Email     *string `json:"email,omitempty" db:"email"`
-	Role      string  `json:"role" db:"role"`
+type InitRegistrationRequest struct {
+	CitizenID string `json:"citizen_id" db:"citizen_id"`
 }
 
-type PatientRegisterRequest struct {
-	AccountRegisterRequest
+type InitRegistrationResponse struct {
+	// JWT token. If acc ID = -1, token will allow user to register new account, otherwise token will allow user to add new patient or staff
+	Token string `json:"token"`
+
+	// Account ID (-1 means account is not registered yet)
+	AccID int `json:"acc_id"`
+}
+
+type AccountRegistrationRequest struct {
+	Phone string `json:"phone" db:"phone"`
+	Email string `json:"email" db:"email"`
+	Role  string `json:"role" db:"role"`
+}
+
+type AccountRegistrationResponse struct {
+	Token string `json:"token"`
+}
+
+// type AccountRegisterResponse struct {
+// 	CitizenID string `json:"citizen_id" db:"citizen_id"`
+// 	Phone     string `json:"phone" db:"phone"`
+// 	Email     string `json:"email" db:"email"`
+// 	Password  string `json:"password" db:"password"`
+// }
+
+type PatientRegistrationRequest struct {
 	FullName                   string    `json:"full_name" db:"full_name"`
 	DateOfBirth                time.Time `json:"date_of_birth" db:"date_of_birth"`
 	Gender                     string    `json:"gender" db:"gender"`
@@ -43,8 +62,7 @@ type PatientRegisterRequest struct {
 	EmergencyContactInfo       string    `json:"emergency_contact_info" db:"emergency_contact_info"`
 }
 
-type StaffRegisterRequest struct {
-	AccountRegisterRequest
+type StaffRegistrationRequest struct {
 	FullName    string    `json:"full_name" db:"full_name"`
 	DateOfBirth time.Time `json:"date_of_birth" db:"date_of_birth"`
 	Gender      string    `json:"gender" db:"gender"`

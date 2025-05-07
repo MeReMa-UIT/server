@@ -19,6 +19,35 @@ definitions:
       email:
         type: string
     type: object
+  models.AccountRegistrationRequest:
+    properties:
+      email:
+        type: string
+      phone:
+        type: string
+      role:
+        type: string
+    type: object
+  models.AccountRegistrationResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  models.InitRegistrationRequest:
+    properties:
+      citizen_id:
+        type: string
+    type: object
+  models.InitRegistrationResponse:
+    properties:
+      acc_id:
+        description: Account ID (-1 means account is not registered yet)
+        type: integer
+      token:
+        description: JWT token, if acc ID = -1, jwt contains citizen ID to register
+          new account, otherwise it contains acc ID
+        type: string
+    type: object
   models.LoginRequest:
     properties:
       id:
@@ -36,15 +65,11 @@ definitions:
       new_password:
         type: string
     type: object
-  models.PatientRegisterRequest:
+  models.PatientRegistrationRequest:
     properties:
       address:
         type: string
-      citizen_id:
-        type: string
       date_of_birth:
-        type: string
-      email:
         type: string
       emergency_contact_info:
         type: string
@@ -60,11 +85,16 @@ definitions:
         type: string
       nationality:
         type: string
-      password:
+    type: object
+  models.StaffRegistrationRequest:
+    properties:
+      date_of_birth:
         type: string
-      phone:
+      department:
         type: string
-      role:
+      full_name:
+        type: string
+      gender:
         type: string
     type: object
 host: localhost:8080
@@ -191,18 +221,87 @@ paths:
       summary: Reset password
       tags:
       - accounts
+  /accounts/register:
+    post:
+      consumes:
+      - application/json
+      description: Initiate registration
+      parameters:
+      - description: Initiate registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.InitRegistrationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.InitRegistrationResponse'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Check whether the citizen ID is already registered
+      tags:
+      - accounts
+  /accounts/register/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new account
+      parameters:
+      - description: 'Format: Bearer {token}'
+        in: header
+        name: Authentication:Bearer
+        required: true
+        type: string
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.AccountRegistrationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.AccountRegistrationResponse'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Register new account
+      tags:
+      - accounts
   /accounts/register/patients:
     post:
       consumes:
       - application/json
       description: Create a new patient account
       parameters:
-      - description: User registration data
+      - description: Patient registration data
         in: body
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.PatientRegisterRequest'
+          $ref: '#/definitions/models.PatientRegistrationRequest'
       produces:
       - application/json
       responses:
@@ -219,6 +318,36 @@ paths:
       security:
       - BearerAuth: []
       summary: Register new patient
+      tags:
+      - accounts
+  /accounts/register/staffs:
+    post:
+      consumes:
+      - application/json
+      description: Create a new staff account
+      parameters:
+      - description: Staff registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.StaffRegistrationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Register new staff
       tags:
       - accounts
 securityDefinitions:

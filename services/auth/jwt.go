@@ -8,12 +8,13 @@ import (
 	"github.com/merema-uit/server/models/errors"
 )
 
-const JWT_SECRET = "test"
+const JWT_SECRET = "MySuperSecretKeyForMeReMa"
 const JWT_SESSION_EXPIRY = 3 * time.Hour
 const JWT_RECOVERY_EXPIRY = 5 * time.Minute
+const JWT_REGISTRATION_EXPIRY = 15 * time.Minute
 
 type Claims struct {
-	CitizenID  string `json:"citizen_id"`
+	ID         string `json:"citizen_id"`
 	Permission string `json:"permission"`
 	jwt.RegisteredClaims
 }
@@ -21,7 +22,7 @@ type Claims struct {
 func GenerateJWT(citizenID string, role string, secret string, expiry time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiry)
 	claims := &Claims{
-		CitizenID:  citizenID,
+		ID:         citizenID,
 		Permission: role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),

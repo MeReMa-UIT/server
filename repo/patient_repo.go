@@ -6,7 +6,7 @@ import (
 	"github.com/merema-uit/server/models"
 )
 
-func StorePatientInfo(ctx context.Context, req models.PatientRegisterRequest, accID int) error {
+func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest, accID int) error {
 	patientTableLock.Lock()
 	defer patientTableLock.Unlock()
 

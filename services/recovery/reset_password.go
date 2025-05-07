@@ -26,7 +26,7 @@ func ResetPassword(ctx context.Context, req models.PasswordResetRequest, authHea
 		return err
 	}
 	req.NewPassword = string(newPasswordHash)
-	err = repo.UpdatePassword(ctx, claims.CitizenID, req.NewPassword)
+	err = repo.UpdatePassword(ctx, claims.ID, req.NewPassword)
 
 	return nil
 }

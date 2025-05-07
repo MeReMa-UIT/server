@@ -37,6 +37,7 @@
 ### To-Do
 - [x] Add mutex lock for repo layer
 - [x] Ultimate rework on error handling
+- [ ] Use native postgresql mutex lock rather than go mutex lock 
 
 ### Test Accounts
 - Admin: 

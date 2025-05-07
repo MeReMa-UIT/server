@@ -2,6 +2,9 @@ package register
 
 import (
 	"context"
+	"strconv"
+
+	"fmt"
 
 	"github.com/merema-uit/server/models"
 	"github.com/merema-uit/server/models/errors"
@@ -11,49 +14,105 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CheckPermission(authHeader, role string) error {
+func InitRegistration(ctx context.Context, req models.InitRegistrationRequest, authHeader string) (string, int, error) {
 	tokenString := auth.ExtractToken(authHeader)
-	permission, err := auth.ExtractPermissionFromToken(tokenString, auth.JWT_SECRET)
+	perm, err := auth.ExtractPermissionFromToken(tokenString, auth.JWT_SECRET)
+	if err != nil {
+		return "", -1, err
+	}
+
+	var registrationType string
+	switch perm {
+	case permission.Admin.String():
+		registrationType = permission.StaffRegistration.String()
+	case permission.Receptionist.String():
+		registrationType = permission.PatientRegistration.String()
+	default:
+		return "", -1, errors.ErrPermissionDenied
+	}
+
+	accID, err := repo.GetAccIDByCitizenID(ctx, req.CitizenID)
+	if err == errors.ErrAccountNotExist {
+		token, _ := auth.GenerateJWT(req.CitizenID, registrationType, auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
+		return token, -1, nil
+	}
+	if err != nil {
+		return "", -1, err
+	}
+	token, _ := auth.GenerateJWT(fmt.Sprint(accID), registrationType, auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
+	return token, accID, nil
+}
+
+func RegisterAccount(ctx context.Context, req models.AccountRegistrationRequest, authHeader string) (string, error) {
+	tokenString := auth.ExtractToken(authHeader)
+	claims, err := auth.ParseJWT(tokenString, auth.JWT_SECRET)
+	if err != nil {
+		return "", err
+	}
+
+	if len(claims.ID) != 12 {
+		return "", errors.ErrInvalidToken
+	}
+
+	switch claims.Permission {
+	case permission.PatientRegistration.String():
+		if req.Role != permission.Patient.String() {
+			return "", errors.ErrPermissionDenied
+		}
+	case permission.StaffRegistration.String():
+		if req.Role != permission.Doctor.String() && req.Role != permission.Receptionist.String() {
+			return "", errors.ErrPermissionDenied
+		}
+	default:
+		return "", errors.ErrPermissionDenied
+	}
+
+	password_hash, _ := bcrypt.GenerateFromPassword([]byte(req.Phone), bcrypt.DefaultCost)
+	createdAccID, err := repo.StoreAccountInfo(ctx, req, claims.ID, string(password_hash))
+	if err != nil {
+		return "", err
+	}
+	token, _ := auth.GenerateJWT(fmt.Sprint(createdAccID), permission.Patient.String(), auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
+	return token, nil
+}
+
+func RegisterStaff(ctx context.Context, req models.StaffRegistrationRequest, authHeader string) error {
+	tokenString := auth.ExtractToken(authHeader)
+	claims, err := auth.ParseJWT(tokenString, auth.JWT_SECRET)
 	if err != nil {
 		return err
 	}
-	if permission != role {
+	if claims.Permission != permission.StaffRegistration.String() {
 		return errors.ErrPermissionDenied
 	}
-	return nil
-}
-
-func RegisterAccount(ctx context.Context, req models.AccountRegisterRequest) (int, error) {
-	password_hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	accID, err := strconv.Atoi(claims.ID)
 	if err != nil {
-		return -1, err
+		return errors.ErrInvalidToken
 	}
-	req.Password = string(password_hash)
-	createdAccID, err := repo.StoreAccountInfo(ctx, req)
-	return createdAccID, err
-}
-
-func RegisterStaff(ctx context.Context, req models.PatientRegisterRequest, authHeader string) error {
-	if err := CheckPermission(authHeader, permission.Admin.String()); err != nil {
+	err = repo.StoreStaffInfo(ctx, req, accID)
+	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func RegisterPatient(ctx context.Context, req models.PatientRegisterRequest, authHeader string) error {
-	if err := CheckPermission(authHeader, permission.Receptionist.String()); err != nil {
+func RegisterPatient(ctx context.Context, req models.PatientRegistrationRequest, authHeader string) error {
+	tokenString := auth.ExtractToken(authHeader)
+	claims, err := auth.ParseJWT(tokenString, auth.JWT_SECRET)
+	if err != nil {
 		return err
 	}
-	accID, err := repo.GetAccIDByCitizenID(ctx, req.AccountRegisterRequest.CitizenID)
-	if err != nil && err != errors.ErrAccountNotExist {
-		return err
+	if claims.Permission != permission.PatientRegistration.String() {
+		return errors.ErrPermissionDenied
 	}
-	if err == errors.ErrAccountNotExist {
-		accID, err = RegisterAccount(ctx, req.AccountRegisterRequest)
-		if err != nil {
-			return err
-		}
+	accID, err := strconv.Atoi(claims.ID)
+	if err != nil {
+		return errors.ErrInvalidToken
 	}
 	err = repo.StorePatientInfo(ctx, req, accID)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

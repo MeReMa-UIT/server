@@ -4,6 +4,9 @@ from      accounts;
 select    *
 from      patients;
 
+select    *
+from      staffs;
+
 delete    from accounts
 where     acc_id >= 1;
 

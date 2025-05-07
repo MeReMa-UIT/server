@@ -12,6 +12,7 @@ var (
 	dbpool           *pgxpool.Pool
 	accountTableLock sync.RWMutex
 	patientTableLock sync.RWMutex
+	staffTableLock   sync.RWMutex
 )
 
 func ConnectToDB(ctx context.Context, connString string) {
