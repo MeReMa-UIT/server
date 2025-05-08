@@ -19,11 +19,11 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(citizenID string, role string, secret string, expiry time.Duration) (string, error) {
+func GenerateJWT(citizenID string, permission string, secret string, expiry time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiry)
 	claims := &Claims{
 		ID:         citizenID,
-		Permission: role,
+		Permission: permission,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},

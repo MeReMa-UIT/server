@@ -55,7 +55,7 @@ func RecoveryHandler(ctx *gin.Context) {
 // @Failure 400
 // @Failure 401
 // @Failure 500
-// @Router /accounts/recovery/confirm [post]
+// @Router /accounts/recovery/verify [post]
 func RecoveryConfirmHandler(ctx *gin.Context) {
 	var req models.AccountRecoverConfirmRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {

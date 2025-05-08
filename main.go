@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/api"
 	"github.com/merema-uit/server/repo"
-	"golang.org/x/crypto/bcrypt"
 
 	"github.com/merema-uit/server/docs"
 	swaggerFiles "github.com/swaggo/files"
@@ -29,9 +28,6 @@ import (
 func main() {
 	repo.ConnectToDB(context.Background(), os.Getenv("DB_URL"))
 	defer repo.CloseDBConnect()
-
-	password_hash, _ := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.DefaultCost)
-	fmt.Print(string(password_hash))
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	r := gin.Default()
