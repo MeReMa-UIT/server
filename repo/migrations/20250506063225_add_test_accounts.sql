@@ -2,7 +2,7 @@
 insert    into accounts (citizen_id, password_hash, phone, email, role)
 values    (
           '123123123123',
-          '$2a$10$l9RU0OPUn6cluh8WKf3JAOiyPNrquxx2o3iJz3aDJ2SlKnXlbx/2G',
+          '$2a$10$bqcjrpmJ8qID2bkUscD15uFKzE0tiYFpbM3oex3GxCeqDy9IuhZ2K',
           '0111222333',
           '23520199@gm.uit.edu.vn',
           'admin'

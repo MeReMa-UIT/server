@@ -42,4 +42,4 @@
 ### Test Accounts
 - Admin: 
   - **ID**: 123123123123/0111222333/23520199@gm.uit.edu.vn
-  - **Password**: test
+  - **Password**: 123456
