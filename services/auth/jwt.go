@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 )
 
 const JWT_SECRET = "MySuperSecretKeyForMeReMa"
@@ -42,16 +42,16 @@ func ParseJWT(tokenString, secret string) (*Claims, error) {
 	if err != nil {
 		switch err {
 		case jwt.ErrTokenMalformed:
-			return nil, errors.ErrMalformedToken
+			return nil, errs.ErrMalformedToken
 		case jwt.ErrTokenExpired:
-			return nil, errors.ErrExpiredToken
+			return nil, errs.ErrExpiredToken
 		default:
-			return nil, errors.ErrInvalidToken
+			return nil, errs.ErrInvalidToken
 		}
 	}
 
 	if !token.Valid {
-		return nil, errors.ErrInvalidToken
+		return nil, errs.ErrInvalidToken
 	}
 
 	return claims, nil

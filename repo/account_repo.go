@@ -2,10 +2,13 @@ package repo
 
 import (
 	"context"
+	"errors"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/merema-uit/server/models"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 )
 
 type Credentials struct {
@@ -15,9 +18,6 @@ type Credentials struct {
 }
 
 func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentials, error) {
-	accountTableLock.RLock()
-	defer accountTableLock.RUnlock()
-
 	const query = `
 		SELECT citizen_id, password_hash, role
 		FROM accounts
@@ -25,22 +25,19 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 		LIMIT 1
 	`
 
-	var creds Credentials
-	err := dbpool.QueryRow(ctx, query, accIdentifier).Scan(&creds.CitizenID, &creds.PasswordHash, &creds.Role)
+	rows, _ := dbpool.Query(ctx, query, accIdentifier)
+	creds, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[Credentials])
 
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return Credentials{}, errors.ErrAccountNotExist
+			return Credentials{}, errs.ErrAccountNotExist
 		}
 	}
 
-	return creds, err
+	return creds, nil
 }
 
 func CheckEmailAndCitizenID(ctx context.Context, req models.AccountRecoverRequest) error {
-	accountTableLock.RLock()
-	defer accountTableLock.RUnlock()
-
 	const query = `
 		SELECT EXISTS(
 			SELECT 1
@@ -55,15 +52,13 @@ func CheckEmailAndCitizenID(ctx context.Context, req models.AccountRecoverReques
 		return err
 	}
 	if exist == false {
-		return errors.ErrAccountNotExist
+		return errs.ErrAccountNotExist
 	}
 
 	return nil
 }
 
 func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
-	accountTableLock.RLock()
-	defer accountTableLock.RUnlock()
 	const query = `
 		SELECT acc_id 
 		FROM accounts
@@ -74,7 +69,7 @@ func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
 	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&accID)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return -1, errors.ErrAccountNotExist
+			return -1, errs.ErrAccountNotExist
 		}
 		return -1, err
 	}
@@ -82,52 +77,63 @@ func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
 }
 
 func StoreAccountInfo(ctx context.Context, req models.AccountRegistrationRequest, citizenID, password_hash string) (int, error) {
-	accountTableLock.Lock()
-	defer accountTableLock.Unlock()
-
-	var emailOrPhoneExists bool
-	err := dbpool.QueryRow(ctx, "SELECT EXISTS (SELECT 1 FROM accounts WHERE email = $1 OR phone = $2)", req.Email, req.Phone).Scan(&emailOrPhoneExists)
-
-	if err != nil {
-		return -1, err
-	}
-
-	if emailOrPhoneExists {
-		return -1, errors.ErrEmailOrPhoneAlreadyUsed
-	}
-
 	const query = `
 		INSERT INTO accounts (citizen_id, password_hash, phone, email, role)
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING acc_id
 	`
-	var createdAccID int
-	err = dbpool.QueryRow(ctx, query, citizenID, password_hash, req.Phone, req.Email, req.Role).Scan(&createdAccID)
-
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
 	if err != nil {
 		return -1, err
 	}
+	defer tx.Rollback(ctx)
 
+	var createdAccID int
+	err = tx.QueryRow(ctx, query, citizenID, password_hash, req.Phone, req.Email, req.Role).Scan(&createdAccID)
+
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			switch pgErr.Code {
+			case "23505":
+				if strings.Contains(pgErr.ConstraintName, "unique_citizen_id") {
+					return -1, errs.ErrCitizenIDExists
+				}
+				if strings.Contains(pgErr.ConstraintName, "unique_phone") || strings.Contains(pgErr.ConstraintName, "unique_email") {
+					return -1, errs.ErrEmailOrPhoneAlreadyUsed
+				}
+			}
+		}
+		return -1, err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return -1, err
+	}
 	return createdAccID, nil
 }
 
 func UpdatePassword(ctx context.Context, citizenID, newPassword string) error {
-	accountTableLock.Lock()
-	defer accountTableLock.Unlock()
-
 	const query = `
 		UPDATE accounts
 		SET password_hash = $1
 		WHERE citizen_id = $2
 	`
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
 
-	_, err := dbpool.Exec(ctx, query, newPassword, citizenID)
+	_, err = tx.Exec(ctx, query, newPassword, citizenID)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return errors.ErrAccountNotExist
+			return errs.ErrAccountNotExist
 		}
 		return err
 	}
-
-	return nil
+	return tx.Commit(ctx)
 }

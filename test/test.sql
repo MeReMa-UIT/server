@@ -1,18 +1,18 @@
-select    *
-from      accounts;
+SELECT    *
+FROM      accounts;
 
-select    *
-from      patients;
+SELECT    *
+FROM      patients;
 
-select    *
-from      staffs;
+SELECT    *
+FROM      staffs;
 
-delete    from accounts
-where     acc_id >= 1;
+DELETE    FROM accounts
+WHERE     acc_id > 1;
 
-delete    from patients
-where     patient_id >= 1;
+DELETE    FROM patients
+WHERE     patient_id >= 1;
 
-update    accounts
-set       role = 'admin'
-where     acc_id >= 1;
+UPDATE    accounts
+SET       role = 'admin'
+WHERE     acc_id >= 1;

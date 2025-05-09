@@ -8,6 +8,6 @@ curl -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer " -d '
 
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"citizen_id":""}'  http://localhost:8080/api/v1/accounts/register
 
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"phone":"", "email":"", "role":""}'  http://localhost:8080/api/v1/accounts/register/confirm
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"phone":"", "email":"", "role":""}'  http://localhost:8080/api/v1/accounts/register/create
 
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"full_name":"", "date_of_birth":"", "gender":"", "department":""}'  http://localhost:8080/api/v1/accounts/register/staffs

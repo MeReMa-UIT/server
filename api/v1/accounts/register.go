@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/services/register"
 	"github.com/merema-uit/server/utils"
 )
@@ -37,9 +37,9 @@ func InitRegistrationHandler(ctx *gin.Context) {
 
 	if err != nil {
 		switch err {
-		case errors.ErrExpiredToken, errors.ErrInvalidToken, errors.ErrMalformedToken:
+		case errs.ErrExpiredToken, errs.ErrInvalidToken, errs.ErrMalformedToken:
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
-		case errors.ErrPermissionDenied:
+		case errs.ErrPermissionDenied:
 			ctx.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
 		default:
 			utils.Logger.Error("Can't initialize user registration", "error", err.Error())
@@ -63,6 +63,7 @@ func InitRegistrationHandler(ctx *gin.Context) {
 // @Failure 400
 // @Failure 401
 // @Failure 403
+// @Failure 409
 // @Failure 500
 // @Router /accounts/register/create [post]
 func RegisterAccountHandler(ctx *gin.Context) {
@@ -78,10 +79,14 @@ func RegisterAccountHandler(ctx *gin.Context) {
 
 	if err != nil {
 		switch err {
-		case errors.ErrExpiredToken, errors.ErrInvalidToken, errors.ErrMalformedToken:
+		case errs.ErrExpiredToken, errs.ErrInvalidToken, errs.ErrMalformedToken:
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
-		case errors.ErrPermissionDenied:
+		case errs.ErrPermissionDenied:
 			ctx.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
+		case errs.ErrCitizenIDExists:
+			ctx.JSON(http.StatusConflict, gin.H{"error": "Citizen ID already exists"})
+		case errs.ErrEmailOrPhoneAlreadyUsed:
+			ctx.JSON(http.StatusConflict, gin.H{"error": "Email or phone number already used"})
 		default:
 			utils.Logger.Error("Can't register new account", "error", err.Error())
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
@@ -119,9 +124,9 @@ func RegisterPatientHandler(ctx *gin.Context) {
 
 	if err != nil {
 		switch err {
-		case errors.ErrExpiredToken, errors.ErrInvalidToken, errors.ErrMalformedToken:
+		case errs.ErrExpiredToken, errs.ErrInvalidToken, errs.ErrMalformedToken:
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
-		case errors.ErrPermissionDenied:
+		case errs.ErrPermissionDenied:
 			ctx.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
 		default:
 			utils.Logger.Error("Can't register new patient", "error", err.Error())
@@ -160,9 +165,9 @@ func RegisterStaffHandler(ctx *gin.Context) {
 
 	if err != nil {
 		switch err {
-		case errors.ErrExpiredToken, errors.ErrInvalidToken, errors.ErrMalformedToken:
+		case errs.ErrExpiredToken, errs.ErrInvalidToken, errs.ErrMalformedToken:
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
-		case errors.ErrPermissionDenied:
+		case errs.ErrPermissionDenied:
 			ctx.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
 		default:
 			utils.Logger.Error("Can't register new staff", "error", err.Error())

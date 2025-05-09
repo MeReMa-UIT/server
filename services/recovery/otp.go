@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/merema-uit/server/models"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 )
 
 type secret struct {
@@ -40,13 +40,13 @@ func validateOTP(req models.AccountRecoverConfirmRequest) error {
 	secret, ok := otpSecrets[req.CitizenID]
 
 	if !ok || secret.OTP != req.OTP {
-		return errors.ErrWrongOTP
+		return errs.ErrWrongOTP
 	}
 
 	delete(otpSecrets, req.CitizenID)
 
 	if time.Now().After(secret.ExpirationTime) {
-		return errors.ErrExpiredOTP
+		return errs.ErrExpiredOTP
 	}
 
 	return nil

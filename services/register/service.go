@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/merema-uit/server/models"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
 	"github.com/merema-uit/server/services/auth"
@@ -28,11 +28,11 @@ func InitRegistration(ctx context.Context, req models.InitRegistrationRequest, a
 	case permission.Receptionist.String():
 		registrationType = permission.PatientRegistration.String()
 	default:
-		return "", -1, errors.ErrPermissionDenied
+		return "", -1, errs.ErrPermissionDenied
 	}
 
 	accID, err := repo.GetAccIDByCitizenID(ctx, req.CitizenID)
-	if err == errors.ErrAccountNotExist {
+	if err == errs.ErrAccountNotExist {
 		token, _ := auth.GenerateJWT(req.CitizenID, registrationType, auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
 		return token, -1, nil
 	}
@@ -51,20 +51,20 @@ func RegisterAccount(ctx context.Context, req models.AccountRegistrationRequest,
 	}
 
 	if len(claims.ID) != 12 {
-		return "", errors.ErrInvalidToken
+		return "", errs.ErrInvalidToken
 	}
 
 	switch claims.Permission {
 	case permission.PatientRegistration.String():
 		if req.Role != permission.Patient.String() {
-			return "", errors.ErrPermissionDenied
+			return "", errs.ErrPermissionDenied
 		}
 	case permission.StaffRegistration.String():
 		if req.Role != permission.Doctor.String() && req.Role != permission.Receptionist.String() {
-			return "", errors.ErrPermissionDenied
+			return "", errs.ErrPermissionDenied
 		}
 	default:
-		return "", errors.ErrPermissionDenied
+		return "", errs.ErrPermissionDenied
 	}
 
 	password_hash, _ := bcrypt.GenerateFromPassword([]byte(req.Phone), bcrypt.DefaultCost)
@@ -83,11 +83,11 @@ func RegisterStaff(ctx context.Context, req models.StaffRegistrationRequest, aut
 		return err
 	}
 	if claims.Permission != permission.StaffRegistration.String() {
-		return errors.ErrPermissionDenied
+		return errs.ErrPermissionDenied
 	}
 	accID, err := strconv.Atoi(claims.ID)
 	if err != nil {
-		return errors.ErrInvalidToken
+		return errs.ErrInvalidToken
 	}
 	err = repo.StoreStaffInfo(ctx, req, accID)
 	if err != nil {
@@ -103,11 +103,11 @@ func RegisterPatient(ctx context.Context, req models.PatientRegistrationRequest,
 		return err
 	}
 	if claims.Permission != permission.PatientRegistration.String() {
-		return errors.ErrPermissionDenied
+		return errs.ErrPermissionDenied
 	}
 	accID, err := strconv.Atoi(claims.ID)
 	if err != nil {
-		return errors.ErrInvalidToken
+		return errs.ErrInvalidToken
 	}
 	err = repo.StorePatientInfo(ctx, req, accID)
 	if err != nil {

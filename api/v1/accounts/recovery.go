@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/services/recovery"
 	"github.com/merema-uit/server/utils"
 )
@@ -32,7 +32,7 @@ func RecoveryHandler(ctx *gin.Context) {
 	err := recovery.SendRecoveryEmail(ctx, req)
 	if err != nil {
 		switch err {
-		case errors.ErrAccountNotExist:
+		case errs.ErrAccountNotExist:
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Citizen ID or Email is incorrect"})
 		default:
 			utils.Logger.Error("Can't send recovery email", "error", err.Error())
@@ -66,7 +66,7 @@ func RecoveryConfirmHandler(ctx *gin.Context) {
 	token, err := recovery.VerifyRecoveryOTP(ctx, req)
 	if err != nil {
 		switch err {
-		case errors.ErrInvalidToken, errors.ErrWrongOTP:
+		case errs.ErrInvalidToken, errs.ErrWrongOTP:
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid OTP"})
 		default:
 			utils.Logger.Error("Can't confirm the recovery request", "error", err.Error())
@@ -104,9 +104,9 @@ func ResetPasswordHandler(ctx *gin.Context) {
 	err := recovery.ResetPassword(ctx, req, authHeader)
 	if err != nil {
 		switch err {
-		case errors.ErrInvalidToken, errors.ErrMalformedToken, errors.ErrExpiredToken:
+		case errs.ErrInvalidToken, errs.ErrMalformedToken, errs.ErrExpiredToken:
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-		case errors.ErrExpiredOTP:
+		case errs.ErrExpiredOTP:
 			ctx.JSON(http.StatusForbidden, gin.H{"error": "Expired OTP"})
 		default:
 			utils.Logger.Error("Can't change to the new password", "error", err.Error())

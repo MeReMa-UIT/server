@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/merema-uit/server/models"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/repo"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -15,7 +15,7 @@ func NewSession(ctx context.Context, req models.LoginRequest) (string, error) {
 		return "", err
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(creds.PasswordHash), []byte(req.Password)); err != nil {
-		return "", errors.ErrPasswordIncorrect
+		return "", errs.ErrPasswordIncorrect
 	}
 	token, err := GenerateJWT(creds.CitizenID, creds.Role, JWT_SECRET, JWT_SESSION_EXPIRY)
 	if err != nil {

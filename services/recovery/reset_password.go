@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/merema-uit/server/models"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
 	"github.com/merema-uit/server/services/auth"
@@ -18,7 +18,7 @@ func ResetPassword(ctx context.Context, req models.PasswordResetRequest, authHea
 		return err
 	}
 	if claims.Permission != permission.Recovery.String() {
-		return errors.ErrPermissionDenied
+		return errs.ErrPermissionDenied
 	}
 
 	newPasswordHash, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)

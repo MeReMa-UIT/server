@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
-	"github.com/merema-uit/server/models/errors"
+	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/services/auth"
 	"github.com/merema-uit/server/utils"
 )
@@ -35,7 +35,7 @@ func LoginHandler(ctx *gin.Context) {
 
 	if err != nil {
 		switch err {
-		case errors.ErrPasswordIncorrect, errors.ErrAccountNotExist:
+		case errs.ErrPasswordIncorrect, errs.ErrAccountNotExist:
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Identifier or Password is incorrect"})
 		default:
 			utils.Logger.Error("Can't create new session", "error", err.Error())

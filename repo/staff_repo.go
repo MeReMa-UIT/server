@@ -3,21 +3,26 @@ package repo
 import (
 	"context"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/merema-uit/server/models"
 )
 
 func StoreStaffInfo(ctx context.Context, req models.StaffRegistrationRequest, accID int) error {
-	staffTableLock.Lock()
-	defer staffTableLock.Unlock()
-
 	const query = `
 		INSERT INTO staffs (acc_id, full_name, date_of_birth, gender, department)
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING staff_id
 	`
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
 
 	var staffID int
-	err := dbpool.QueryRow(ctx, query,
+	err = tx.QueryRow(ctx, query,
 		accID,
 		req.FullName,
 		req.DateOfBirth,
@@ -25,5 +30,9 @@ func StoreStaffInfo(ctx context.Context, req models.StaffRegistrationRequest, ac
 		req.Department,
 	).Scan(&staffID)
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit(ctx)
 }
