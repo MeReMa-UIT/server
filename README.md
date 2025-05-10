@@ -40,6 +40,9 @@
 - [ ] Use native postgresql mutex lock rather than go mutex lock 
 
 ### Test Accounts
-- Admin: 
+- Admin 1: 
   - **ID**: 123123123123/0111222333/23520199@gm.uit.edu.vn
+  - **Password**: 123456
+- Admin 2: 
+  - **ID**: 123412341234/0123456789/23521734@gm.uit.edu.vn
   - **Password**: 123456

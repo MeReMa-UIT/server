@@ -7,7 +7,7 @@ import (
 	"github.com/merema-uit/server/models"
 )
 
-func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest, accID int) error {
+func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest) error {
 	const query = `
 		INSERT INTO patients (acc_id, full_name, date_of_birth, gender, ethnicity, nationality, address, health_insurance_expired_date, health_insurance_number, emergency_contact_info)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
@@ -24,7 +24,7 @@ func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest
 
 	var patientID int
 	err = tx.QueryRow(ctx, query,
-		accID,
+		req.AccID,
 		req.FullName,
 		req.DateOfBirth,
 		req.Gender,

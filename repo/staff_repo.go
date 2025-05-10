@@ -7,7 +7,7 @@ import (
 	"github.com/merema-uit/server/models"
 )
 
-func StoreStaffInfo(ctx context.Context, req models.StaffRegistrationRequest, accID int) error {
+func StoreStaffInfo(ctx context.Context, req models.StaffRegistrationRequest) error {
 	const query = `
 		INSERT INTO staffs (acc_id, full_name, date_of_birth, gender, department)
 		VALUES ($1, $2, $3, $4, $5)
@@ -23,7 +23,7 @@ func StoreStaffInfo(ctx context.Context, req models.StaffRegistrationRequest, ac
 
 	var staffID int
 	err = tx.QueryRow(ctx, query,
-		accID,
+		req.AccID,
 		req.FullName,
 		req.DateOfBirth,
 		req.Gender,

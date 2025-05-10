@@ -12,14 +12,14 @@ import (
 )
 
 type Credentials struct {
-	CitizenID    string `json:"citizen_id" db:"citizen_id"`
+	AccID        string `json:"acc_id" db:"acc_id"`
 	PasswordHash string `json:"password_hash" db:"password_hash"`
 	Role         string `json:"role" db:"role"`
 }
 
 func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentials, error) {
 	const query = `
-		SELECT citizen_id, password_hash, role
+		SELECT acc_id, password_hash, role
 		FROM accounts
 		WHERE citizen_id = $1 OR phone = $1 OR email = $1
 		LIMIT 1
@@ -76,7 +76,7 @@ func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
 	return accID, nil
 }
 
-func StoreAccountInfo(ctx context.Context, req models.AccountRegistrationRequest, citizenID, password_hash string) (int, error) {
+func StoreAccountInfo(ctx context.Context, req models.AccountRegistrationRequest, password_hash string) (int, error) {
 	const query = `
 		INSERT INTO accounts (citizen_id, password_hash, phone, email, role)
 		VALUES ($1, $2, $3, $4, $5)
@@ -91,7 +91,7 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegistrationRequest
 	defer tx.Rollback(ctx)
 
 	var createdAccID int
-	err = tx.QueryRow(ctx, query, citizenID, password_hash, req.Phone, req.Email, req.Role).Scan(&createdAccID)
+	err = tx.QueryRow(ctx, query, req.CitizenID, password_hash, req.Phone, req.Email, req.Role).Scan(&createdAccID)
 
 	if err != nil {
 		var pgErr *pgconn.PgError

@@ -14,15 +14,15 @@ const JWT_RECOVERY_EXPIRY = 5 * time.Minute
 const JWT_REGISTRATION_EXPIRY = 15 * time.Minute
 
 type Claims struct {
-	ID         string `json:"citizen_id"`
+	ID         string `json:"id"` // Acc ID
 	Permission string `json:"permission"`
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(citizenID string, permission string, secret string, expiry time.Duration) (string, error) {
+func GenerateJWT(id string, permission string, secret string, expiry time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiry)
 	claims := &Claims{
-		ID:         citizenID,
+		ID:         id,
 		Permission: permission,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),

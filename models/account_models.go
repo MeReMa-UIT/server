@@ -34,13 +34,15 @@ type InitRegistrationResponse struct {
 }
 
 type AccountRegistrationRequest struct {
-	Phone string `json:"phone" db:"phone"`
-	Email string `json:"email" db:"email"`
-	Role  string `json:"role" db:"role"`
+	CitizenID string `json:"citizen_id" db:"citizen_id"`
+	Phone     string `json:"phone" db:"phone"`
+	Email     string `json:"email" db:"email"`
+	Role      string `json:"role" db:"role"`
 }
 
 type AccountRegistrationResponse struct {
 	Token string `json:"token"`
+	AccID int    `json:"acc_id"`
 }
 
 // type AccountRegisterResponse struct {
@@ -51,6 +53,7 @@ type AccountRegistrationResponse struct {
 // }
 
 type PatientRegistrationRequest struct {
+	AccID                      int       `json:"acc_id" db:"acc_id"`
 	FullName                   string    `json:"full_name" db:"full_name"`
 	DateOfBirth                time.Time `json:"date_of_birth" db:"date_of_birth"`
 	Gender                     string    `json:"gender" db:"gender"`
@@ -63,6 +66,7 @@ type PatientRegistrationRequest struct {
 }
 
 type StaffRegistrationRequest struct {
+	AccID       int       `json:"acc_id" db:"acc_id"`
 	FullName    string    `json:"full_name" db:"full_name"`
 	DateOfBirth time.Time `json:"date_of_birth" db:"date_of_birth"`
 	Gender      string    `json:"gender" db:"gender"`

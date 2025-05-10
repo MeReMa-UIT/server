@@ -75,7 +75,7 @@ func RegisterAccountHandler(ctx *gin.Context) {
 
 	authHeader := ctx.GetHeader("Authorization")
 
-	token, err := register.RegisterAccount(context.Background(), req, authHeader)
+	token, accID, err := register.RegisterAccount(context.Background(), req, authHeader)
 
 	if err != nil {
 		switch err {
@@ -94,7 +94,7 @@ func RegisterAccountHandler(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, models.AccountRegistrationResponse{Token: token})
+	ctx.JSON(http.StatusCreated, models.AccountRegistrationResponse{Token: token, AccID: accID})
 }
 
 // Register patient godoc
