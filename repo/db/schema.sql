@@ -19,11 +19,11 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.accounts (
-    acc_id integer NOT NULL,
+    acc_id bigint NOT NULL,
     citizen_id character(12) NOT NULL,
     password_hash character(60) NOT NULL,
     phone character(10) NOT NULL,
-    email text,
+    email text NOT NULL,
     role character varying(12) NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -34,7 +34,6 @@ CREATE TABLE public.accounts (
 --
 
 CREATE SEQUENCE public.accounts_acc_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -54,10 +53,10 @@ ALTER SEQUENCE public.accounts_acc_id_seq OWNED BY public.accounts.acc_id;
 --
 
 CREATE TABLE public.messages (
-    from_acc_id integer NOT NULL,
-    to_acc_id integer NOT NULL,
-    content text NOT NULL,
-    sent_at timestamp with time zone NOT NULL
+    from_acc_id bigint NOT NULL,
+    to_acc_id bigint NOT NULL,
+    sent_at timestamp with time zone NOT NULL,
+    content text NOT NULL
 );
 
 
@@ -66,8 +65,8 @@ CREATE TABLE public.messages (
 --
 
 CREATE TABLE public.patients (
-    patient_id integer NOT NULL,
-    acc_id integer NOT NULL,
+    patient_id bigint NOT NULL,
+    acc_id bigint NOT NULL,
     full_name character varying(50) NOT NULL,
     date_of_birth date NOT NULL,
     gender character varying(3) NOT NULL,
@@ -85,7 +84,6 @@ CREATE TABLE public.patients (
 --
 
 CREATE SEQUENCE public.patients_patient_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -105,8 +103,8 @@ ALTER SEQUENCE public.patients_patient_id_seq OWNED BY public.patients.patient_i
 --
 
 CREATE TABLE public.prescription_details (
-    detail_id integer NOT NULL,
-    prescription_id integer NOT NULL,
+    detail_id bigint NOT NULL,
+    prescription_id bigint NOT NULL,
     medication_name text NOT NULL,
     dosage integer NOT NULL,
     dosage_unit character varying(20) NOT NULL,
@@ -122,7 +120,6 @@ CREATE TABLE public.prescription_details (
 --
 
 CREATE SEQUENCE public.prescription_details_detail_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -138,32 +135,12 @@ ALTER SEQUENCE public.prescription_details_detail_id_seq OWNED BY public.prescri
 
 
 --
--- Name: prescription_details_prescription_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.prescription_details_prescription_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: prescription_details_prescription_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.prescription_details_prescription_id_seq OWNED BY public.prescription_details.prescription_id;
-
-
---
 -- Name: prescriptions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.prescriptions (
-    prescription_id integer NOT NULL,
-    record_id integer NOT NULL,
+    prescription_id bigint NOT NULL,
+    record_id bigint NOT NULL,
     is_insurance_covered boolean NOT NULL,
     prescription_note text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -176,7 +153,6 @@ CREATE TABLE public.prescriptions (
 --
 
 CREATE SEQUENCE public.prescriptions_prescription_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -196,9 +172,9 @@ ALTER SEQUENCE public.prescriptions_prescription_id_seq OWNED BY public.prescrip
 --
 
 CREATE TABLE public.records (
-    record_id integer NOT NULL,
-    patient_id integer NOT NULL,
-    doctor_id integer NOT NULL,
+    record_id bigint NOT NULL,
+    patient_id bigint NOT NULL,
+    doctor_id bigint NOT NULL,
     type text NOT NULL,
     main_diagnosis text,
     secondary_diagnosis text,
@@ -214,7 +190,6 @@ CREATE TABLE public.records (
 --
 
 CREATE SEQUENCE public.records_record_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -234,8 +209,8 @@ ALTER SEQUENCE public.records_record_id_seq OWNED BY public.records.record_id;
 --
 
 CREATE TABLE public.schedules (
-    schedule_id integer NOT NULL,
-    patient_id integer NOT NULL,
+    schedule_id bigint NOT NULL,
+    patient_id bigint NOT NULL,
     queue_number integer NOT NULL,
     examination_date date NOT NULL,
     expected_examination_time time with time zone NOT NULL,
@@ -248,7 +223,6 @@ CREATE TABLE public.schedules (
 --
 
 CREATE SEQUENCE public.schedules_schedule_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -277,8 +251,8 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.staffs (
-    staff_id integer NOT NULL,
-    acc_id integer NOT NULL,
+    staff_id bigint NOT NULL,
+    acc_id bigint NOT NULL,
     full_name text NOT NULL,
     date_of_birth date NOT NULL,
     gender character varying(3) NOT NULL,
@@ -291,7 +265,6 @@ CREATE TABLE public.staffs (
 --
 
 CREATE SEQUENCE public.staffs_staff_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -328,13 +301,6 @@ ALTER TABLE ONLY public.prescription_details ALTER COLUMN detail_id SET DEFAULT 
 
 
 --
--- Name: prescription_details prescription_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.prescription_details ALTER COLUMN prescription_id SET DEFAULT nextval('public.prescription_details_prescription_id_seq'::regclass);
-
-
---
 -- Name: prescriptions prescription_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -363,11 +329,43 @@ ALTER TABLE ONLY public.staffs ALTER COLUMN staff_id SET DEFAULT nextval('public
 
 
 --
+-- Name: accounts accounts_citizen_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_citizen_id_key UNIQUE (citizen_id);
+
+
+--
+-- Name: accounts accounts_email_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_email_key UNIQUE (email);
+
+
+--
+-- Name: accounts accounts_phone_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_phone_key UNIQUE (phone);
+
+
+--
 -- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.accounts
     ADD CONSTRAINT accounts_pkey PRIMARY KEY (acc_id);
+
+
+--
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (from_acc_id, to_acc_id, sent_at);
 
 
 --
