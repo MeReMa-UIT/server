@@ -37,6 +37,27 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 	return creds, nil
 }
 
+func GetAccountInfo(ctx context.Context, accID string) (models.AccountInfo, error) {
+	const query = `
+		SELECT acc_id, citizen_id, phone, email, role, created_at
+		FROM accounts
+		WHERE acc_id = $1
+		LIMIT 1
+	`
+
+	rows, _ := dbpool.Query(ctx, query, accID)
+	accountInfo, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.AccountInfo])
+
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return models.AccountInfo{}, errs.ErrAccountNotExist
+		}
+		return models.AccountInfo{}, err
+	}
+
+	return accountInfo, nil
+}
+
 func CheckEmailAndCitizenID(ctx context.Context, req models.AccountRecoverRequest) error {
 	const query = `
 		SELECT EXISTS(

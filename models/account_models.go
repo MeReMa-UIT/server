@@ -2,15 +2,14 @@ package models
 
 import "time"
 
-// type Account struct {
-// 	AccID        uint      `json:"acc_id" db:"acc_id"`
-// 	CitizenID    string    `json:"citizen_id" db:"citizen_id"`
-// 	PasswordHash string    `json:"-" db:"password_hash"`
-// 	Phone        string    `json:"phone" db:"phone"`
-// 	Email        *string   `json:"email,omitempty" db:"email"`
-// 	Role         string    `json:"role" db:"role"`
-// 	CreatedAt    time.Time `json:"created_at" db:"created_at"`
-// }
+type AccountInfo struct {
+	AccID     int       `json:"acc_id" db:"acc_id"`
+	CitizenID string    `json:"citizen_id" db:"citizen_id"`
+	Phone     string    `json:"phone" db:"phone"`
+	Email     string    `json:"email" db:"email"`
+	Role      string    `json:"role" db:"role"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+}
 
 type LoginRequest struct {
 	Identifier string `json:"id" db:"id"`
@@ -44,13 +43,6 @@ type AccountRegistrationResponse struct {
 	Token string `json:"token"`
 	AccID int    `json:"acc_id"`
 }
-
-// type AccountRegisterResponse struct {
-// 	CitizenID string `json:"citizen_id" db:"citizen_id"`
-// 	Phone     string `json:"phone" db:"phone"`
-// 	Email     string `json:"email" db:"email"`
-// 	Password  string `json:"password" db:"password"`
-// }
 
 type PatientRegistrationRequest struct {
 	AccID                      int       `json:"acc_id" db:"acc_id"`

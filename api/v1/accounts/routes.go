@@ -13,4 +13,5 @@ func Routes(r *gin.RouterGroup) {
 	r.POST("/register/create", RegisterAccountHandler)
 	r.POST("/register/patients", RegisterPatientHandler)
 	r.POST("/register/staffs", RegisterStaffHandler)
+	r.GET("/profile", GetAccountInfoHandler)
 }
