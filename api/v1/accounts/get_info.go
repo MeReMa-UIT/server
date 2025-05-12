@@ -8,6 +8,19 @@ import (
 	getinfo "github.com/merema-uit/server/services/get_info"
 )
 
+// @Get account info godoc
+// @Summary Get account info
+// @Description API for user to get account info
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} models.AccountInfo
+// @Failure 400
+// @Failure 401
+// @Failure 404
+// @Failure 500
+// @Router /accounts/get_info [get]
 func GetAccountInfoHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	accountInfo, err := getinfo.GetAccountInfo(c.Request.Context(), authHeader)

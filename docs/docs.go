@@ -19,6 +19,46 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/accounts/get_info": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "API for user to get account info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get account info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/accounts/login": {
             "post": {
                 "description": "API for user to login",
@@ -105,49 +145,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/accounts/recovery/confirm": {
-            "post": {
-                "description": "Confirm recovery OTP",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "accounts"
-                ],
-                "summary": "Confirm recovery OTP",
-                "parameters": [
-                    {
-                        "description": "Recovery OTP",
-                        "name": "credentials",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.AccountRecoverConfirmRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.AccountRecoverConfirmResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
         "/accounts/recovery/reset": {
             "put": {
                 "security": [
@@ -189,6 +186,49 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/accounts/recovery/verify": {
+            "post": {
+                "description": "Confirm recovery OTP",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Confirm recovery OTP",
+                "parameters": [
+                    {
+                        "description": "Recovery OTP",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountRecoverConfirmRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountRecoverConfirmResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -267,13 +307,6 @@ const docTemplate = `{
                 "summary": "Register new account",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Format: Bearer {token}",
-                        "name": "Authentication:Bearer",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
                         "description": "User registration data",
                         "name": "user",
                         "in": "body",
@@ -298,6 +331,9 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden"
+                    },
+                    "409": {
+                        "description": "Conflict"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -403,6 +439,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.AccountInfo": {
+            "type": "object",
+            "properties": {
+                "acc_id": {
+                    "type": "integer"
+                },
+                "citizen_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
         "models.AccountRecoverConfirmRequest": {
             "type": "object",
             "properties": {
@@ -436,6 +495,9 @@ const docTemplate = `{
         "models.AccountRegistrationRequest": {
             "type": "object",
             "properties": {
+                "citizen_id": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -450,6 +512,9 @@ const docTemplate = `{
         "models.AccountRegistrationResponse": {
             "type": "object",
             "properties": {
+                "acc_id": {
+                    "type": "integer"
+                },
                 "token": {
                     "type": "string"
                 }
@@ -471,7 +536,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "token": {
-                    "description": "JWT token, if acc ID = -1, jwt contains citizen ID to register new account, otherwise it contains acc ID",
+                    "description": "JWT token. If acc ID = -1, token will allow user to register new account, otherwise token will allow user to add new patient or staff",
                     "type": "string"
                 }
             }
@@ -506,6 +571,9 @@ const docTemplate = `{
         "models.PatientRegistrationRequest": {
             "type": "object",
             "properties": {
+                "acc_id": {
+                    "type": "integer"
+                },
                 "address": {
                     "type": "string"
                 },
@@ -538,6 +606,9 @@ const docTemplate = `{
         "models.StaffRegistrationRequest": {
             "type": "object",
             "properties": {
+                "acc_id": {
+                    "type": "integer"
+                },
                 "date_of_birth": {
                     "type": "string"
                 },
