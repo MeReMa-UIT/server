@@ -84,6 +84,17 @@ definitions:
       new_password:
         type: string
     type: object
+  models.PatientBriefInfo:
+    properties:
+      date_of_birth:
+        type: string
+      full_name:
+        type: string
+      gender:
+        type: string
+      patient_id:
+        type: string
+    type: object
   models.PatientRegistrationRequest:
     properties:
       acc_id:
@@ -105,6 +116,19 @@ definitions:
       health_insurance_number:
         type: string
       nationality:
+        type: string
+    type: object
+  models.StaffInfo:
+    properties:
+      date_of_birth:
+        type: string
+      department:
+        type: string
+      full_name:
+        type: string
+      gender:
+        type: string
+      staff_id:
         type: string
     type: object
   models.StaffRegistrationRequest:
@@ -130,29 +154,31 @@ info:
   title: MeReMa Server API
   version: "1.0"
 paths:
-  /accounts/get_info:
+  /accounts:
     get:
       consumes:
       - application/json
-      description: API for user to get account info
+      description: API for admin to get account list
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.AccountInfo'
+            items:
+              $ref: '#/definitions/models.AccountInfo'
+            type: array
         "400":
           description: Bad Request
         "401":
           description: Unauthorized
-        "404":
-          description: Not Found
+        "403":
+          description: Forbidden
         "500":
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get account info
+      summary: Get account list (admin)
       tags:
       - accounts
   /accounts/login:
@@ -183,6 +209,31 @@ paths:
         "500":
           description: Internal Server Error
       summary: Login
+      tags:
+      - accounts
+  /accounts/profile:
+    get:
+      consumes:
+      - application/json
+      description: API for user to get account info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AccountInfo'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get account info
       tags:
       - accounts
   /accounts/recovery:
@@ -273,7 +324,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Initiate registration
+      description: Check whether the citizen ID is already registered
       parameters:
       - description: Initiate registration data
         in: body
@@ -298,7 +349,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Check whether the citizen ID is already registered
+      summary: Initiate registration (admin, receptionist)
       tags:
       - accounts
   /accounts/register/create:
@@ -332,7 +383,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Register new account
+      summary: Register new account (admin, receptionist)
       tags:
       - accounts
   /accounts/register/patients:
@@ -362,7 +413,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Register new patient
+      summary: Register new patient (receptionist)
       tags:
       - accounts
   /accounts/register/staffs:
@@ -392,9 +443,59 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Register new staff
+      summary: Register new staff (admin)
       tags:
       - accounts
+  /patients:
+    get:
+      consumes:
+      - application/json
+      description: Get patient list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PatientBriefInfo'
+            type: array
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get patient list (receptionist, doctor)
+      tags:
+      - patients
+  /staffs:
+    get:
+      consumes:
+      - application/json
+      description: Get staff list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.StaffInfo'
+            type: array
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get staff list (admin)
+      tags:
+      - staffs
 securityDefinitions:
   BearerAuth:
     description: 'Provide the JWT token as a header with format "Authorization: Bearer

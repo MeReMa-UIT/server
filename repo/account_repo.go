@@ -37,6 +37,19 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 	return creds, nil
 }
 
+func GetAccountList(ctx context.Context) ([]models.AccountInfo, error) {
+	const query = `
+		SELECT acc_id, citizen_id, phone, email, role, created_at
+		FROM accounts
+	`
+	rows, _ := dbpool.Query(ctx, query)
+	list, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.AccountInfo])
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
+}
+
 func GetAccountInfo(ctx context.Context, accID string) (models.AccountInfo, error) {
 	const query = `
 		SELECT acc_id, citizen_id, phone, email, role, created_at

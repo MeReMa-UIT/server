@@ -280,6 +280,15 @@ ALTER SEQUENCE public.staffs_staff_id_seq OWNED BY public.staffs.staff_id;
 
 
 --
+-- Name: test; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.test (
+    path text
+);
+
+
+--
 -- Name: accounts acc_id; Type: DEFAULT; Schema: public; Owner: -
 --
 

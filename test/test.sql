@@ -16,3 +16,5 @@ WHERE     patient_id >= 1;
 UPDATE    accounts
 SET       role = 'admin'
 WHERE     acc_id >= 1;
+
+CREATE    TABLE test (path text);

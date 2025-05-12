@@ -5,10 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	errs "github.com/merema-uit/server/models/errors"
-	getinfo "github.com/merema-uit/server/services/get_info"
+	"github.com/merema-uit/server/services/retrieval"
+	"github.com/merema-uit/server/utils"
 )
 
-// @Get account info godoc
+// Get account info godoc
 // @Summary Get account info
 // @Description API for user to get account info
 // @Tags accounts
@@ -20,10 +21,10 @@ import (
 // @Failure 401
 // @Failure 404
 // @Failure 500
-// @Router /accounts/get_info [get]
+// @Router /accounts/profile [get]
 func GetAccountInfoHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	accountInfo, err := getinfo.GetAccountInfo(c.Request.Context(), authHeader)
+	accountInfo, err := retrieval.GetAccountInfo(c.Request.Context(), authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrAccountNotExist:
@@ -31,9 +32,41 @@ func GetAccountInfoHandler(c *gin.Context) {
 		case errs.ErrExpiredToken, errs.ErrMalformedToken, errs.ErrInvalidToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		default:
-			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			utils.Logger.Error("Error getting account info", "error", err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		}
 		return
 	}
 	c.JSON(http.StatusOK, accountInfo)
+}
+
+// Get account list godoc
+// @Summary Get account list (admin)
+// @Description API for admin to get account list
+// @Tags accounts
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} models.AccountInfo
+// @Failure 400
+// @Failure 401
+// @Failure 403
+// @Failure 500
+// @Router /accounts [get]
+func GetAccountListHandler(c *gin.Context) {
+	authHeader := c.GetHeader("Authorization")
+	list, err := retrieval.GetAccountList(c.Request.Context(), authHeader)
+	if err != nil {
+		switch err {
+		case errs.ErrExpiredToken, errs.ErrMalformedToken, errs.ErrInvalidToken:
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		case errs.ErrPermissionDenied:
+			c.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
+		default:
+			utils.Logger.Error("Error getting accounts list", "error", err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		}
+		return
+	}
+	c.IndentedJSON(http.StatusOK, list)
 }

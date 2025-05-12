@@ -36,3 +36,16 @@ func StoreStaffInfo(ctx context.Context, req models.StaffRegistrationRequest) er
 
 	return tx.Commit(ctx)
 }
+
+func GetStaffList(ctx context.Context) ([]models.StaffInfo, error) {
+	const query = `
+		SELECT staff_id, full_name, date_of_birth, gender, department
+		FROM staffs
+	`
+	rows, _ := dbpool.Query(ctx, query)
+	list, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.StaffInfo])
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
+}

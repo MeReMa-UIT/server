@@ -19,14 +19,14 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/accounts/get_info": {
+        "/accounts": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "API for user to get account info",
+                "description": "API for admin to get account list",
                 "consumes": [
                     "application/json"
                 ],
@@ -36,12 +36,15 @@ const docTemplate = `{
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Get account info",
+                "summary": "Get account list (admin)",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.AccountInfo"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AccountInfo"
+                            }
                         }
                     },
                     "400": {
@@ -50,8 +53,8 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized"
                     },
-                    "404": {
-                        "description": "Not Found"
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -88,6 +91,46 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.LoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/accounts/profile": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "API for user to get account info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get account info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountInfo"
                         }
                     },
                     "400": {
@@ -243,7 +286,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Initiate registration",
+                "description": "Check whether the citizen ID is already registered",
                 "consumes": [
                     "application/json"
                 ],
@@ -253,7 +296,7 @@ const docTemplate = `{
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Check whether the citizen ID is already registered",
+                "summary": "Initiate registration (admin, receptionist)",
                 "parameters": [
                     {
                         "description": "Initiate registration data",
@@ -304,7 +347,7 @@ const docTemplate = `{
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Register new account",
+                "summary": "Register new account (admin, receptionist)",
                 "parameters": [
                     {
                         "description": "User registration data",
@@ -358,7 +401,7 @@ const docTemplate = `{
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Register new patient",
+                "summary": "Register new patient (receptionist)",
                 "parameters": [
                     {
                         "description": "Patient registration data",
@@ -406,7 +449,7 @@ const docTemplate = `{
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Register new staff",
+                "summary": "Register new staff (admin)",
                 "parameters": [
                     {
                         "description": "Staff registration data",
@@ -424,6 +467,86 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/patients": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get patient list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "patients"
+                ],
+                "summary": "Get patient list (receptionist, doctor)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.PatientBriefInfo"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/staffs": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get staff list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "staffs"
+                ],
+                "summary": "Get staff list (admin)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.StaffInfo"
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -568,6 +691,23 @@ const docTemplate = `{
                 }
             }
         },
+        "models.PatientBriefInfo": {
+            "type": "object",
+            "properties": {
+                "date_of_birth": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "patient_id": {
+                    "type": "string"
+                }
+            }
+        },
         "models.PatientRegistrationRequest": {
             "type": "object",
             "properties": {
@@ -599,6 +739,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "nationality": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.StaffInfo": {
+            "type": "object",
+            "properties": {
+                "date_of_birth": {
+                    "type": "string"
+                },
+                "department": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "staff_id": {
                     "type": "string"
                 }
             }

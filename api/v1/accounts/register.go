@@ -12,8 +12,8 @@ import (
 )
 
 // Initiate registration godoc
-// @Summary Check whether the citizen ID is already registered
-// @Description Initiate registration
+// @Summary Initiate registration (admin, receptionist)
+// @Description Check whether the citizen ID is already registered
 // @Tags accounts
 // @Accept json
 // @Produce json
@@ -52,7 +52,7 @@ func InitRegistrationHandler(ctx *gin.Context) {
 }
 
 // Register account godoc
-// @Summary Register new account
+// @Summary Register new account (admin, receptionist)
 // @Description Create a new account
 // @Tags accounts
 // @Accept json
@@ -98,7 +98,7 @@ func RegisterAccountHandler(ctx *gin.Context) {
 }
 
 // Register patient godoc
-// @Summary Register new patient
+// @Summary Register new patient (receptionist)
 // @Description Create a new patient account
 // @Tags accounts
 // @Accept json
@@ -139,7 +139,7 @@ func RegisterPatientHandler(ctx *gin.Context) {
 }
 
 // Register staff godoc
-// @Summary Register new staff
+// @Summary Register new staff (admin)
 // @Description Create a new staff account
 // @Tags accounts
 // @Accept json
