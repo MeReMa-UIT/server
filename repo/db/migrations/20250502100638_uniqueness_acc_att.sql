@@ -34,19 +34,19 @@ ALTER     TABLE accounts
 DROP      CONSTRAINT IF EXISTS unique_phone;
 
 ALTER     SEQUENCE accounts_acc_id_seq
-RESTART   WITH 0;
+RESTART   WITH 1;
 
 ALTER     SEQUENCE patients_patient_id_seq
-RESTART   WITH 0;
+RESTART   WITH 1;
 
 ALTER     SEQUENCE staffs_staff_id_seq
-RESTART   WITH 0;
+RESTART   WITH 1;
 
 ALTER     SEQUENCE records_record_id_seq
-RESTART   WITH 0;
+RESTART   WITH 1;
 
 ALTER     SEQUENCE prescriptions_prescription_id_seq
-RESTART   WITH 0;
+RESTART   WITH 1;
 
 ALTER     SEQUENCE schedules_schedule_id_seq
-RESTART   WITH 0;
+RESTART   WITH 1;

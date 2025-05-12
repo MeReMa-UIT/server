@@ -67,15 +67,15 @@ CREATE TABLE public.messages (
 CREATE TABLE public.patients (
     patient_id bigint NOT NULL,
     acc_id bigint NOT NULL,
-    full_name character varying(50) NOT NULL,
+    full_name text NOT NULL,
     date_of_birth date NOT NULL,
     gender character varying(3) NOT NULL,
-    ethnicity character varying(15) NOT NULL,
-    nationality character varying(30),
+    ethnicity text NOT NULL,
+    nationality text NOT NULL,
     address text NOT NULL,
     health_insurance_expired_date date,
     health_insurance_number character(15),
-    emergency_contact_info character varying NOT NULL
+    emergency_contact_info text NOT NULL
 );
 
 
@@ -214,7 +214,7 @@ CREATE TABLE public.schedules (
     queue_number integer NOT NULL,
     examination_date date NOT NULL,
     expected_examination_time time with time zone NOT NULL,
-    status character varying(30) NOT NULL
+    status text NOT NULL
 );
 
 

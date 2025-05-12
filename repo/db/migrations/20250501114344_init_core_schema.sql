@@ -21,15 +21,15 @@ CREATE    TABLE "staffs" (
 CREATE    TABLE "patients" (
           "patient_id" bigserial PRIMARY KEY NOT NULL,
           "acc_id" BIGINT NOT NULL,
-          "full_name" VARCHAR(50) NOT NULL,
+          "full_name" text NOT NULL,
           "date_of_birth" DATE NOT NULL,
           "gender" VARCHAR(3) NOT NULL,
-          "ethnicity" VARCHAR(15) NOT NULL,
-          "nationality" VARCHAR(30),
+          "ethnicity" text NOT NULL,
+          "nationality" text NOT NULL,
           "address" text NOT NULL,
           "health_insurance_expired_date" DATE,
           "health_insurance_number" CHAR(15),
-          "emergency_contact_info" VARCHAR NOT NULL
+          "emergency_contact_info" text NOT NULL
           );
 
 CREATE    TABLE "records" (
@@ -80,7 +80,7 @@ CREATE    TABLE "schedules" (
           "queue_number" INT NOT NULL,
           "examination_date" DATE NOT NULL,
           "expected_examination_time" timetz NOT NULL,
-          "status" VARCHAR(30) NOT NULL
+          "status" text NOT NULL
           );
 
 ALTER     TABLE "staffs" ADD FOREIGN KEY ("acc_id") REFERENCES "accounts" ("acc_id");
