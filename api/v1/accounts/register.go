@@ -150,6 +150,7 @@ func RegisterPatientHandler(ctx *gin.Context) {
 // @Failure 400
 // @Failure 401
 // @Failure 403
+// @Failure 409
 // @Failure 500
 // @Router /accounts/register/staffs [post]
 func RegisterStaffHandler(ctx *gin.Context) {
@@ -169,6 +170,8 @@ func RegisterStaffHandler(ctx *gin.Context) {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		case errs.ErrPermissionDenied:
 			ctx.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
+		case errs.ErrAccountAlreadyLinked:
+			ctx.JSON(http.StatusConflict, gin.H{"error": "Account already linked with other staff"})
 		default:
 			utils.Logger.Error("Can't register new staff", "error", err.Error())
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})

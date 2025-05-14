@@ -17,4 +17,12 @@ UPDATE    accounts
 SET       role = 'admin'
 WHERE     acc_id >= 1;
 
-CREATE    TABLE test (path text);
+DROP      TABLE IF EXISTS test;
+
+CREATE    TABLE test (test jsonb);
+
+INSERT    INTO test (test)
+VALUES    ('');
+
+SELECT    *
+FROM      test;

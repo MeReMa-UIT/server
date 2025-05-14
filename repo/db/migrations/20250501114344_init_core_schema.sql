@@ -11,11 +11,11 @@ CREATE    TABLE "accounts" (
 
 CREATE    TABLE "staffs" (
           "staff_id" bigserial PRIMARY KEY NOT NULL,
-          "acc_id" BIGINT NOT NULL,
+          "acc_id" BIGINT UNIQUE NOT NULL,
+          "department" text NOT NULL,
           "full_name" text NOT NULL,
           "date_of_birth" DATE NOT NULL,
-          "gender" VARCHAR(3) NOT NULL,
-          "department" text NOT NULL
+          "gender" VARCHAR(3) NOT NULL
           );
 
 CREATE    TABLE "patients" (
@@ -28,7 +28,7 @@ CREATE    TABLE "patients" (
           "nationality" text NOT NULL,
           "address" text NOT NULL,
           "health_insurance_expired_date" DATE,
-          "health_insurance_number" CHAR(15),
+          "health_insurance_number" CHAR(15) UNIQUE,
           "emergency_contact_info" text NOT NULL
           );
 
@@ -37,12 +37,25 @@ CREATE    TABLE "records" (
           "patient_id" BIGINT NOT NULL,
           "doctor_id" BIGINT NOT NULL,
           "type" text NOT NULL,
-          "main_diagnosis" text,
-          "secondary_diagnosis" text,
-          "record_detail_path" text NOT NULL,
-          "discharged_at" timestamptz,
+          "primary_diagnosis" VARCHAR(10) NOT NULL,
+          "secondary_diagnosis" VARCHAR(10) NOT NULL,
           "created_at" timestamptz NOT NULL DEFAULT (now ()),
-          "expired_at" timestamptz NOT NULL
+          "expired_at" timestamptz NOT NULL,
+          "record_detail" jsonb
+          );
+
+CREATE    TABLE "diagnoses" (
+          "icd_code" VARCHAR(10) PRIMARY KEY NOT NULL,
+          "name" text NOT NULL,
+          "detail_info" text
+          );
+
+CREATE    TABLE "record_attachments" (
+          "attachment_id" bigserial PRIMARY KEY NOT NULL,
+          "record_id" BIGINT NOT NULL,
+          "type" text NOT NULL,
+          "file_path" text NOT NULL,
+          "uploaded_at" timestamptz NOT NULL DEFAULT (now ())
           );
 
 CREATE    TABLE "prescriptions" (
@@ -57,13 +70,22 @@ CREATE    TABLE "prescriptions" (
 CREATE    TABLE "prescription_details" (
           "detail_id" bigserial PRIMARY KEY NOT NULL,
           "prescription_id" BIGINT NOT NULL,
-          "medication_name" text NOT NULL,
-          "dosage" INT NOT NULL,
+          "med_id" BIGINT NOT NULL,
+          "dosage" DECIMAL(10, 2) NOT NULL,
           "dosage_unit" VARCHAR(20) NOT NULL,
           "duration_days" INT NOT NULL,
           "quantity" INT NOT NULL,
           "frequency" text NOT NULL,
           "instructions" text NOT NULL
+          );
+
+CREATE    TABLE "medications" (
+          "med_id" bigserial PRIMARY KEY NOT NULL,
+          "name" text NOT NULL,
+          "generic_name" text,
+          "med_type" VARCHAR(50) NOT NULL,
+          "strength" VARCHAR(50),
+          "manufacturer" text NOT NULL
           );
 
 CREATE    TABLE "messages" (
@@ -91,9 +113,17 @@ ALTER     TABLE "records" ADD FOREIGN KEY ("patient_id") REFERENCES "patients" (
 
 ALTER     TABLE "records" ADD FOREIGN KEY ("doctor_id") REFERENCES "staffs" ("staff_id");
 
+ALTER     TABLE "records" ADD FOREIGN KEY ("primary_diagnosis") REFERENCES "diagnoses" ("icd_code");
+
+ALTER     TABLE "records" ADD FOREIGN KEY ("secondary_diagnosis") REFERENCES "diagnoses" ("icd_code");
+
+ALTER     TABLE "record_attachments" ADD FOREIGN KEY ("record_id") REFERENCES "records" ("record_id");
+
 ALTER     TABLE "prescriptions" ADD FOREIGN KEY ("record_id") REFERENCES "records" ("record_id");
 
 ALTER     TABLE "prescription_details" ADD FOREIGN KEY ("prescription_id") REFERENCES "prescriptions" ("prescription_id");
+
+ALTER     TABLE "prescription_details" ADD FOREIGN KEY ("med_id") REFERENCES "medications" ("med_id");
 
 ALTER     TABLE "messages" ADD FOREIGN KEY ("from_acc_id") REFERENCES "accounts" ("acc_id");
 
@@ -106,11 +136,17 @@ DROP      TABLE if EXISTS "schedules";
 
 DROP      TABLE if EXISTS "prescription_details";
 
+DROP      TABLE if EXISTS "medications";
+
 DROP      TABLE if EXISTS "prescriptions";
 
 DROP      TABLE if EXISTS "messages";
 
+DROP      TABLE if EXISTS "record_attachments";
+
 DROP      TABLE if EXISTS "records";
+
+DROP      TABLE if EXISTS "diagnoses";
 
 DROP      TABLE if EXISTS "patients";
 

@@ -49,6 +49,50 @@ ALTER SEQUENCE public.accounts_acc_id_seq OWNED BY public.accounts.acc_id;
 
 
 --
+-- Name: diagnoses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.diagnoses (
+    icd_code character varying(10) NOT NULL,
+    name text NOT NULL,
+    detail_info text
+);
+
+
+--
+-- Name: medications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.medications (
+    med_id bigint NOT NULL,
+    name text NOT NULL,
+    generic_name text,
+    med_type character varying(50) NOT NULL,
+    strength character varying(50),
+    manufacturer text NOT NULL
+);
+
+
+--
+-- Name: medications_med_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.medications_med_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: medications_med_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.medications_med_id_seq OWNED BY public.medications.med_id;
+
+
+--
 -- Name: messages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -105,8 +149,8 @@ ALTER SEQUENCE public.patients_patient_id_seq OWNED BY public.patients.patient_i
 CREATE TABLE public.prescription_details (
     detail_id bigint NOT NULL,
     prescription_id bigint NOT NULL,
-    medication_name text NOT NULL,
-    dosage integer NOT NULL,
+    med_id bigint NOT NULL,
+    dosage numeric(10,2) NOT NULL,
     dosage_unit character varying(20) NOT NULL,
     duration_days integer NOT NULL,
     quantity integer NOT NULL,
@@ -168,6 +212,38 @@ ALTER SEQUENCE public.prescriptions_prescription_id_seq OWNED BY public.prescrip
 
 
 --
+-- Name: record_attachments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.record_attachments (
+    attachment_id bigint NOT NULL,
+    record_id bigint NOT NULL,
+    type text NOT NULL,
+    file_path text NOT NULL,
+    uploaded_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: record_attachments_attachment_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.record_attachments_attachment_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: record_attachments_attachment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.record_attachments_attachment_id_seq OWNED BY public.record_attachments.attachment_id;
+
+
+--
 -- Name: records; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -176,12 +252,11 @@ CREATE TABLE public.records (
     patient_id bigint NOT NULL,
     doctor_id bigint NOT NULL,
     type text NOT NULL,
-    main_diagnosis text,
-    secondary_diagnosis text,
-    record_detail_path text NOT NULL,
-    discharged_at timestamp with time zone,
+    primary_diagnosis character varying(10) NOT NULL,
+    secondary_diagnosis character varying(10) NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    expired_at timestamp with time zone NOT NULL
+    expired_at timestamp with time zone NOT NULL,
+    record_detail jsonb
 );
 
 
@@ -253,10 +328,10 @@ CREATE TABLE public.schema_migrations (
 CREATE TABLE public.staffs (
     staff_id bigint NOT NULL,
     acc_id bigint NOT NULL,
+    department text NOT NULL,
     full_name text NOT NULL,
     date_of_birth date NOT NULL,
-    gender character varying(3) NOT NULL,
-    department text NOT NULL
+    gender character varying(3) NOT NULL
 );
 
 
@@ -284,7 +359,7 @@ ALTER SEQUENCE public.staffs_staff_id_seq OWNED BY public.staffs.staff_id;
 --
 
 CREATE TABLE public.test (
-    path text
+    test jsonb
 );
 
 
@@ -293,6 +368,13 @@ CREATE TABLE public.test (
 --
 
 ALTER TABLE ONLY public.accounts ALTER COLUMN acc_id SET DEFAULT nextval('public.accounts_acc_id_seq'::regclass);
+
+
+--
+-- Name: medications med_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.medications ALTER COLUMN med_id SET DEFAULT nextval('public.medications_med_id_seq'::regclass);
 
 
 --
@@ -314,6 +396,13 @@ ALTER TABLE ONLY public.prescription_details ALTER COLUMN detail_id SET DEFAULT 
 --
 
 ALTER TABLE ONLY public.prescriptions ALTER COLUMN prescription_id SET DEFAULT nextval('public.prescriptions_prescription_id_seq'::regclass);
+
+
+--
+-- Name: record_attachments attachment_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.record_attachments ALTER COLUMN attachment_id SET DEFAULT nextval('public.record_attachments_attachment_id_seq'::regclass);
 
 
 --
@@ -370,11 +459,35 @@ ALTER TABLE ONLY public.accounts
 
 
 --
+-- Name: diagnoses diagnoses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.diagnoses
+    ADD CONSTRAINT diagnoses_pkey PRIMARY KEY (icd_code);
+
+
+--
+-- Name: medications medications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.medications
+    ADD CONSTRAINT medications_pkey PRIMARY KEY (med_id);
+
+
+--
 -- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.messages
     ADD CONSTRAINT messages_pkey PRIMARY KEY (from_acc_id, to_acc_id, sent_at);
+
+
+--
+-- Name: patients patients_health_insurance_number_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.patients
+    ADD CONSTRAINT patients_health_insurance_number_key UNIQUE (health_insurance_number);
 
 
 --
@@ -402,6 +515,14 @@ ALTER TABLE ONLY public.prescriptions
 
 
 --
+-- Name: record_attachments record_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.record_attachments
+    ADD CONSTRAINT record_attachments_pkey PRIMARY KEY (attachment_id);
+
+
+--
 -- Name: records records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -426,35 +547,19 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: staffs staffs_acc_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.staffs
+    ADD CONSTRAINT staffs_acc_id_key UNIQUE (acc_id);
+
+
+--
 -- Name: staffs staffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.staffs
     ADD CONSTRAINT staffs_pkey PRIMARY KEY (staff_id);
-
-
---
--- Name: accounts unique_citizen_id; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.accounts
-    ADD CONSTRAINT unique_citizen_id UNIQUE (citizen_id);
-
-
---
--- Name: accounts unique_email; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.accounts
-    ADD CONSTRAINT unique_email UNIQUE (email);
-
-
---
--- Name: accounts unique_phone; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.accounts
-    ADD CONSTRAINT unique_phone UNIQUE (phone);
 
 
 --
@@ -482,6 +587,14 @@ ALTER TABLE ONLY public.patients
 
 
 --
+-- Name: prescription_details prescription_details_med_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prescription_details
+    ADD CONSTRAINT prescription_details_med_id_fkey FOREIGN KEY (med_id) REFERENCES public.medications(med_id);
+
+
+--
 -- Name: prescription_details prescription_details_prescription_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -498,6 +611,14 @@ ALTER TABLE ONLY public.prescriptions
 
 
 --
+-- Name: record_attachments record_attachments_record_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.record_attachments
+    ADD CONSTRAINT record_attachments_record_id_fkey FOREIGN KEY (record_id) REFERENCES public.records(record_id);
+
+
+--
 -- Name: records records_doctor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -511,6 +632,22 @@ ALTER TABLE ONLY public.records
 
 ALTER TABLE ONLY public.records
     ADD CONSTRAINT records_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES public.patients(patient_id);
+
+
+--
+-- Name: records records_primary_diagnosis_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.records
+    ADD CONSTRAINT records_primary_diagnosis_fkey FOREIGN KEY (primary_diagnosis) REFERENCES public.diagnoses(icd_code);
+
+
+--
+-- Name: records records_secondary_diagnosis_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.records
+    ADD CONSTRAINT records_secondary_diagnosis_fkey FOREIGN KEY (secondary_diagnosis) REFERENCES public.diagnoses(icd_code);
 
 
 --

@@ -16,3 +16,5 @@ var ErrInvalidToken = errors.New("Invalid token")
 var ErrExpiredToken = errors.New("Expired token")
 var ErrMalformedToken = errors.New("Malformed token")
 var ErrPermissionDenied = errors.New("Permission denied. You are not allowed to perform this action")
+
+var ErrAccountAlreadyLinked = errors.New("Account already linked with other staff")

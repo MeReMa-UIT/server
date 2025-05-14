@@ -2,7 +2,6 @@ package register
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
@@ -18,7 +17,6 @@ func RegisterPatient(ctx context.Context, req models.PatientRegistrationRequest,
 		return err
 	}
 	if claims.Permission != permission.PatientRegistration.String() {
-		fmt.Print(claims.Permission)
 		return errs.ErrPermissionDenied
 	}
 	err = repo.StorePatientInfo(ctx, req)

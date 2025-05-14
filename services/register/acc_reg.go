@@ -30,11 +30,11 @@ func InitRegistration(ctx context.Context, req models.InitRegistrationRequest, a
 	}
 
 	accID, err := repo.GetAccIDByCitizenID(ctx, req.CitizenID)
-	if err == errs.ErrAccountNotExist {
-		token, _ := auth.GenerateJWT(claims.ID, registrationType, auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
-		return token, -1, nil
-	}
 	if err != nil {
+		if err == errs.ErrAccountNotExist {
+			token, _ := auth.GenerateJWT(claims.ID, registrationType, auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
+			return token, -1, nil
+		}
 		return "", -1, err
 	}
 	token, _ := auth.GenerateJWT(claims.ID, registrationType, auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)

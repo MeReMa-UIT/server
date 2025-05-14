@@ -474,6 +474,9 @@ const docTemplate = `{
                     "403": {
                         "description": "Forbidden"
                     },
+                    "409": {
+                        "description": "Conflict"
+                    },
                     "500": {
                         "description": "Internal Server Error"
                     }

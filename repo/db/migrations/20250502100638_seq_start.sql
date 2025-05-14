@@ -1,10 +1,4 @@
 -- migrate:up
-ALTER     TABLE accounts ADD CONSTRAINT unique_citizen_id UNIQUE (citizen_id);
-
-ALTER     TABLE accounts ADD CONSTRAINT unique_email UNIQUE (email);
-
-ALTER     TABLE accounts ADD CONSTRAINT unique_phone UNIQUE (phone);
-
 ALTER     SEQUENCE accounts_acc_id_seq
 RESTART   WITH 1000000000;
 
@@ -24,15 +18,6 @@ ALTER     SEQUENCE schedules_schedule_id_seq
 RESTART   WITH 4000000000;
 
 -- migrate:down
-ALTER     TABLE accounts
-DROP      CONSTRAINT IF EXISTS unique_citizen_id;
-
-ALTER     TABLE accounts
-DROP      CONSTRAINT IF EXISTS unique_email;
-
-ALTER     TABLE accounts
-DROP      CONSTRAINT IF EXISTS unique_phone;
-
 ALTER     SEQUENCE accounts_acc_id_seq
 RESTART   WITH 1;
 

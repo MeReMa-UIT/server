@@ -132,10 +132,10 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegistrationRequest
 		if errors.As(err, &pgErr) {
 			switch pgErr.Code {
 			case "23505":
-				if strings.Contains(pgErr.ConstraintName, "unique_citizen_id") {
+				if strings.Contains(pgErr.ConstraintName, "accounts_citizen_id_key") {
 					return -1, errs.ErrCitizenIDExists
 				}
-				if strings.Contains(pgErr.ConstraintName, "unique_phone") || strings.Contains(pgErr.ConstraintName, "unique_email") {
+				if strings.Contains(pgErr.ConstraintName, "accounts_phone_key") || strings.Contains(pgErr.ConstraintName, "accounts_phone_key") {
 					return -1, errs.ErrEmailOrPhoneAlreadyUsed
 				}
 			}

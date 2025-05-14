@@ -2,9 +2,13 @@ package repo
 
 import (
 	"context"
+	"errors"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/merema-uit/server/models"
+	errs "github.com/merema-uit/server/models/errors"
 )
 
 func StoreStaffInfo(ctx context.Context, req models.StaffRegistrationRequest) error {
@@ -31,6 +35,15 @@ func StoreStaffInfo(ctx context.Context, req models.StaffRegistrationRequest) er
 	).Scan(&staffID)
 
 	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			switch pgErr.Code {
+			case "23505":
+				if strings.Contains(pgErr.ConstraintName, "accounts_acc_id_key") {
+					return errs.ErrAccountAlreadyLinked
+				}
+			}
+		}
 		return err
 	}
 

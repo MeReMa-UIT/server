@@ -37,7 +37,8 @@
 ### To-Do
 - [x] Add mutex lock for repo layer
 - [x] Ultimate rework on error handling
-- [ ] Use native postgresql mutex lock rather than go mutex lock 
+- [x] Use native postgresql mutex lock rather than go mutex lock 
+- [ ] Cache token to prevent reusing
 
 ### Test Accounts
 - Admin 1: 

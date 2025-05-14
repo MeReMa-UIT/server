@@ -1,0 +1,159 @@
+{
+  "thong_tin_chung": {
+    "thong_tin_benh_an": {
+      "ms": "01/BV1",
+      "loai_benh_an": "Bệnh án Nội khoa",
+      "so_y_te": "",
+      "benh_vien": "",
+      "khoa": "",
+      "giuong": "",
+      "ma_yt": "",
+      "so_luu_tru": ""
+    },
+    "hanh_chinh": {
+      "ho_ten": "",
+      "ngay_sinh": "",
+      "gioi_tinh": "",
+      "nghe_nghiep": "",
+      "dan_toc": "",
+      "quoc_tich": "",
+      "dia_chi": "",
+      "noi_lam_viec": "",
+      "doi_tuong": "",
+      "bhyt": {
+        "so_the": "",
+        "gia_tri_den_ngay": ""
+      },
+      "nguoi_lien_he": ""
+    },
+    "quan_ly_nguoi_benh": {
+      "vao_vien": "",
+      "truc_tiep_vao": "",
+      "noi_gioi_thieu": "",
+      "lan_vao_vien": 0,
+      "vao_khoa": {
+        "khoa": "",
+        "thoi_gian": ""
+      },
+      "chuyen_khoa": [
+        {
+          "khoa": "",
+          "thoi_gian": ""
+        },
+        {
+          "khoa": "",
+          "thoi_gian": ""
+        },
+        {
+          "khoa": "",
+          "thoi_gian": ""
+        }
+      ],
+      "chuyen_vien": {
+        "loai": "",
+        "chuyen_den": ""
+      },
+      "ra_vien": {
+        "thoi_gian": "",
+        "ly_do": ""
+      },
+      "tong_ngay_dieu_tri": 0
+    },
+    "chan_doan": {
+      "noi_chuyen_den": "",
+      "kkb_cap_cuu": "",
+      "khi_vao_khoa_dieu_tri": "",
+      "thu_thuat": false,
+      "phau_thuat": false,
+      "ra_vien": {
+        "benh_chinh": "",
+        "benh_kem_theo": ""
+      },
+      "tai_bien": false,
+      "bien_chung": false
+    },
+    "tinh_trang_ra_vien": {
+      "ket_qua_dieu_tri": "",
+      "giai_phau_benh": "",
+      "tinh_hinh_tu_vong": {
+        "thoi_gian": "",
+        "nguyen_nhan": "",
+        "trong_24h_vao_vien": false
+      },
+      "nguyen_nhan_chinh_tu_vong": "",
+      "kham_nghiem_tu_thi": false,
+      "chan_doan_giai_phau_tu_thi": ""
+    }
+  },
+  "benh_an": {
+    "ly_do_vao_vien": {
+      "ly_do": "",
+      "vao_ngay_thu": ""
+    },
+    "hoi_benh": {
+      "qua_trinh_benh_ly": "",
+      "tien_su_benh": {
+        "ban_than": "",
+        "dac_diem_lien_quan_benh": {
+          "di_ung": "",
+          "ruou_bia": "",
+          "ma_tuy": "",
+          "thuoc_la": "",
+          "thuoc_lao": "",
+          "khac": ""
+        },
+        "gia_dinh": ""
+      }
+    },
+    "kham_benh": {
+      "toan_than": {
+        "noi_dung": "",
+        "mach": 0,
+        "nhiet_do": 0.0,
+        "huyet_ap": "",
+        "nhip_tho": 0,
+        "can_nang": 0.0
+      },
+      "cac_co_quan": {
+        "tuan_hoan": "",
+        "ho_hap": "",
+        "tieu_hoa": "",
+        "than_tiet_nieu_sinh_duc": "",
+        "than_kinh": "",
+        "co_xuong_khop": "",
+        "tai_mui_hong": "",
+        "rang_ham_mat": "",
+        "mat": "",
+        "noi_tiet_dinh_duong": ""
+      },
+      "chuyen_khoa": {
+        "tham_tri": "",
+        "ton_thuong": "",
+        "hinh_ve_mo_ta": ""
+      },
+      "can_lam_sang": [],
+      "tom_tat_benh_an": ""
+    },
+    "chan_doan_khi_vao_khoa_dieu_tri": {
+      "benh_chinh": "",
+      "benh_kem_theo": "",
+      "phan_biet": ""
+    },
+    "tien_luong": "",
+    "huong_dieu_tri": ""
+  },
+  "tong_ket_benh_an": {
+    "qua_trinh_benh_ly": "",
+    "tom_tat_can_lam_sang": "",
+    "phuong_phap_dieu_tri": "",
+    "tinh_trang_ra_vien": "",
+    "huong_dieu_tri_tiep_theo": ""
+  },
+  "ho_so_kem_theo": {
+    "x_quang": [],
+    "ct_scanner": [],
+    "sieu_am": [],
+    "xet_nghiem": [],
+    "khac": []
+  }
+}
