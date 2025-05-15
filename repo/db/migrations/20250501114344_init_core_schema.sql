@@ -37,8 +37,8 @@ CREATE    TABLE "records" (
           "patient_id" BIGINT NOT NULL,
           "doctor_id" BIGINT NOT NULL,
           "type" text NOT NULL,
-          "primary_diagnosis" VARCHAR(10) NOT NULL,
-          "secondary_diagnosis" VARCHAR(10) NOT NULL,
+          "primary_diagnosis" VARCHAR(10),
+          "secondary_diagnosis" VARCHAR(10),
           "created_at" timestamptz NOT NULL DEFAULT (now ()),
           "expired_at" timestamptz NOT NULL,
           "record_detail" jsonb

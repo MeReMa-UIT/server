@@ -252,8 +252,8 @@ CREATE TABLE public.records (
     patient_id bigint NOT NULL,
     doctor_id bigint NOT NULL,
     type text NOT NULL,
-    primary_diagnosis character varying(10) NOT NULL,
-    secondary_diagnosis character varying(10) NOT NULL,
+    primary_diagnosis character varying(10),
+    secondary_diagnosis character varying(10),
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     expired_at timestamp with time zone NOT NULL,
     record_detail jsonb
@@ -678,4 +678,5 @@ ALTER TABLE ONLY public.staffs
 INSERT INTO public.schema_migrations (version) VALUES
     ('20250501114344'),
     ('20250502100638'),
-    ('20250506063225');
+    ('20250506063225'),
+    ('20250514151657');
