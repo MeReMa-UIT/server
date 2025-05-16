@@ -1,0 +1,19 @@
+package models
+
+import "time"
+
+type ScheduleBookingRequest struct {
+	ExaminationDate time.Time `json:"examination_date"`
+	Type int       `json:"type"`
+}
+
+type ScheduleBookingResponse struct {
+	ExaminationDate       time.Time `json:"examination_date" db:"examination_date"`
+	ExaminationType       int       `json:"type"`
+	QueueNumber           int       `json:"queue_number"`
+	ExpectedReceptionTime time.Time `json:"expected_reception_time"`
+	Status                int       `json:"status"`
+}
+
+type ScheduleInfo struct {
+}

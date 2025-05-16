@@ -99,12 +99,12 @@ CREATE    TABLE "messages" (
 CREATE    TABLE "schedules" (
           "schedule_id" bigserial PRIMARY KEY NOT NULL,
           "patient_id" BIGINT NOT NULL,
+          "examination_date" DATE NOT NULL,
           "queue_number" INT NOT NULL,
-          "expected_reception_time" DATE NOT NULL,
           "type" INT NOT NULL,
+          "expected_reception_time" timetz NOT NULL,
           "actual_reception_time" timetz,
-          "expected_examination_time" timetz NOT NULL,
-          "status" INT NOT NULL
+          "status" INT NOT NULL DEFAULT 1
           );
 
 ALTER     TABLE "staffs" ADD FOREIGN KEY ("acc_id") REFERENCES "accounts" ("acc_id");

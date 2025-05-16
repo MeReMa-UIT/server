@@ -118,6 +118,39 @@ definitions:
       nationality:
         type: string
     type: object
+  models.ScheduleBookingRequest:
+    properties:
+      examination_date:
+        type: string
+      type:
+        description: 'Type of examination (1: Regular, 2: Service)'
+        enum:
+        - 1
+        - 2
+        type: integer
+    type: object
+  models.ScheduleBookingResponse:
+    properties:
+      examination_date:
+        type: string
+      expected_reception_time:
+        type: string
+      queue_number:
+        type: integer
+      status:
+        description: 'Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled)'
+        enum:
+        - 1
+        - 2
+        - 3
+        type: integer
+      type:
+        description: 'Type of examination (1: Regular, 2: Service)'
+        enum:
+        - 1
+        - 2
+        type: integer
+    type: object
   models.StaffInfo:
     properties:
       date_of_birth:
@@ -473,6 +506,40 @@ paths:
       summary: Get patient list (receptionist, doctor)
       tags:
       - patients
+  /schedules/book:
+    post:
+      consumes:
+      - application/json
+      description: Book Examination Schedule
+      parameters:
+      - description: Schedule Booking Request
+        in: body
+        name: schedule
+        required: true
+        schema:
+          $ref: '#/definitions/models.ScheduleBookingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.ScheduleBookingResponse'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Book Examination Schedule (patient)
+      tags:
+      - schedules
   /staffs:
     get:
       consumes:

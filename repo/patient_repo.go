@@ -5,7 +5,25 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/merema-uit/server/models"
+	errs "github.com/merema-uit/server/models/errors"
 )
+
+func GetPatientID(ctx context.Context, accID string) (int, error) {
+	const query = `
+		SELECT patient_id
+		FROM patients
+		WHERE acc_id = $1
+	`
+	var patientID int
+	err := dbpool.QueryRow(ctx, query, accID).Scan(&patientID)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return -1, errs.ErrPatientNotExist
+		}
+		return -1, err
+	}
+	return patientID, nil
+}
 
 func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest) error {
 	const query = `

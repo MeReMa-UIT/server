@@ -523,6 +523,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/schedules/book": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Book Examination Schedule",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "schedules"
+                ],
+                "summary": "Book Examination Schedule (patient)",
+                "parameters": [
+                    {
+                        "description": "Schedule Booking Request",
+                        "name": "schedule",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ScheduleBookingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.ScheduleBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/staffs": {
             "get": {
                 "security": [
@@ -743,6 +797,53 @@ const docTemplate = `{
                 },
                 "nationality": {
                     "type": "string"
+                }
+            }
+        },
+        "models.ScheduleBookingRequest": {
+            "type": "object",
+            "properties": {
+                "examination_date": {
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type of examination (1: Regular, 2: Service)",
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2
+                    ]
+                }
+            }
+        },
+        "models.ScheduleBookingResponse": {
+            "type": "object",
+            "properties": {
+                "examination_date": {
+                    "type": "string"
+                },
+                "expected_reception_time": {
+                    "type": "string"
+                },
+                "queue_number": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled)",
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ]
+                },
+                "type": {
+                    "description": "Type of examination (1: Regular, 2: Service)",
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2
+                    ]
                 }
             }
         },

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
-	"github.com/merema-uit/server/services/register"
+	"github.com/merema-uit/server/services/registration"
 	"github.com/merema-uit/server/utils"
 )
 
@@ -33,7 +33,7 @@ func InitRegistrationHandler(ctx *gin.Context) {
 	}
 
 	authHeader := ctx.GetHeader("Authorization")
-	token, accID, err := register.InitRegistration(context.Background(), req, authHeader)
+	token, accID, err := registration.InitRegistration(context.Background(), req, authHeader)
 
 	if err != nil {
 		switch err {
@@ -75,7 +75,7 @@ func RegisterAccountHandler(ctx *gin.Context) {
 
 	authHeader := ctx.GetHeader("Authorization")
 
-	token, accID, err := register.RegisterAccount(context.Background(), req, authHeader)
+	token, accID, err := registration.RegisterAccount(context.Background(), req, authHeader)
 
 	if err != nil {
 		switch err {
@@ -120,7 +120,7 @@ func RegisterPatientHandler(ctx *gin.Context) {
 
 	authHeader := ctx.GetHeader("Authorization")
 
-	err := register.RegisterPatient(context.Background(), req, authHeader)
+	err := registration.RegisterPatient(context.Background(), req, authHeader)
 
 	if err != nil {
 		switch err {
@@ -162,7 +162,7 @@ func RegisterStaffHandler(ctx *gin.Context) {
 
 	authHeader := ctx.GetHeader("Authorization")
 
-	err := register.RegisterStaff(context.Background(), req, authHeader)
+	err := registration.RegisterStaff(context.Background(), req, authHeader)
 
 	if err != nil {
 		switch err {

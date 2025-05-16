@@ -6,6 +6,7 @@ import (
 	catalog_api "github.com/merema-uit/server/api/v1/catalog"
 	patients_api "github.com/merema-uit/server/api/v1/patients"
 	records_api "github.com/merema-uit/server/api/v1/records"
+	schedules_api "github.com/merema-uit/server/api/v1/schedules"
 	staffs_api "github.com/merema-uit/server/api/v1/staffs"
 )
 
@@ -17,5 +18,6 @@ func RegisterRoutesV1(r *gin.Engine) {
 		staffs_api.Routes(v1.Group("/staffs"))
 		catalog_api.Routes(v1.Group("/catalog"))
 		records_api.Routes(v1.Group("/records"))
+		schedules_api.Routes(v1.Group("/schedules"))
 	}
 }

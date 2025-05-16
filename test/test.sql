@@ -25,4 +25,4 @@ INSERT    INTO test (test)
 VALUES    ('');
 
 SELECT    *
-FROM      test;
+FROM      queue_number;

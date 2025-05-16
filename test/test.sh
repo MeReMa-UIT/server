@@ -17,3 +17,5 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d 
 curl -H "Authorization: Bearer " http://localhost:8080/api/v1/patients
 curl -H "Authorization: Bearer " http://localhost:8080/api/v1/accounts
 curl -H "Authorization: Bearer " http://localhost:8080/api/v1/staffs
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"examination_date":"", "examination_type":""}' http://localhost:8080/api/v1/schedules/book
