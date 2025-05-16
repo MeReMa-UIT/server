@@ -100,9 +100,11 @@ CREATE    TABLE "schedules" (
           "schedule_id" bigserial PRIMARY KEY NOT NULL,
           "patient_id" BIGINT NOT NULL,
           "queue_number" INT NOT NULL,
-          "examination_date" DATE NOT NULL,
+          "expected_reception_time" DATE NOT NULL,
+          "type" INT NOT NULL,
+          "actual_reception_time" timetz,
           "expected_examination_time" timetz NOT NULL,
-          "status" text NOT NULL
+          "status" INT NOT NULL
           );
 
 ALTER     TABLE "staffs" ADD FOREIGN KEY ("acc_id") REFERENCES "accounts" ("acc_id");
