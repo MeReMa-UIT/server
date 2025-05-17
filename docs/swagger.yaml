@@ -151,6 +151,30 @@ definitions:
         - 2
         type: integer
     type: object
+  models.ScheduleInfo:
+    properties:
+      examination_date:
+        type: string
+      expected_reception_time:
+        type: string
+      queue_number:
+        type: integer
+      schedule_id:
+        type: integer
+      status:
+        description: 'Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled)'
+        enum:
+        - 1
+        - 2
+        - 3
+        type: integer
+      type:
+        description: 'Type of examination (1: Regular, 2: Service)'
+        enum:
+        - 1
+        - 2
+        type: integer
+    type: object
   models.StaffInfo:
     properties:
       date_of_birth:
@@ -506,6 +530,49 @@ paths:
       summary: Get patient list (receptionist, doctor)
       tags:
       - patients
+  /schedules:
+    get:
+      consumes:
+      - application/json
+      description: Get Schedule List
+      parameters:
+      - collectionFormat: csv
+        description: 'Type of examination (1: Regular, 2: Service). Ex: ?type[]=1&type[]=2'
+        in: query
+        items:
+          type: integer
+        name: type[]
+        type: array
+      - collectionFormat: csv
+        description: 'Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled).
+          Ex: ?status[]=1&status[]=2'
+        in: query
+        items:
+          type: integer
+        name: status[]
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ScheduleInfo'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get Schedule List (patient, receptionist)
+      tags:
+      - schedules
   /schedules/book:
     post:
       consumes:

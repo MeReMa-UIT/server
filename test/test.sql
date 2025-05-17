@@ -26,3 +26,6 @@ VALUES    ('');
 
 SELECT    *
 FROM      queue_number;
+
+SELECT    *
+FROM      schedules;

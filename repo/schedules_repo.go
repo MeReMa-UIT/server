@@ -73,3 +73,23 @@ func CreateSchedule(ctx context.Context, req models.ScheduleBookingRequest, queu
 
 	return createdSchedule, nil
 }
+
+func GetScheduleList(ctx context.Context, patientID *int, req models.GetScheduleListRequest) ([]models.ScheduleInfo, error) {
+	const query = `
+		SELECT schedule_id, examination_date, type, queue_number, expected_reception_time, status
+		FROM schedules
+		WHERE ($1::BIGINT IS NULL OR patient_id = $1::BIGINT) 
+			AND type = ANY($2) 
+			AND status = ANY($3)
+		ORDER BY examination_date, queue_number 
+	`
+
+	rows, _ := dbpool.Query(ctx, query, patientID, req.Type, req.Status)
+	schedules, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.ScheduleInfo])
+
+	if err != nil {
+		return nil, err
+	}
+
+	return schedules, nil
+}

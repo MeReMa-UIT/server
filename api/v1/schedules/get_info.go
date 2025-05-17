@@ -17,14 +17,21 @@ import (
 // @Accept json
 // @Produce json
 // @Security BearerAuth
+// @Param type[] query []int false "Type of examination (1: Regular, 2: Service). Ex: ?type[]=1&type[]=2"
+// @Param status[] query []int false "Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled. Ex: ?status[]=1&status[]=2"
+// @Success 200 {array} models.ScheduleInfo
+// @Failure 400
+// @Failure 401
+// @Failure 403
+// @Failure 500
+// @Router /schedules [get]
 func GetScheduleListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 
 	var req models.GetScheduleListRequest
 
-	c.ShouldBindQuery(&req)
-
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindQuery(&req); err != nil {
+		utils.Logger.Error("Error binding query parameters", "error", err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}

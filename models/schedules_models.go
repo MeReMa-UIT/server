@@ -19,4 +19,13 @@ type ScheduleBookingResponse struct {
 }
 
 type ScheduleInfo struct {
+	ScheduleID int `json:"schedule_id" db:"schedule_id"`
+	ScheduleBookingResponse
+}
+
+type GetScheduleListRequest struct {
+	// The list of types of examination (1: Regular, 2: Service)
+	Type []int `form:"type[]"`
+	// The list of statuses of the schedule (1: Waiting, 2: Completed, 3: Cancelled)
+	Status []int `form:"status[]"`
 }
