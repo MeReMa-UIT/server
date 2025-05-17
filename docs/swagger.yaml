@@ -642,6 +642,8 @@ paths:
           description: Forbidden
         "500":
           description: Internal Server Error
+      security:
+      - BearerAuth: []
       summary: Update schedule status (receptionist)
       tags:
       - schedules

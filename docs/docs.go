@@ -644,6 +644,11 @@ const docTemplate = `{
         },
         "/schedules/update-status": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update schedule status from waiting to completed or cancelled",
                 "consumes": [
                     "application/json"

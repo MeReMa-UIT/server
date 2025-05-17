@@ -16,7 +16,7 @@ import (
 // @Tags schedules
 // @Accept json
 // @Produce json
-// Security BearerAuth
+// @Security BearerAuth
 // @Param request body models.UpdateScheduleStatusRequest true "Update schedule status request"
 // @Success 200
 // @Failure 400
