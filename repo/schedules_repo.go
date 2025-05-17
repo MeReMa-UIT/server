@@ -93,3 +93,24 @@ func GetScheduleList(ctx context.Context, patientID *string, req models.GetSched
 
 	return schedules, nil
 }
+
+func UpdateScheduleStatus(ctx context.Context, req models.UpdateScheduleStatusRequest) error {
+	const query = `
+		UPDATE schedules
+		SET status = $1, actual_reception_time = $2
+		WHERE schedule_id = $3
+	`
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	if _, err := tx.Exec(ctx, query, req.NewStatus, req.ReceptionTime, req.ScheduleID); err != nil {
+		return err
+	}
+
+	return tx.Commit(ctx)
+}

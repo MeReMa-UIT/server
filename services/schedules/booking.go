@@ -23,7 +23,7 @@ func BookSchedule(ctx context.Context, authHeader string, req models.ScheduleBoo
 		return models.ScheduleBookingResponse{}, errs.ErrPermissionDenied
 	}
 
-	if req.Type < 1 || req.Type > 2 {
+	if req.Type != models.ScheduleType.Regular && req.Type != models.ScheduleType.Service {
 		return models.ScheduleBookingResponse{}, errs.ErrInvalidExaminationType
 	}
 

@@ -201,6 +201,16 @@ definitions:
       gender:
         type: string
     type: object
+  models.UpdateScheduleStatusRequest:
+    properties:
+      new_status:
+        description: 'New status of the schedule (1: Waiting, 2: Completed, 3: Cancelled)'
+        type: integer
+      reception_time:
+        type: string
+      schedule_id:
+        type: integer
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -544,7 +554,7 @@ paths:
         name: type[]
         type: array
       - collectionFormat: csv
-        description: 'Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled).
+        description: 'Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled.
           Ex: ?status[]=1&status[]=2'
         in: query
         items:
@@ -605,6 +615,34 @@ paths:
       security:
       - BearerAuth: []
       summary: Book Examination Schedule (patient)
+      tags:
+      - schedules
+  /schedules/update-status:
+    put:
+      consumes:
+      - application/json
+      description: Update schedule status from waiting to completed or cancelled
+      parameters:
+      - description: Update schedule status request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateScheduleStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      summary: Update schedule status (receptionist)
       tags:
       - schedules
   /staffs:

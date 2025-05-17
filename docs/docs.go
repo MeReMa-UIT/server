@@ -558,7 +558,7 @@ const docTemplate = `{
                             "type": "integer"
                         },
                         "collectionFormat": "csv",
-                        "description": "Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled). Ex: ?status[]=1\u0026status[]=2",
+                        "description": "Status of the schedule (1: Waiting, 2: Completed, 3: Cancelled. Ex: ?status[]=1\u0026status[]=2",
                         "name": "status[]",
                         "in": "query"
                     }
@@ -635,6 +635,49 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/schedules/update-status": {
+            "put": {
+                "description": "Update schedule status from waiting to completed or cancelled",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "schedules"
+                ],
+                "summary": "Update schedule status (receptionist)",
+                "parameters": [
+                    {
+                        "description": "Update schedule status request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UpdateScheduleStatusRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -983,6 +1026,21 @@ const docTemplate = `{
                 },
                 "gender": {
                     "type": "string"
+                }
+            }
+        },
+        "models.UpdateScheduleStatusRequest": {
+            "type": "object",
+            "properties": {
+                "new_status": {
+                    "description": "New status of the schedule (1: Waiting, 2: Completed, 3: Cancelled)",
+                    "type": "integer"
+                },
+                "reception_time": {
+                    "type": "string"
+                },
+                "schedule_id": {
+                    "type": "integer"
                 }
             }
         }
