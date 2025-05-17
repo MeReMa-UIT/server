@@ -98,7 +98,7 @@ CREATE    TABLE "messages" (
 
 CREATE    TABLE "schedules" (
           "schedule_id" bigserial PRIMARY KEY NOT NULL,
-          "patient_id" BIGINT NOT NULL,
+          "acc_id" BIGINT NOT NULL,
           "examination_date" DATE NOT NULL,
           "queue_number" INT NOT NULL,
           "type" INT NOT NULL,
@@ -131,7 +131,7 @@ ALTER     TABLE "messages" ADD FOREIGN KEY ("from_acc_id") REFERENCES "accounts"
 
 ALTER     TABLE "messages" ADD FOREIGN KEY ("to_acc_id") REFERENCES "accounts" ("acc_id");
 
-ALTER     TABLE "schedules" ADD FOREIGN KEY ("patient_id") REFERENCES "patients" ("patient_id");
+ALTER     TABLE "schedules" ADD FOREIGN KEY ("acc_id") REFERENCES "accounts" ("acc_id");
 
 -- migrate:down
 DROP      TABLE if EXISTS "schedules";

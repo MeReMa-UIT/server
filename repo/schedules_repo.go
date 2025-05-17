@@ -44,9 +44,9 @@ func GetQueueNumber(ctx context.Context, date time.Time) (int, error) {
 	return queueNumber, nil
 }
 
-func CreateSchedule(ctx context.Context, req models.ScheduleBookingRequest, queue_number int, patientID string) (models.ScheduleBookingResponse, error) {
+func CreateSchedule(ctx context.Context, req models.ScheduleBookingRequest, queue_number int, accID string) (models.ScheduleBookingResponse, error) {
 	const query = `
-		INSERT INTO schedules (patient_id, examination_date, queue_number, type, expected_reception_time)
+		INSERT INTO schedules (acc_id, examination_date, queue_number, type, expected_reception_time)
 		VALUES ($1, $2, $3, $4, $5)
 		RETURNING examination_date, type, queue_number, expected_reception_time, status
 	`
@@ -61,7 +61,7 @@ func CreateSchedule(ctx context.Context, req models.ScheduleBookingRequest, queu
 
 	expectedTime := req.ExaminationDate.Add(time.Hour * 7).Add(time.Minute * 5 * time.Duration(queue_number)) // add 7 hours and 5 minutes for each queue number
 
-	rows, _ := tx.Query(ctx, query, patientID, req.ExaminationDate, queue_number, req.Type, expectedTime)
+	rows, _ := tx.Query(ctx, query, accID, req.ExaminationDate, queue_number, req.Type, expectedTime)
 	createdSchedule, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.ScheduleBookingResponse])
 	if err != nil {
 		return models.ScheduleBookingResponse{}, err
@@ -74,11 +74,11 @@ func CreateSchedule(ctx context.Context, req models.ScheduleBookingRequest, queu
 	return createdSchedule, nil
 }
 
-func GetScheduleList(ctx context.Context, patientID *int, req models.GetScheduleListRequest) ([]models.ScheduleInfo, error) {
+func GetScheduleList(ctx context.Context, patientID *string, req models.GetScheduleListRequest) ([]models.ScheduleInfo, error) {
 	const query = `
 		SELECT schedule_id, examination_date, type, queue_number, expected_reception_time, status
 		FROM schedules
-		WHERE ($1::BIGINT IS NULL OR patient_id = $1::BIGINT) 
+		WHERE ($1::BIGINT IS NULL OR acc_id = $1::BIGINT) 
 			AND type = ANY($2) 
 			AND status = ANY($3)
 		ORDER BY examination_date, queue_number 

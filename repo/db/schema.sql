@@ -295,7 +295,7 @@ ALTER SEQUENCE public.records_record_id_seq OWNED BY public.records.record_id;
 
 CREATE TABLE public.schedules (
     schedule_id bigint NOT NULL,
-    patient_id bigint NOT NULL,
+    acc_id bigint NOT NULL,
     examination_date date NOT NULL,
     queue_number integer NOT NULL,
     type integer NOT NULL,
@@ -671,11 +671,11 @@ ALTER TABLE ONLY public.records
 
 
 --
--- Name: schedules schedules_patient_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: schedules schedules_acc_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.schedules
-    ADD CONSTRAINT schedules_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES public.patients(patient_id);
+    ADD CONSTRAINT schedules_acc_id_fkey FOREIGN KEY (acc_id) REFERENCES public.accounts(acc_id);
 
 
 --

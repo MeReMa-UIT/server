@@ -2,7 +2,6 @@ package schedule_services
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
@@ -24,9 +23,8 @@ func BookSchedule(ctx context.Context, authHeader string, req models.ScheduleBoo
 		return models.ScheduleBookingResponse{}, errs.ErrPermissionDenied
 	}
 
-	patientID, err := repo.GetPatientID(ctx, claims.ID)
-	if err != nil {
-		return models.ScheduleBookingResponse{}, err
+	if req.Type < 1 || req.Type > 2 {
+		return models.ScheduleBookingResponse{}, errs.ErrInvalidExaminationType
 	}
 
 	queueNumber, err := repo.GetQueueNumber(ctx, req.ExaminationDate)
@@ -34,7 +32,7 @@ func BookSchedule(ctx context.Context, authHeader string, req models.ScheduleBoo
 		return models.ScheduleBookingResponse{}, err
 	}
 
-	createdSchedule, err := repo.CreateSchedule(ctx, req, queueNumber, fmt.Sprint(patientID))
+	createdSchedule, err := repo.CreateSchedule(ctx, req, queueNumber, claims.ID)
 	if err != nil {
 		return models.ScheduleBookingResponse{}, err
 	}

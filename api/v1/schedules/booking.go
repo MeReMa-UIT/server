@@ -37,6 +37,8 @@ func BookScheduleHandler(c *gin.Context) {
 	response, err := schedule_services.BookSchedule(c, authHeader, req)
 	if err != nil {
 		switch err {
+		case errs.ErrInvalidExaminationType:
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		case errs.ErrInvalidToken, errs.ErrExpiredToken, errs.ErrMalformedToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		case errs.ErrPermissionDenied:
