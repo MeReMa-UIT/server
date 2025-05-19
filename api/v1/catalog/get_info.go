@@ -9,6 +9,18 @@ import (
 	"github.com/merema-uit/server/utils"
 )
 
+// Get Medication List godoc
+// @Summary      Get Medication List (doctor)
+// @Description  Get a list of medications
+// @Tags         Catalog
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200  {array}  models.MedicationInfo
+// @Failure      401
+// @Failure      403
+// @Failure      500
+// @Router       /catalog/medications [get]
 func GetMedicationListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	list, err := retrieval.GetMedicationList(c, authHeader)
@@ -27,6 +39,18 @@ func GetMedicationListHandler(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, list)
 }
 
+// Get Diagnosis List godoc
+// @Summary      Get Diagnosis List (doctor)
+// @Description  Get a list of diagnoses
+// @Tags         Catalog
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200  {array}  models.DiagnosisInfo
+// @Failure      401
+// @Failure      403
+// @Failure      500
+// @Router       /catalog/diagnoses [get]
 func GetDiagnosisListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	list, err := retrieval.GetDiagnosisList(c, authHeader)
