@@ -44,13 +44,14 @@ func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest
 	return tx.Commit(ctx)
 }
 
-func GetPatientList(ctx context.Context) ([]models.PatientBriefInfo, error) {
+func GetPatientList(ctx context.Context, accID *string) ([]models.PatientBriefInfo, error) {
 	const query = `
 		SELECT patient_id, full_name, date_of_birth, gender
 		FROM patients
+		WHERE (acc_id = $1::BIGINT OR $1::BIGINT IS NULL)
 	`
 
-	rows, _ := dbpool.Query(ctx, query)
+	rows, _ := dbpool.Query(ctx, query, accID)
 	list, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.PatientBriefInfo])
 	if err != nil {
 		return nil, err

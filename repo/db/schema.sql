@@ -55,7 +55,7 @@ ALTER SEQUENCE public.accounts_acc_id_seq OWNED BY public.accounts.acc_id;
 CREATE TABLE public.diagnoses (
     icd_code character varying(10) NOT NULL,
     name text NOT NULL,
-    detail_info text
+    description text
 );
 
 

@@ -7,6 +7,10 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d 
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"citizen_id":"", "phone":"", "email":"", "role":""}'  http://localhost:8080/api/v1/accounts/register/create
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"acc_id":"", "full_name":"", "date_of_birth":"", "gender":"", "department":""}'  http://localhost:8080/api/v1/accounts/register/staffs
 
+# Catalog stuff
+curl -H "Authorization: Bearer " http://localhost:8080/api/v1/catalog/medications
+curl -H "Authorization: Bearer " http://localhost:8080/api/v1/catalog/diagnoses
+
 # Account stuff
 curl -H "Authorization: Bearer " http://localhost:8080/api/v1/accounts
 curl -H "Authorization: Bearer " http://localhost:8080/api/v1/accounts/profile

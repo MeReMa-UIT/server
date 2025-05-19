@@ -16,8 +16,12 @@ func GetPatientList(ctx context.Context, authHeader string) ([]models.PatientBri
 	if err != nil {
 		return nil, err
 	}
-	if claims.Permission != permission.Doctor.String() && claims.Permission != permission.Receptionist.String() {
+	switch claims.Permission {
+	case permission.Patient.String():
+		return repo.GetPatientList(ctx, &claims.ID)
+	case permission.Receptionist.String(), permission.Doctor.String():
+		return repo.GetPatientList(ctx, nil)
+	default:
 		return nil, errs.ErrPermissionDenied
 	}
-	return repo.GetPatientList(ctx)
 }

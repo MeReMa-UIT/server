@@ -47,7 +47,7 @@ CREATE    TABLE "records" (
 CREATE    TABLE "diagnoses" (
           "icd_code" VARCHAR(10) PRIMARY KEY NOT NULL,
           "name" text NOT NULL,
-          "detail_info" text
+          "description" text
           );
 
 CREATE    TABLE "record_attachments" (
