@@ -128,9 +128,10 @@ const docTemplate = `{
                 "summary": "Get account info",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "account_info: models.AccountInfo, additional_info: []models.PatientBriefInfo or models.StaffInfo",
                         "schema": {
-                            "$ref": "#/definitions/models.AccountInfo"
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "400": {
@@ -991,7 +992,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "patient_id": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -1127,7 +1128,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "staff_id": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },

@@ -16,7 +16,7 @@ import (
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Success 200 {object} models.AccountInfo
+// @Success 200 {object} map[string]interface{} "account_info: models.AccountInfo, additional_info: []models.PatientBriefInfo or models.StaffInfo"
 // @Failure 400
 // @Failure 401
 // @Failure 404
@@ -24,7 +24,7 @@ import (
 // @Router /accounts/profile [get]
 func GetAccountInfoHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	accountInfo, err := retrieval.GetAccountInfo(c.Request.Context(), authHeader)
+	accountInfo, additionalInfo, err := retrieval.GetAccountInfo(c.Request.Context(), authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrAccountNotExist:
@@ -37,7 +37,7 @@ func GetAccountInfoHandler(c *gin.Context) {
 		}
 		return
 	}
-	c.JSON(http.StatusOK, accountInfo)
+	c.IndentedJSON(http.StatusOK, gin.H{"account_info": accountInfo, "additional_info": additionalInfo})
 }
 
 // Get account list godoc
@@ -55,7 +55,7 @@ func GetAccountInfoHandler(c *gin.Context) {
 // @Router /accounts [get]
 func GetAccountListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	list, err := retrieval.GetAccountList(c.Request.Context(), authHeader)
+	accList, err := retrieval.GetAccountList(c.Request.Context(), authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrExpiredToken, errs.ErrMalformedToken, errs.ErrInvalidToken:
@@ -68,5 +68,5 @@ func GetAccountListHandler(c *gin.Context) {
 		}
 		return
 	}
-	c.IndentedJSON(http.StatusOK, list)
+	c.IndentedJSON(http.StatusOK, accList)
 }

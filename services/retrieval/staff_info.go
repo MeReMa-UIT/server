@@ -21,3 +21,27 @@ func GetStaffList(ctx context.Context, authHeader string) ([]models.StaffInfo, e
 	}
 	return repo.GetStaffList(ctx)
 }
+
+func GetStaffInfo(ctx context.Context, authHeader string, staffID string) (models.StaffInfo, error) {
+	token := auth.ExtractToken(authHeader)
+	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	if err != nil {
+		return models.StaffInfo{}, err
+	}
+
+	var info models.StaffInfo
+	switch claims.Permission {
+	case permission.Admin.String():
+		info, err = repo.GetStaffInfo(ctx, staffID, "0")
+	case permission.Doctor.String(), permission.Receptionist.String():
+		info, err = repo.GetStaffInfo(ctx, "0", claims.ID)
+	default:
+		return models.StaffInfo{}, errs.ErrPermissionDenied
+	}
+
+	if err != nil {
+		return models.StaffInfo{}, err
+	}
+
+	return info, nil
+}

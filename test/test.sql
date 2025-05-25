@@ -29,5 +29,3 @@ FROM      queue_number;
 
 SELECT    *
 FROM      schedules;
-
-DELETE    FROM schedules;

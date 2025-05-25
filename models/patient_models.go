@@ -3,7 +3,7 @@ package models
 import "time"
 
 type PatientInfo struct {
-	PatientID                  string    `json:"patient_id" db:"patient_id"`
+	PatientID                  int       `json:"patient_id" db:"patient_id"`
 	FullName                   string    `json:"full_name" db:"full_name"`
 	DateOfBirth                time.Time `json:"date_of_birth" db:"date_of_birth"`
 	Gender                     string    `json:"gender" db:"gender"`
@@ -16,7 +16,7 @@ type PatientInfo struct {
 }
 
 type PatientBriefInfo struct {
-	PatientID   string    `json:"patient_id" db:"patient_id"`
+	PatientID   int       `json:"patient_id" db:"patient_id"`
 	FullName    string    `json:"full_name" db:"full_name"`
 	DateOfBirth time.Time `json:"date_of_birth" db:"date_of_birth"`
 	Gender      string    `json:"gender" db:"gender"`

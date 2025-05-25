@@ -13,9 +13,11 @@ import (
 func GetPatientList(ctx context.Context, authHeader string) ([]models.PatientBriefInfo, error) {
 	token := auth.ExtractToken(authHeader)
 	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	print("claims:", claims.Permission)
 	if err != nil {
 		return nil, err
 	}
+
 	switch claims.Permission {
 	case permission.Patient.String():
 		return repo.GetPatientList(ctx, &claims.ID)
@@ -25,3 +27,6 @@ func GetPatientList(ctx context.Context, authHeader string) ([]models.PatientBri
 		return nil, errs.ErrPermissionDenied
 	}
 }
+
+// func GetPatientInfo(ctx context.Context, authHeader string, patientID string) (models.PatientInfo, error) {
+// }

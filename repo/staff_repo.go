@@ -62,3 +62,20 @@ func GetStaffList(ctx context.Context) ([]models.StaffInfo, error) {
 	}
 	return list, nil
 }
+
+func GetStaffInfo(ctx context.Context, staffID string, accID string) (models.StaffInfo, error) {
+	const query = `
+		SELECT staff_id, full_name, date_of_birth, gender, department 
+		FROM staffs
+		WHERE staff_id = $1 OR acc_id = $2
+	`
+
+	rows, _ := dbpool.Query(ctx, query, staffID, accID)
+	staffInfo, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.StaffInfo])
+
+	if err != nil {
+		return models.StaffInfo{}, err
+	}
+
+	return staffInfo, nil
+}
