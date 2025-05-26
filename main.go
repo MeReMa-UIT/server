@@ -24,7 +24,7 @@ import (
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
-// @description Provide the JWT token as a header with format "Authorization: Bearer \<token\>"
+// @description Provide the JWT token as a header with format "Bearer \<token\>"
 func main() {
 	repo.ConnectToDB(context.Background(), os.Getenv("DB_URL"))
 	defer repo.CloseDBConnect()
