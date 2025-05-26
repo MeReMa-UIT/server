@@ -28,5 +28,26 @@ func GetPatientList(ctx context.Context, authHeader string) ([]models.PatientBri
 	}
 }
 
-// func GetPatientInfo(ctx context.Context, authHeader string, patientID string) (models.PatientInfo, error) {
-// }
+func GetPatientInfo(ctx context.Context, authHeader string, patientID string) (models.PatientInfo, error) {
+	token := auth.ExtractToken(authHeader)
+	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	if err != nil {
+		return models.PatientInfo{}, err
+	}
+
+	var info models.PatientInfo
+	switch claims.Permission {
+	case permission.Doctor.String(), permission.Receptionist.String():
+		info, err = repo.GetPatientInfo(ctx, patientID, "0")
+	case permission.Patient.String():
+		info, err = repo.GetPatientInfo(ctx, patientID, claims.ID)
+	default:
+		return models.PatientInfo{}, errs.ErrPermissionDenied
+	}
+
+	if err != nil {
+		return models.PatientInfo{}, err
+	}
+
+	return info, nil
+}

@@ -604,6 +604,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/patients/{patient_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get patient info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "patients"
+                ],
+                "summary": "Get patient info (receptionist, doctor, patient)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Patient ID",
+                        "name": "patient_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.PatientInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/schedules": {
             "get": {
                 "security": [
@@ -810,6 +859,55 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/staffs/{staff_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get staff info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "staffs"
+                ],
+                "summary": "Get staff info (primary for admin; doctor, receptionist will only get their own info for whichever staff_id they set)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Staff ID",
+                        "name": "staff_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.StaffInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -989,6 +1087,41 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "gender": {
+                    "type": "string"
+                },
+                "patient_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.PatientInfo": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "date_of_birth": {
+                    "type": "string"
+                },
+                "emergency_contact_info": {
+                    "type": "string"
+                },
+                "ethnicity": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "health_insurance_expired_date": {
+                    "type": "string"
+                },
+                "health_insurance_number": {
+                    "type": "string"
+                },
+                "nationality": {
                     "type": "string"
                 },
                 "patient_id": {

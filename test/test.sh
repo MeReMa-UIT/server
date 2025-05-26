@@ -17,9 +17,11 @@ curl -H "Authorization: Bearer " http://localhost:8080/api/v1/accounts/profile
 
 # Patients stuff
 curl -H "Authorization: Bearer " http://localhost:8080/api/v1/patients
+curl -H "Authorization: Bearer " http://localhost:8080/api/v1/patients/1100000000
 
 # Staffs stuff
 curl -H "Authorization: Bearer " http://localhost:8080/api/v1/staffs
+curl -H "Authorization: Bearer " http://localhost:8080/api/v1/staffs/1200000000
 
 # Schedules stuff
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer " -d '{"examination_date":"", "type":""}' http://localhost:8080/api/v1/schedules/book

@@ -34,7 +34,7 @@ func GetStaffInfo(ctx context.Context, authHeader string, staffID string) (model
 	case permission.Admin.String():
 		info, err = repo.GetStaffInfo(ctx, staffID, "0")
 	case permission.Doctor.String(), permission.Receptionist.String():
-		info, err = repo.GetStaffInfo(ctx, "0", claims.ID)
+		info, err = repo.GetStaffInfo(ctx, staffID, claims.ID)
 	default:
 		return models.StaffInfo{}, errs.ErrPermissionDenied
 	}

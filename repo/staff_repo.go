@@ -74,6 +74,9 @@ func GetStaffInfo(ctx context.Context, staffID string, accID string) (models.Sta
 	staffInfo, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.StaffInfo])
 
 	if err != nil {
+		if err == pgx.ErrNoRows {
+			return models.StaffInfo{}, errs.ErrStaffNotExist
+		}
 		return models.StaffInfo{}, err
 	}
 

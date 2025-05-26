@@ -5,6 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/merema-uit/server/models"
+	errs "github.com/merema-uit/server/models/errors"
 )
 
 func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest) error {
@@ -59,17 +60,20 @@ func GetPatientList(ctx context.Context, accID *string) ([]models.PatientBriefIn
 	return list, nil
 }
 
-// func GetPatientInfo(ctx context.Context, patientID string) (models.PatientInfo, error) {
-// 	const query = `
-// 		SELECT patient_id, full_name, date_of_birth, gender, ethnicity, nationality, address, health_insurance_expired_date, health_insurance_number, emergency_contact_info
-// 		FROM patients
-// 		WHERE patient_id = $1
-// 	`
+func GetPatientInfo(ctx context.Context, patientID string, accID string) (models.PatientInfo, error) {
+	const query = `
+		SELECT patient_id, full_name, date_of_birth, gender, ethnicity, nationality, address, health_insurance_expired_date, health_insurance_number, emergency_contact_info
+		FROM patients
+		WHERE patient_id = $1 AND (acc_id = $2::BIGINT OR $2::BIGINT = 0)
+	`
 
-// 	rows, _ := dbpool.Query(ctx, query, patientID)
-// 	info, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.PatientInfo])
-// 	if err != nil {
-// 		return models.PatientInfo{}, err
-// 	}
-// 	return info, nil
-// }
+	rows, _ := dbpool.Query(ctx, query, patientID, accID)
+	info, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.PatientInfo])
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return models.PatientInfo{}, errs.ErrPatientNotExist
+		}
+		return models.PatientInfo{}, err
+	}
+	return info, nil
+}
