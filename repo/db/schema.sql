@@ -69,6 +69,7 @@ CREATE TABLE public.medications (
     generic_name text,
     med_type character varying(50) NOT NULL,
     strength character varying(50),
+    route_of_administration text NOT NULL,
     manufacturer text NOT NULL
 );
 
@@ -150,11 +151,12 @@ CREATE TABLE public.prescription_details (
     detail_id bigint NOT NULL,
     prescription_id bigint NOT NULL,
     med_id bigint NOT NULL,
-    dosage numeric(10,2) NOT NULL,
-    dosage_unit character varying(20) NOT NULL,
+    morning_dosage numeric(10,2),
+    afternoon_dosage numeric(10,2),
+    evening_dosage numeric(10,2),
     duration_days integer NOT NULL,
-    quantity integer NOT NULL,
-    frequency text NOT NULL,
+    total_dosage numeric(10,2) NOT NULL,
+    dosage_unit character varying(20) NOT NULL,
     instructions text NOT NULL
 );
 
@@ -364,15 +366,6 @@ CREATE SEQUENCE public.staffs_staff_id_seq
 --
 
 ALTER SEQUENCE public.staffs_staff_id_seq OWNED BY public.staffs.staff_id;
-
-
---
--- Name: test; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.test (
-    test jsonb
-);
 
 
 --
@@ -700,4 +693,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20250502100638'),
     ('20250506063225'),
     ('20250514151657'),
-    ('20250516100948');
+    ('20250516100948'),
+    ('20250526090415');

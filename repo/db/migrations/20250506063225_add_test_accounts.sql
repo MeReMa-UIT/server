@@ -44,13 +44,7 @@ VALUES    (
           'patient'
           );
 
-INSERT    INTO staffs (
-          acc_id,
-          full_name,
-          date_of_birth,
-          gender,
-          department
-          )
+INSERT    INTO staffs (acc_id, full_name, date_of_birth, gender, department)
 VALUES    (
           (
           SELECT    acc_id
@@ -63,13 +57,7 @@ VALUES    (
           'Phòng Hành chính'
           );
 
-INSERT    INTO staffs (
-          acc_id,
-          full_name,
-          date_of_birth,
-          gender,
-          department
-          )
+INSERT    INTO staffs (acc_id, full_name, date_of_birth, gender, department)
 VALUES    (
           (
           SELECT    acc_id

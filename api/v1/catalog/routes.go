@@ -1,4 +1,4 @@
-package catalog_api
+package catalogs_api
 
 import "github.com/gin-gonic/gin"
 

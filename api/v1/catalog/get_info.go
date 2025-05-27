@@ -1,4 +1,4 @@
-package catalog_api
+package catalogs_api
 
 import (
 	"net/http"
@@ -12,7 +12,7 @@ import (
 // Get Medication List godoc
 // @Summary      Get Medication List (doctor)
 // @Description  Get a list of medications
-// @Tags         Catalog
+// @Tags         catalogs
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
@@ -42,7 +42,7 @@ func GetMedicationListHandler(c *gin.Context) {
 // Get Diagnosis List godoc
 // @Summary      Get Diagnosis List (doctor)
 // @Description  Get a list of diagnoses
-// @Tags         Catalog
+// @Tags         catalogs
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth

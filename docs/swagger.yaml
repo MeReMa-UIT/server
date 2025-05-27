@@ -100,8 +100,23 @@ definitions:
         type: string
       name:
         type: string
+      route_of_administration:
+        type: string
       strength:
         type: string
+    type: object
+  models.NewPrescriptionRequest:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/models.PrescriptionDetail'
+        type: array
+      is_insurance_covered:
+        type: boolean
+      prescription_note:
+        type: string
+      record_id:
+        type: integer
     type: object
   models.PasswordResetRequest:
     properties:
@@ -164,6 +179,23 @@ definitions:
         type: string
       nationality:
         type: string
+    type: object
+  models.PrescriptionDetail:
+    properties:
+      afternoon_dosage:
+        type: number
+      dosage_unit:
+        type: string
+      duration_days:
+        type: integer
+      evening_dosage:
+        type: number
+      instructions:
+        type: string
+      med_id:
+        type: integer
+      morning_dosage:
+        type: number
     type: object
   models.ScheduleBookingRequest:
     properties:
@@ -588,7 +620,7 @@ paths:
       - BearerAuth: []
       summary: Get Diagnosis List (doctor)
       tags:
-      - Catalog
+      - catalogs
   /catalog/medications:
     get:
       consumes:
@@ -613,7 +645,7 @@ paths:
       - BearerAuth: []
       summary: Get Medication List (doctor)
       tags:
-      - Catalog
+      - catalogs
   /patients:
     get:
       consumes:
@@ -670,6 +702,36 @@ paths:
       summary: Get patient info (receptionist, doctor, patient)
       tags:
       - patients
+  /prescriptions/new:
+    post:
+      consumes:
+      - application/json
+      description: Add a new prescription for a patient record
+      parameters:
+      - description: Add New Prescription Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.NewPrescriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Add New Prescription (doctor)
+      tags:
+      - prescriptions
   /schedules:
     get:
       consumes:
@@ -836,8 +898,7 @@ paths:
       - staffs
 securityDefinitions:
   BearerAuth:
-    description: 'Provide the JWT token as a header with format "Authorization: Bearer
-      \<token\>"'
+    description: Provide the JWT token as a header with format "Bearer \<token\>"
     in: header
     name: Authorization
     type: apiKey

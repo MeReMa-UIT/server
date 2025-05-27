@@ -29,3 +29,18 @@ FROM      queue_number;
 
 SELECT    *
 FROM      schedules;
+
+SELECT    *
+FROM      records;
+
+SELECT    *
+FROM      prescriptions;
+
+SELECT    *
+FROM      prescription_details;
+
+DELETE    FROM prescription_details;
+
+DELETE    FROM prescriptions;
+
+DROP      DATABASE IF EXISTS merema;

@@ -499,7 +499,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Catalog"
+                    "catalogs"
                 ],
                 "summary": "Get Diagnosis List (doctor)",
                 "responses": {
@@ -539,7 +539,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Catalog"
+                    "catalogs"
                 ],
                 "summary": "Get Medication List (doctor)",
                 "responses": {
@@ -646,6 +646,54 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/prescriptions/new": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Add a new prescription for a patient record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prescriptions"
+                ],
+                "summary": "Add New Prescription (doctor)",
+                "parameters": [
+                    {
+                        "description": "Add New Prescription Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.NewPrescriptionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -1064,8 +1112,31 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "route_of_administration": {
+                    "type": "string"
+                },
                 "strength": {
                     "type": "string"
+                }
+            }
+        },
+        "models.NewPrescriptionRequest": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PrescriptionDetail"
+                    }
+                },
+                "is_insurance_covered": {
+                    "type": "boolean"
+                },
+                "prescription_note": {
+                    "type": "string"
+                },
+                "record_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -1161,6 +1232,32 @@ const docTemplate = `{
                 },
                 "nationality": {
                     "type": "string"
+                }
+            }
+        },
+        "models.PrescriptionDetail": {
+            "type": "object",
+            "properties": {
+                "afternoon_dosage": {
+                    "type": "number"
+                },
+                "dosage_unit": {
+                    "type": "string"
+                },
+                "duration_days": {
+                    "type": "integer"
+                },
+                "evening_dosage": {
+                    "type": "number"
+                },
+                "instructions": {
+                    "type": "string"
+                },
+                "med_id": {
+                    "type": "integer"
+                },
+                "morning_dosage": {
+                    "type": "number"
                 }
             }
         },
@@ -1303,7 +1400,7 @@ const docTemplate = `{
     },
     "securityDefinitions": {
         "BearerAuth": {
-            "description": "Provide the JWT token as a header with format \"Authorization: Bearer \\\u003ctoken\\\u003e\"",
+            "description": "Provide the JWT token as a header with format \"Bearer \\\u003ctoken\\\u003e\"",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

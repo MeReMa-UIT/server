@@ -9,6 +9,16 @@
       "database": "merema",
       "username": "postgres",
       "password": "pg"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "password": "pg",
+      "username": "postgres",
+      "database": "test",
+      "name": "tmp"
     }
   ]
 }

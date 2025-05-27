@@ -51,352 +51,63 @@ VALUES    ('A09.9', 'Viêm dạ dày ruột nhiễm trùng'),
           ('N40', 'Phì đại tuyến tiền liệt'),
           ('T78.4', 'Dị ứng không xác định');
 
-INSERT    INTO medications (
-          name,
-          generic_name,
-          med_type,
-          strength,
-          manufacturer
-          )
+INSERT    INTO medications (name, generic_name, med_type, strength, route_of_administration, manufacturer)
 VALUES   
-          -- KHÁNG SINH (15 loại)
-          (
-          'Amoxicillin',
-          'Amoxicilin',
-          'viên nang',
-          '500mg',
-          'VN Pharma'
-          ),
-          (
-          'Augmentin',
-          'Amoxicilin/Clavulanat',
-          'viên nén',
-          '625mg',
-          'GlaxoSmithKline'
-          ),
-          (
-          'Azithromycin',
-          'Azithromycin',
-          'viên nén',
-          '500mg',
-          'Pfizer'
-          ),
-          (
-          'Cefixime',
-          'Cefixim',
-          'viên nén',
-          '200mg',
-          'Sandoz'
-          ),
-          (
-          'Ciprofloxacin',
-          'Ciprofloxacin',
-          'viên nén',
-          '500mg',
-          'Bayer'
-          ),
-          (
-          'Erythromycin',
-          'Erythromycin',
-          'viên nén',
-          '250mg',
-          'Abbott'
-          ),
-          (
-          'Metronidazole',
-          'Metronidazol',
-          'viên nén',
-          '500mg',
-          'Sanofi'
-          ),
-          (
-          'Doxycycline',
-          'Doxycyclin',
-          'viên nén',
-          '100mg',
-          'Pfizer'
-          ),
-          (
-          'Clarithromycin',
-          'Clarithromycin',
-          'viên nén',
-          '500mg',
-          'Abbott'
-          ),
-          (
-          'Ceftriaxone',
-          'Ceftriaxon',
-          'lọ tiêm',
-          '1g',
-          'Roche'
-          ),
-          (
-          'Amikacin',
-          'Amikacin',
-          'lọ tiêm',
-          '500mg',
-          'Fresenius Kabi'
-          ),
-          (
-          'Levofloxacin',
-          'Levofloxacin',
-          'viên nén',
-          '500mg',
-          'Sanofi'
-          ),
-          (
-          'Vancomycin',
-          'Vancomycin',
-          'lọ tiêm',
-          '500mg',
-          'Pfizer'
-          ),
-          (
-          'Fluconazole',
-          'Fluconazol',
-          'viên nén',
-          '150mg',
-          'Pfizer'
-          ),
-          (
-          'Acyclovir',
-          'Acyclovir',
-          'viên nén',
-          '400mg',
-          'GSK'
-          ),
-          -- GIẢM ĐAU/HẠ SỐT (10 loại)
-          (
-          'Paracetamol',
-          'Paracetamol',
-          'viên nén',
-          '500mg',
-          'DHG Pharma'
-          ),
-          (
-          'Panadol',
-          'Paracetamol',
-          'viên nén',
-          '500mg',
-          'GSK'
-          ),
-          (
-          'Efferalgan',
-          'Paracetamol',
-          'viên sủi',
-          '500mg',
-          'Sanofi'
-          ),
-          (
-          'Ibuprofen',
-          'Ibuprofen',
-          'viên nén',
-          '400mg',
-          'Bayer'
-          ),
-          (
-          'Diclofenac',
-          'Diclofenac',
-          'viên nén',
-          '50mg',
-          'Novartis'
-          ),
-          (
-          'Meloxicam',
-          'Meloxicam',
-          'viên nén',
-          '7.5mg',
-          'Boehringer'
-          ),
-          (
-          'Celecoxib',
-          'Celecoxib',
-          'viên nang',
-          '200mg',
-          'Pfizer'
-          ),
-          (
-          'Tramadol',
-          'Tramadol',
-          'viên nén',
-          '50mg',
-          'Grunenthal'
-          ),
-          ('Aspirin', 'Aspirin', 'viên nén', '81mg', 'Bayer'),
-          (
-          'Arcoxia',
-          'Etoricoxib',
-          'viên nén',
-          '60mg',
-          'MSD'
-          ),
-          -- TIM MẠCH (8 loại)
-          ('Losartan', 'Losartan', 'viên nén', '50mg', 'MSD'),
-          (
-          'Amlodipine',
-          'Amlodipin',
-          'viên nén',
-          '5mg',
-          'Pfizer'
-          ),
-          (
-          'Bisoprolol',
-          'Bisoprolol',
-          'viên nén',
-          '5mg',
-          'AstraZeneca'
-          ),
-          (
-          'Atorvastatin',
-          'Atorvastatin',
-          'viên nén',
-          '20mg',
-          'Pfizer'
-          ),
-          (
-          'Simvastatin',
-          'Simvastatin',
-          'viên nén',
-          '20mg',
-          'Merck'
-          ),
-          (
-          'Furosemide',
-          'Furosemid',
-          'viên nén',
-          '40mg',
-          'Sanofi'
-          ),
-          (
-          'Spironolactone',
-          'Spironolacton',
-          'viên nén',
-          '25mg',
-          'Pfizer'
-          ),
-          (
-          'Warfarin',
-          'Warfarin',
-          'viên nén',
-          '5mg',
-          'Bristol-Myers'
-          ),
-          -- TIÊU HÓA (7 loại)
-          (
-          'Omeprazole',
-          'Omeprazol',
-          'viên nang',
-          '20mg',
-          'AstraZeneca'
-          ),
-          (
-          'Lansoprazole',
-          'Lansoprazol',
-          'viên nang',
-          '30mg',
-          'Takeda'
-          ),
-          (
-          'Domperidone',
-          'Domperidon',
-          'viên nén',
-          '10mg',
-          'Janssen'
-          ),
-          ('Smecta', 'Diosmectit', 'gói bột', '3g', 'Ipsen'),
-          (
-          'Buscopan',
-          'Hyoscine',
-          'viên nén',
-          '10mg',
-          'Boehringer'
-          ),
-          (
-          'Gaviscon',
-          'Alginat',
-          'hỗn dịch',
-          '500mg',
-          'Reckitt'
-          ),
-          (
-          'Loperamide',
-          'Loperamid',
-          'viên nang',
-          '2mg',
-          'Johnson & Johnson'
-          ),
-          -- TIỂU ĐƯỜNG (5 loại)
-          (
-          'Metformin',
-          'Metformin',
-          'viên nén',
-          '500mg',
-          'Merck'
-          ),
-          (
-          'Gliclazide',
-          'Gliclazid',
-          'viên nén',
-          '80mg',
-          'Servier'
-          ),
-          (
-          'Insulin Mixtard',
-          'Insulin người',
-          'ống tiêm',
-          '100IU/mL',
-          'Novo Nordisk'
-          ),
-          (
-          'Glucophage',
-          'Metformin',
-          'viên nén',
-          '850mg',
-          'Merck'
-          ),
-          (
-          'Januvia',
-          'Sitagliptin',
-          'viên nén',
-          '100mg',
-          'MSD'
-          ),
-          -- HÔ HẤP (5 loại)
-          (
-          'Salbutamol',
-          'Salbutamol',
-          'bình xịt',
-          '100mcg/liều',
-          'GSK'
-          ),
-          (
-          'Seretide',
-          'Salmeterol/Fluticason',
-          'bình xịt',
-          '25/125mcg',
-          'GSK'
-          ),
-          (
-          'Budesonide',
-          'Budesonid',
-          'dung dịch khí dung',
-          '0.5mg/mL',
-          'AstraZeneca'
-          ),
-          (
-          'Theophylline',
-          'Theophyllin',
-          'viên nén',
-          '100mg',
-          'Sanofi'
-          ),
-          (
-          'Mucosolvan',
-          'Ambroxol',
-          'siro',
-          '30mg/5mL',
-          'Boehringer'
-          );
+          -- 1-10: Thuốc giảm đau/hạ sốt
+          ('Panadol', 'Paracetamol', 'viên nén', '500mg', 'uống', 'GSK'),
+          ('Efferalgan', 'Paracetamol', 'viên sủi', '500mg', 'uống', 'Sanofi'),
+          ('Hapacol', 'Paracetamol', 'viên nén', '650mg', 'uống', 'DHG Pharma'),
+          ('Ibuprofen', 'Ibuprofen', 'viên nang', '400mg', 'uống', 'Stada'),
+          ('Alaxan', 'Ibuprofen + Paracetamol', 'viên nén', '400mg/325mg', 'uống', 'United Pharma'),
+          ('Tylenol', 'Paracetamol', 'siro', '160mg/5ml', 'uống', 'Johnson & Johnson'),
+          ('Doliprane', 'Paracetamol', 'viên đặt', '300mg', 'đặt hậu môn', 'Sanofi'),
+          ('Arcoxia', 'Etoricoxib', 'viên nén', '90mg', 'uống', 'MSD'),
+          ('Celebrex', 'Celecoxib', 'viên nang', '200mg', 'uống', 'Pfizer'),
+          ('Voltaren', 'Diclofenac', 'gel', '1%', 'bôi ngoài da', 'Novartis'),
+          -- 11-20: Kháng sinh
+          ('Augmentin', 'Amoxicillin + Clavulanate', 'viên nén', '875mg/125mg', 'uống', 'GSK'),
+          ('Amoxicillin', 'Amoxicillin', 'viên nang', '500mg', 'uống', 'Stada'),
+          ('Cephalexin', 'Cephalexin', 'viên nén', '500mg', 'uống', 'VN Pharma'),
+          ('Azithromycin', 'Azithromycin', 'viên nén', '500mg', 'uống', 'Pfizer'),
+          ('Ciprofloxacin', 'Ciprofloxacin', 'viên nén', '500mg', 'uống', 'Bayer'),
+          ('Biseptol', 'Cotrimoxazole', 'viên nén', '480mg', 'uống', 'Sanofi'),
+          ('Zinnat', 'Cefuroxime', 'viên nén', '500mg', 'uống', 'GSK'),
+          ('Clavophar', 'Amoxicillin + Clavulanate', 'bột pha hỗn dịch', '600mg/5ml', 'uống', 'Pharimexco'),
+          ('Ofloxacin', 'Ofloxacin', 'viên nén', '200mg', 'uống', 'Domesco'),
+          ('Cefixime', 'Cefixime', 'viên nang', '400mg', 'uống', 'VN Pharma'),
+          -- 21-30: Tiêu hóa
+          ('Gastropulgite', 'Diosmectite', 'gói bột', '3g', 'uống', 'Sanofi'),
+          ('Smecta', 'Diosmectite', 'gói bột', '3g', 'uống', 'Ipsen'),
+          ('Omeprazole', 'Omeprazole', 'viên nang', '20mg', 'uống', 'AstraZeneca'),
+          ('Lansoprazole', 'Lansoprazole', 'viên nén', '30mg', 'uống', 'Takeda'),
+          ('Yumangel', 'Aluminium hydroxide', 'gel', '340mg/5ml', 'uống', 'Daewoong'),
+          ('Motilium', 'Domperidone', 'viên nén', '10mg', 'uống', 'Janssen'),
+          ('Primperan', 'Metoclopramide', 'viên nén', '10mg', 'uống', 'Sanofi'),
+          ('Buscopan', 'Hyoscine N-butylbromide', 'viên nén', '10mg', 'uống', 'Sanofi'),
+          ('Phosphalugel', 'Aluminium phosphate', 'gel', '20g', 'uống', 'Boehringer Ingelheim'),
+          ('Debridat', 'Trimebutine', 'viên nén', '200mg', 'uống', 'Sanofi'),
+          -- 31-40: Tim mạch
+          ('Amlor', 'Amlodipine', 'viên nén', '5mg', 'uống', 'Pfizer'),
+          ('Concor', 'Bisoprolol', 'viên nén', '5mg', 'uống', 'Merck'),
+          ('Lasix', 'Furosemide', 'viên nén', '40mg', 'uống', 'Sanofi'),
+          ('Plavix', 'Clopidogrel', 'viên nén', '75mg', 'uống', 'Sanofi'),
+          ('Coversyl', 'Perindopril', 'viên nén', '5mg', 'uống', 'Servier'),
+          ('Zestril', 'Lisinopril', 'viên nén', '10mg', 'uống', 'AstraZeneca'),
+          ('Lipitor', 'Atorvastatin', 'viên nén', '20mg', 'uống', 'Pfizer'),
+          ('Crestor', 'Rosuvastatin', 'viên nén', '10mg', 'uống', 'AstraZeneca'),
+          ('Norvasc', 'Amlodipine', 'viên nén', '5mg', 'uống', 'Pfizer'),
+          ('Cordarone', 'Amiodarone', 'viên nén', '200mg', 'uống', 'Sanofi'),
+          -- 41-50: Thần kinh & Khác
+          ('Stilux', 'Ginkgo biloba', 'viên nén', '40mg', 'uống', 'Pharbaco'),
+          ('Tanganil', 'Acetylleucine', 'viên nén', '500mg', 'uống', 'Pierre Fabre'),
+          ('Serc', 'Betahistine', 'viên nén', '16mg', 'uống', 'Abbott'),
+          ('Neurobion', 'Vitamin B complex', 'viên nén', 'B1/B6/B12', 'uống', 'Merck'),
+          ('Boganic', 'Tinh chất thảo dược', 'viên nang', '300mg', 'uống', 'Traphaco'),
+          ('Glucosamine', 'Glucosamine sulfate', 'viên nén', '1500mg', 'uống', 'Dược Hậu Giang'),
+          ('Prospan', 'Cao khô lá thường xuân', 'siro', '35mg/5ml', 'uống', 'Engelhard Arzneimittel'),
+          ('Eugica', 'Eugica', 'viên ngậm', '2mg', 'ngậm', 'Dược phẩm OPC'),
+          ('Otrivin', 'Xylometazoline', 'dung dịch nhỏ', '0.1%', 'nhỏ mũi', 'Novartis'),
+          ('Sofmerol', 'Carboxymethyl cellulose', 'nước mắt nhân tạo', '0.5%', 'nhỏ mắt', 'Santen');
 
 -- migrate:down
 DELETE    FROM diagnoses;

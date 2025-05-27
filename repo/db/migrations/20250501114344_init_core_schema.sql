@@ -44,11 +44,7 @@ CREATE    TABLE "records" (
           "record_detail" jsonb
           );
 
-CREATE    TABLE "diagnoses" (
-          "icd_code" VARCHAR(10) PRIMARY KEY NOT NULL,
-          "name" text NOT NULL,
-          "description" text
-          );
+CREATE    TABLE "diagnoses" ("icd_code" VARCHAR(10) PRIMARY KEY NOT NULL, "name" text NOT NULL, "description" text);
 
 CREATE    TABLE "record_attachments" (
           "attachment_id" bigserial PRIMARY KEY NOT NULL,
@@ -71,11 +67,12 @@ CREATE    TABLE "prescription_details" (
           "detail_id" bigserial PRIMARY KEY NOT NULL,
           "prescription_id" BIGINT NOT NULL,
           "med_id" BIGINT NOT NULL,
-          "dosage" DECIMAL(10, 2) NOT NULL,
-          "dosage_unit" VARCHAR(20) NOT NULL,
+          "morning_dosage" DECIMAL(10, 2),
+          "afternoon_dosage" DECIMAL(10, 2),
+          "evening_dosage" DECIMAL(10, 2),
           "duration_days" INT NOT NULL,
-          "quantity" INT NOT NULL,
-          "frequency" text NOT NULL,
+          "total_dosage" DECIMAL(10, 2) NOT NULL,
+          "dosage_unit" VARCHAR(20) NOT NULL,
           "instructions" text NOT NULL
           );
 
@@ -85,6 +82,7 @@ CREATE    TABLE "medications" (
           "generic_name" text,
           "med_type" VARCHAR(50) NOT NULL,
           "strength" VARCHAR(50),
+          "route_of_administration" text NOT NULL,
           "manufacturer" text NOT NULL
           );
 
