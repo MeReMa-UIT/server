@@ -7,7 +7,7 @@ import (
 	"github.com/merema-uit/server/models"
 )
 
-func StorePrescription(ctx context.Context, req models.NewPrescriptionRequest, totalDosage []float32) error {
+func StorePrescription(ctx context.Context, req models.NewPrescriptionRequest) error {
 	const query = `
 		INSERT INTO prescriptions (record_id, is_insurance_covered, prescription_note)
 		VALUES ($1, $2, $3)
@@ -38,7 +38,7 @@ func StorePrescription(ctx context.Context, req models.NewPrescriptionRequest, t
 				req.Details[i].MorningDosage,
 				req.Details[i].AfternoonDosage,
 				req.Details[i].EveningDosage,
-				totalDosage[i],
+				req.Details[i].TotalDosage,
 				req.Details[i].DurationDays,
 				req.Details[i].DosageUnit,
 				req.Details[i].Instructions,

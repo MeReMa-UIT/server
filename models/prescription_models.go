@@ -6,6 +6,7 @@ type PrescriptionDetail struct {
 	AfternoonDosage float32 `json:"afternoon_dosage" db:"afternoon_dosage"`
 	EveningDosage   float32 `json:"evening_dosage" db:"evening_dosage"`
 	DurationDays    int     `json:"duration_days" db:"duration_days"`
+	TotalDosage     float32 `json:"total_dosage" db:"total_dosage"`
 	DosageUnit      string  `json:"dosage_unit" db:"dosage_unit"`
 	Instructions    string  `json:"instructions" db:"instructions"`
 }

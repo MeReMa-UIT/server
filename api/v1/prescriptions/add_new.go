@@ -28,13 +28,15 @@ func AddNewPrescriptionHandler(c *gin.Context) {
 	var req models.NewPrescriptionRequest
 	authHeader := c.GetHeader("Authorization")
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
 
 	err := prescription_services.AddNewPrescription(c, authHeader, req)
 	if err != nil {
 		switch err {
+		case errs.ErrWrongDosageCalulation, errs.ErrInvalidDosage:
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		case errs.ErrExpiredToken, errs.ErrInvalidToken, errs.ErrMalformedToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		case errs.ErrPermissionDenied:

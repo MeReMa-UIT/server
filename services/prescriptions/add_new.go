@@ -19,9 +19,13 @@ func AddNewPrescription(ctx context.Context, authHeader string, req models.NewPr
 	if claims.Permission != permission.Doctor.String() {
 		return errs.ErrPermissionDenied
 	}
-	var totalDosage []float32
 	for _, detail := range req.Details {
-		totalDosage = append(totalDosage, (detail.MorningDosage+detail.AfternoonDosage+detail.EveningDosage)*float32(detail.DurationDays))
+		if detail.MorningDosage < 0 || detail.AfternoonDosage < 0 || detail.EveningDosage < 0 || detail.DurationDays <= 0 || (detail.MorningDosage == 0 && detail.AfternoonDosage == 0 && detail.EveningDosage == 0) {
+			return errs.ErrInvalidDosage
+		}
+		if detail.TotalDosage != (detail.MorningDosage+detail.AfternoonDosage+detail.EveningDosage)*float32(detail.DurationDays) {
+			return errs.ErrWrongDosageCalulation
+		}
 	}
-	return repo.StorePrescription(ctx, req, totalDosage)
+	return repo.StorePrescription(ctx, req)
 }
