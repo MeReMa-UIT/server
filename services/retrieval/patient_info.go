@@ -11,8 +11,7 @@ import (
 )
 
 func GetPatientList(ctx context.Context, authHeader string) ([]models.PatientBriefInfo, error) {
-	token := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
 	print("claims:", claims.Permission)
 	if err != nil {
 		return nil, err
@@ -29,8 +28,7 @@ func GetPatientList(ctx context.Context, authHeader string) ([]models.PatientBri
 }
 
 func GetPatientInfo(ctx context.Context, authHeader string, patientID string) (models.PatientInfo, error) {
-	token := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
 	if err != nil {
 		return models.PatientInfo{}, err
 	}

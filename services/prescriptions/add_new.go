@@ -11,8 +11,7 @@ import (
 )
 
 func AddNewPrescription(ctx context.Context, authHeader string, req models.NewPrescriptionRequest) error {
-	token := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
 	if err != nil {
 		return err
 	}

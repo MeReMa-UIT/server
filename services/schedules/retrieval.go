@@ -11,8 +11,7 @@ import (
 )
 
 func GetScheduleList(ctx context.Context, authHeader string, req models.GetScheduleListRequest) ([]models.ScheduleInfo, error) {
-	token := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
 	if err != nil {
 		return nil, err
 	}

@@ -12,8 +12,7 @@ import (
 )
 
 func ResetPassword(ctx context.Context, req models.PasswordResetRequest, authHeader string) error {
-	token := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
 	if err != nil {
 		return err
 	}

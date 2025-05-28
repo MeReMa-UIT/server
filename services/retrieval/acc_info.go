@@ -11,8 +11,7 @@ import (
 )
 
 func GetAccountInfo(ctx context.Context, authHeader string) (models.AccountInfo, any, error) {
-	token := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
 	if err != nil {
 		return models.AccountInfo{}, nil, err
 	}
@@ -40,8 +39,7 @@ func GetAccountInfo(ctx context.Context, authHeader string) (models.AccountInfo,
 }
 
 func GetAccountList(ctx context.Context, authHeader string) ([]models.AccountInfo, error) {
-	token := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(token, auth.JWT_SECRET)
+	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
 	if err != nil {
 		return nil, err
 	}

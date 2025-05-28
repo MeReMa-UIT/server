@@ -196,6 +196,8 @@ definitions:
         type: integer
       morning_dosage:
         type: number
+      total_dosage:
+        type: number
     type: object
   models.ScheduleBookingRequest:
     properties:
@@ -702,6 +704,35 @@ paths:
       summary: Get patient info (receptionist, doctor, patient)
       tags:
       - patients
+  /prescriptions/{prescription_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get prescription details by ID
+      parameters:
+      - description: Prescription ID
+        in: path
+        name: prescription_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get prescription details (doctor, patient)
+      tags:
+      - prescriptions
   /prescriptions/new:
     post:
       consumes:
@@ -730,6 +761,64 @@ paths:
       security:
       - BearerAuth: []
       summary: Add New Prescription (doctor)
+      tags:
+      - prescriptions
+  /prescriptions/patients/{patient_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get prescription list
+      parameters:
+      - description: Patient ID
+        in: path
+        name: patient_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get prescription list with patient ID (doctor, patient)
+      tags:
+      - prescriptions
+  /prescriptions/records/{record_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get prescription list
+      parameters:
+      - description: Medical Record ID
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get prescription list with medical record ID (doctor, patient)
       tags:
       - prescriptions
   /schedules:

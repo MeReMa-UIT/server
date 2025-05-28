@@ -701,6 +701,144 @@ const docTemplate = `{
                 }
             }
         },
+        "/prescriptions/patients/{patient_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get prescription list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prescriptions"
+                ],
+                "summary": "Get prescription list with patient ID (doctor, patient)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Patient ID",
+                        "name": "patient_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/prescriptions/records/{record_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get prescription list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prescriptions"
+                ],
+                "summary": "Get prescription list with medical record ID (doctor, patient)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Medical Record ID",
+                        "name": "record_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/prescriptions/{prescription_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get prescription details by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prescriptions"
+                ],
+                "summary": "Get prescription details (doctor, patient)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Prescription ID",
+                        "name": "prescription_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/schedules": {
             "get": {
                 "security": [
@@ -1257,6 +1395,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "morning_dosage": {
+                    "type": "number"
+                },
+                "total_dosage": {
                     "type": "number"
                 }
             }

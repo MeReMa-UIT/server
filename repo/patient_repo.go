@@ -8,6 +8,22 @@ import (
 	errs "github.com/merema-uit/server/models/errors"
 )
 
+func GetPatientIDListByAccID(ctx context.Context, accID string) ([]int, error) {
+	const query = `
+		SELECT patient_id
+		FROM patients
+		WHERE acc_id = $1::BIGINT
+	`
+
+	var patientIDList []int
+	rows, _ := dbpool.Query(ctx, query, accID)
+	patientIDList, err := pgx.AppendRows(patientIDList, rows, pgx.RowTo[int])
+	if err != nil {
+		return nil, err
+	}
+	return patientIDList, nil
+}
+
 func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest) error {
 	const query = `
 		INSERT INTO patients (acc_id, full_name, date_of_birth, gender, ethnicity, nationality, address,
