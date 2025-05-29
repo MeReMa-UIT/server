@@ -564,6 +564,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/comms/contacts": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get contact list for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "communications"
+                ],
+                "summary": "Get contact list (doctor, patient)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ContactInfo"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/patients": {
             "get": {
                 "security": [
@@ -1174,6 +1214,17 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ContactInfo": {
+            "type": "object",
+            "properties": {
+                "acc_id": {
+                    "type": "string"
+                },
+                "full_name": {
                     "type": "string"
                 }
             }

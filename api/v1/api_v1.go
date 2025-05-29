@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	accounts_api "github.com/merema-uit/server/api/v1/accounts"
 	catalogs_api "github.com/merema-uit/server/api/v1/catalog"
+	comms_api "github.com/merema-uit/server/api/v1/communications"
 	patients_api "github.com/merema-uit/server/api/v1/patients"
 	prescriptions_api "github.com/merema-uit/server/api/v1/prescriptions"
 	records_api "github.com/merema-uit/server/api/v1/records"
@@ -21,5 +22,6 @@ func RegisterRoutesV1(r *gin.Engine) {
 		records_api.Routes(v1.Group("/records"))
 		schedules_api.Routes(v1.Group("/schedules"))
 		prescriptions_api.Routes(v1.Group("/prescriptions"))
+		comms_api.Routes(v1.Group("/comms"))
 	}
 }
