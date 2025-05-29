@@ -11,7 +11,7 @@ import (
 )
 
 func GetStaffList(ctx context.Context, authHeader string) ([]models.StaffInfo, error) {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func GetStaffList(ctx context.Context, authHeader string) ([]models.StaffInfo, e
 }
 
 func GetStaffInfo(ctx context.Context, authHeader string, staffID string) (models.StaffInfo, error) {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return models.StaffInfo{}, err
 	}

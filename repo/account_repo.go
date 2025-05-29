@@ -97,7 +97,6 @@ func GetAccIDByCitizenID(ctx context.Context, citizenID string) (int, error) {
 		SELECT acc_id 
 		FROM accounts
 		WHERE citizen_id = $1
-		LIMIT 1
 	`
 	var accID int
 	err := dbpool.QueryRow(ctx, query, citizenID).Scan(&accID)
@@ -152,7 +151,7 @@ func UpdatePassword(ctx context.Context, citizenID, newPassword string) error {
 	const query = `
 		UPDATE accounts
 		SET password_hash = $1
-		WHERE citizen_id = $2
+		WHERE acc_id = $2
 	`
 	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
 		IsoLevel: pgx.Serializable,

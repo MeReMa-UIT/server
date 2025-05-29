@@ -11,7 +11,7 @@ import (
 )
 
 func GetMedicationList(ctx context.Context, authHeader string) ([]models.MedicationInfo, error) {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func GetMedicationList(ctx context.Context, authHeader string) ([]models.Medicat
 }
 
 func GetDiagnosisList(ctx context.Context, authHeader string) ([]models.DiagnosisInfo, error) {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}

@@ -44,17 +44,22 @@ func SendRecoveryEmail(ctx context.Context, req models.AccountRecoverRequest) er
 	if err != nil {
 		return err
 	}
+	accID, _ := repo.GetAccIDByCitizenID(ctx, req.CitizenID)
 
-	otp := generateOTP(req.CitizenID)
+	otp := generateOTP(fmt.Sprint(accID))
 	return sendOTPEmail(req.Email, otp)
 }
 
 func VerifyRecoveryOTP(ctx context.Context, req models.AccountRecoverConfirmRequest) (string, error) {
-	err := validateOTP(req)
+	accID, err := repo.GetAccIDByCitizenID(ctx, req.CitizenID)
 	if err != nil {
 		return "", err
 	}
-	token, err := auth.GenerateJWT(req.CitizenID, permission.Recovery.String(), auth.JWT_SECRET, auth.JWT_RECOVERY_EXPIRY)
+	err = validateOTP(fmt.Sprint(accID), req.OTP)
+	if err != nil {
+		return "", err
+	}
+	token, err := auth.GenerateToken(fmt.Sprint(accID), permission.Recovery.String(), auth.JWT_RECOVERY_EXPIRY)
 	if err != nil {
 		return "", err
 	}

@@ -12,7 +12,7 @@ import (
 
 func BookSchedule(ctx context.Context, authHeader string, req models.ScheduleBookingRequest) (models.ScheduleBookingResponse, error) {
 
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 
 	if err != nil {
 		return models.ScheduleBookingResponse{}, err

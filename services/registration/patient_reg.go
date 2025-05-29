@@ -11,7 +11,7 @@ import (
 )
 
 func RegisterPatient(ctx context.Context, req models.PatientRegistrationRequest, authHeader string) error {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return err
 	}

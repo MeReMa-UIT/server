@@ -14,7 +14,7 @@ import (
 
 func InitRegistration(ctx context.Context, req models.InitRegistrationRequest, authHeader string) (string, int, error) {
 	tokenString := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(tokenString, auth.JWT_SECRET)
+	claims, err := auth.ParseToken(tokenString)
 	if err != nil {
 		return "", -1, err
 	}
@@ -32,18 +32,18 @@ func InitRegistration(ctx context.Context, req models.InitRegistrationRequest, a
 	accID, err := repo.GetAccIDByCitizenID(ctx, req.CitizenID)
 	if err != nil {
 		if err == errs.ErrAccountNotExist {
-			token, _ := auth.GenerateJWT(claims.ID, registrationType, auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
+			token, _ := auth.GenerateToken(claims.ID, registrationType, auth.JWT_REGISTRATION_EXPIRY)
 			return token, -1, nil
 		}
 		return "", -1, err
 	}
-	token, _ := auth.GenerateJWT(claims.ID, registrationType, auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
+	token, _ := auth.GenerateToken(claims.ID, registrationType, auth.JWT_REGISTRATION_EXPIRY)
 	return token, accID, nil
 }
 
 func RegisterAccount(ctx context.Context, req models.AccountRegistrationRequest, authHeader string) (string, int, error) {
 	tokenString := auth.ExtractToken(authHeader)
-	claims, err := auth.ParseJWT(tokenString, auth.JWT_SECRET)
+	claims, err := auth.ParseToken(tokenString)
 	if err != nil {
 		return "", -1, err
 	}
@@ -66,6 +66,6 @@ func RegisterAccount(ctx context.Context, req models.AccountRegistrationRequest,
 	if err != nil {
 		return "", -1, err
 	}
-	token, _ := auth.GenerateJWT(fmt.Sprint(createdAccID), permission.Patient.String(), auth.JWT_SECRET, auth.JWT_REGISTRATION_EXPIRY)
+	token, _ := auth.GenerateToken(fmt.Sprint(createdAccID), permission.Patient.String(), auth.JWT_REGISTRATION_EXPIRY)
 	return token, createdAccID, nil
 }

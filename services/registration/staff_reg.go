@@ -11,7 +11,7 @@ import (
 )
 
 func RegisterStaff(ctx context.Context, req models.StaffRegistrationRequest, authHeader string) error {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return err
 	}

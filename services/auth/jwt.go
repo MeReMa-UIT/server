@@ -19,7 +19,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(id string, permission string, secret string, expiry time.Duration) (string, error) {
+func GenerateToken(id string, permission string, expiry time.Duration) (string, error) {
 	expirationTime := time.Now().Add(expiry)
 	claims := &Claims{
 		ID:         id,
@@ -30,13 +30,13 @@ func GenerateJWT(id string, permission string, secret string, expiry time.Durati
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(secret))
+	return token.SignedString([]byte(JWT_SECRET))
 }
 
-func ParseJWT(tokenString, secret string) (*Claims, error) {
+func ParseToken(tokenString string) (*Claims, error) {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(secret), nil
+		return []byte(JWT_SECRET), nil
 	})
 
 	if err != nil {
@@ -55,14 +55,6 @@ func ParseJWT(tokenString, secret string) (*Claims, error) {
 	}
 
 	return claims, nil
-}
-
-func ExtractPermissionFromToken(tokenString, secret string) (string, error) {
-	claims, err := ParseJWT(tokenString, secret)
-	if err != nil {
-		return "", err
-	}
-	return claims.Permission, nil
 }
 
 func ExtractToken(authHeader string) string {

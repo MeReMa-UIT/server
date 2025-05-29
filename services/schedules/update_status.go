@@ -11,7 +11,7 @@ import (
 )
 
 func UpdateScheduleStatus(ctx context.Context, authHeader string, req models.UpdateScheduleStatusRequest) error {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return err
 	}

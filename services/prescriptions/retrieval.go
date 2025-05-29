@@ -13,7 +13,7 @@ import (
 )
 
 func GetPrescriptionListWithRecordID(ctx context.Context, authHeader, recordID string) ([]models.PrescriptionInfo, error) {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func GetPrescriptionListWithRecordID(ctx context.Context, authHeader, recordID s
 }
 
 func GetPrescriptionListWithPatientID(ctx context.Context, authHeader, patientID string) ([]models.PrescriptionInfo, error) {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func GetPrescriptionListWithPatientID(ctx context.Context, authHeader, patientID
 }
 
 func GetPrescriptionDetails(ctx context.Context, authHeader, prescriptionID string) ([]models.PrescriptionDetail, error) {
-	claims, err := auth.ParseJWT(auth.ExtractToken(authHeader), auth.JWT_SECRET)
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}

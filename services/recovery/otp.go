@@ -6,7 +6,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
 )
 
@@ -21,29 +20,30 @@ var (
 	otpLock    sync.RWMutex
 )
 
-func generateOTP(citizenID string) string {
+func generateOTP(accID string) string {
 	otpLock.Lock()
 	defer otpLock.Unlock()
 
 	otp := fmt.Sprintf("%06d", rand.Intn(1000000))
-	otpSecrets[citizenID] = secret{
+	otpSecrets[accID] = secret{
 		OTP:            otp,
 		ExpirationTime: time.Now().Add(5 * time.Minute),
 	}
 	return otp
 }
 
-func validateOTP(req models.AccountRecoverConfirmRequest) error {
+func validateOTP(accID, otp string) error {
 	otpLock.Lock()
 	defer otpLock.Unlock()
 
-	secret, ok := otpSecrets[req.CitizenID]
+	secret, ok := otpSecrets[accID]
+	println(otp)
 
-	if !ok || secret.OTP != req.OTP {
+	if !ok || secret.OTP != otp {
 		return errs.ErrWrongOTP
 	}
 
-	delete(otpSecrets, req.CitizenID)
+	delete(otpSecrets, accID)
 
 	if time.Now().After(secret.ExpirationTime) {
 		return errs.ErrExpiredOTP
