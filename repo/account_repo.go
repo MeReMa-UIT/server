@@ -22,7 +22,6 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 		SELECT acc_id, password_hash, role
 		FROM accounts
 		WHERE citizen_id = $1 OR phone = $1 OR email = $1
-		LIMIT 1
 	`
 
 	rows, _ := dbpool.Query(ctx, query, accIdentifier)
@@ -55,7 +54,6 @@ func GetAccountInfo(ctx context.Context, accID string) (models.AccountInfo, erro
 		SELECT acc_id, citizen_id, phone, email, role, created_at
 		FROM accounts
 		WHERE acc_id = $1
-		LIMIT 1
 	`
 
 	rows, _ := dbpool.Query(ctx, query, accID)

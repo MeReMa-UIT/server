@@ -100,7 +100,7 @@ ALTER SEQUENCE public.medications_med_id_seq OWNED BY public.medications.med_id;
 CREATE TABLE public.messages (
     from_acc_id bigint NOT NULL,
     to_acc_id bigint NOT NULL,
-    sent_at timestamp with time zone NOT NULL,
+    sent_at timestamp with time zone DEFAULT now() NOT NULL,
     content text NOT NULL
 );
 

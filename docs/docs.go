@@ -604,6 +604,106 @@ const docTemplate = `{
                 }
             }
         },
+        "/comms/messages": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Send message to a doctor or patient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "communications"
+                ],
+                "summary": "Send message (patient, doctor)",
+                "parameters": [
+                    {
+                        "description": "Message to send",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SendingMessage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/comms/messages/{contact_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Load conversation with a doctor or patient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "communications"
+                ],
+                "summary": "Load conversation (patient, doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Contact ID",
+                        "name": "contact_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Message"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/patients": {
             "get": {
                 "security": [
@@ -1222,7 +1322,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "acc_id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "full_name": {
                     "type": "string"
@@ -1305,6 +1405,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "strength": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Message": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "sent_at": {
                     "type": "string"
                 }
             }
@@ -1531,6 +1642,17 @@ const docTemplate = `{
                         1,
                         2
                     ]
+                }
+            }
+        },
+        "models.SendingMessage": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "to_acc_id": {
+                    "type": "integer"
                 }
             }
         },

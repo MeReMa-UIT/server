@@ -89,7 +89,7 @@ CREATE    TABLE "medications" (
 CREATE    TABLE "messages" (
           "from_acc_id" BIGINT NOT NULL,
           "to_acc_id" BIGINT NOT NULL,
-          "sent_at" timestamptz NOT NULL,
+          "sent_at" timestamptz NOT NULL DEFAULT (now ()),
           "content" text NOT NULL,
           PRIMARY KEY ("from_acc_id", "to_acc_id", "sent_at")
           );

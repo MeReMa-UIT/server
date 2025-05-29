@@ -39,6 +39,9 @@ FROM      prescriptions;
 SELECT    *
 FROM      prescription_details;
 
+SELECT    *
+FROM      messages;
+
 DELETE    FROM prescription_details;
 
 DELETE    FROM prescriptions;
