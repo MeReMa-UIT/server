@@ -1326,6 +1326,9 @@ const docTemplate = `{
                 },
                 "full_name": {
                     "type": "string"
+                },
+                "role": {
+                    "type": "string"
                 }
             }
         },
@@ -1414,6 +1417,9 @@ const docTemplate = `{
             "properties": {
                 "content": {
                     "type": "string"
+                },
+                "sender_id": {
+                    "type": "integer"
                 },
                 "sent_at": {
                     "type": "string"

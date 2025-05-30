@@ -99,6 +99,35 @@ VALUES    (
           'Nguyễn Thị B, 0987654321'
           );
 
+INSERT    INTO patients (
+          acc_id,
+          full_name,
+          date_of_birth,
+          gender,
+          ethnicity,
+          nationality,
+          address,
+          health_insurance_expired_date,
+          health_insurance_number,
+          emergency_contact_info
+          )
+VALUES    (
+          (
+          SELECT    acc_id
+          FROM      accounts
+          WHERE     citizen_id = '000000001113'
+          ),
+          'Nguyễn Văn C',
+          '2020-03-13',
+          'Nam',
+          'Kinh',
+          'Việt Nam',
+          '123 Đường ABC, Phường 2, Tp. Thủ Đức, TP.HCM',
+          '2026-01-01',
+          '123456789013',
+          'Nguyễn Thị B, 0987654322'
+          );
+
 -- migrate:down
 DELETE    FROM accounts
 WHERE     citizen_id = '123123123123';
