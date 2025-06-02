@@ -19,7 +19,7 @@ import (
 // @Produce json
 // @Param user body models.InitRegistrationRequest true "Initiate registration data"
 // @Security BearerAuth
-// @Success 201 {object} models.InitRegistrationResponse
+// @Success 200 {object} models.AccountRegistrationResponse
 // @Failure 400
 // @Failure 401
 // @Failure 403
@@ -33,7 +33,7 @@ func InitRegistrationHandler(ctx *gin.Context) {
 	}
 
 	authHeader := ctx.GetHeader("Authorization")
-	token, accID, err := registration.InitRegistration(context.Background(), req, authHeader)
+	response, err := registration.InitRegistration(context.Background(), req, authHeader)
 
 	if err != nil {
 		switch err {
@@ -48,7 +48,7 @@ func InitRegistrationHandler(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, models.InitRegistrationResponse{Token: token, AccID: accID})
+	ctx.JSON(http.StatusOK, response)
 }
 
 // Register account godoc
@@ -75,7 +75,7 @@ func RegisterAccountHandler(ctx *gin.Context) {
 
 	authHeader := ctx.GetHeader("Authorization")
 
-	token, accID, err := registration.RegisterAccount(context.Background(), req, authHeader)
+	response, err := registration.RegisterAccount(context.Background(), req, authHeader)
 
 	if err != nil {
 		switch err {
@@ -94,7 +94,7 @@ func RegisterAccountHandler(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, models.AccountRegistrationResponse{Token: token, AccID: accID})
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // Register patient godoc

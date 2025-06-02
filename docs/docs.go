@@ -310,10 +310,10 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.InitRegistrationResponse"
+                            "$ref": "#/definitions/models.AccountRegistrationResponse"
                         }
                     },
                     "400": {
@@ -1311,9 +1311,11 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "acc_id": {
+                    "description": "Account ID (-1 means account is not registered yet)",
                     "type": "integer"
                 },
                 "token": {
+                    "description": "JWT token. If acc ID = -1, token will allow user to register new account, otherwise token will allow user to add new patient or staff",
                     "type": "string"
                 }
             }
@@ -1350,19 +1352,6 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "citizen_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.InitRegistrationResponse": {
-            "type": "object",
-            "properties": {
-                "acc_id": {
-                    "description": "Account ID (-1 means account is not registered yet)",
-                    "type": "integer"
-                },
-                "token": {
-                    "description": "JWT token. If acc ID = -1, token will allow user to register new account, otherwise token will allow user to add new patient or staff",
                     "type": "string"
                 }
             }

@@ -24,7 +24,7 @@ type InitRegistrationRequest struct {
 	CitizenID string `json:"citizen_id" db:"citizen_id"`
 }
 
-type InitRegistrationResponse struct {
+type AccountRegistrationResponse struct {
 	// JWT token. If acc ID = -1, token will allow user to register new account, otherwise token will allow user to add new patient or staff
 	Token string `json:"token"`
 
@@ -37,11 +37,6 @@ type AccountRegistrationRequest struct {
 	Phone     string `json:"phone" db:"phone"`
 	Email     string `json:"email" db:"email"`
 	Role      string `json:"role" db:"role"`
-}
-
-type AccountRegistrationResponse struct {
-	Token string `json:"token"`
-	AccID int    `json:"acc_id"`
 }
 
 type PatientRegistrationRequest struct {

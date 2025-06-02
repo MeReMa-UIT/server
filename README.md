@@ -1,11 +1,5 @@
 # MEREMA SERVER
 
-## Ref
-- [techshool/simplebank](https://github.com/techschool/simplebank)
-- [moby/moby](https://github.com/moby/moby)
-- [golang-standards/project-layout](https://github.com/golang-standards/project-layout)
-- [sikozonpc/GopherSocial](https://github.com/sikozonpc/GopherSocial)
-
 ## Tools
 - `docker` and `docker-compose`
 - [`dbmate`](https://github.com/amacneil/dbmate)
@@ -20,9 +14,14 @@
 
 ## Devs
 
-### Required envs
+### Required envs (setup a .env, see .env.example)
 - `GMAIL_USERNAME` (ex: haha@gmail.com, ...) 
 - `GMAIL_PASSWORD` (google app password, 12 char long)
+- `JWT_SECRET` (a non-empty string)
+- `JWT_SESSION_EXPIRATION` (an integer, measured in minutes)
+- `JWT_RECOVERY_EXPIRATION` (an integer, measured in minutes)
+- `JWT_REGISTRATION_EXPIRATION` (an integer, measured in minutes)
+
 
 ### Setup
 - Run `docker compose up -d`
@@ -31,7 +30,7 @@
 - Run `go get -u github.com/swaggo/swag` (if `swag` hasn't been installed yet)
 - Run `go mod tidy`
 - Run `make run`
-- Check `/test` for testing cmd
+- Check `/test` for testing cmd. Use swagger UI to test API
 - swagger is also available, check it for frontend dev
 
 ### To-Do
