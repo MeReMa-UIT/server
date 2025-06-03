@@ -12,7 +12,6 @@ import (
 
 func GetPatientList(ctx context.Context, authHeader string) ([]models.PatientBriefInfo, error) {
 	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
-	print("claims:", claims.Permission)
 	if err != nil {
 		return nil, err
 	}
