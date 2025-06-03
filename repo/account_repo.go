@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
@@ -21,7 +22,7 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 	const query = `
 		SELECT acc_id, password_hash, role
 		FROM accounts
-		WHERE citizen_id = $1 OR phone = $1 OR email = $1
+		WHERE citizen_id = $1 OR phone = $1 OR email = $1 OR acc_id = $1::BIGINT
 	`
 
 	rows, _ := dbpool.Query(ctx, query, accIdentifier)
@@ -132,7 +133,7 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegistrationRequest
 				if strings.Contains(pgErr.ConstraintName, "accounts_citizen_id_key") {
 					return -1, errs.ErrCitizenIDExists
 				}
-				if strings.Contains(pgErr.ConstraintName, "accounts_phone_key") || strings.Contains(pgErr.ConstraintName, "accounts_phone_key") {
+				if strings.Contains(pgErr.ConstraintName, "accounts_email_key") || strings.Contains(pgErr.ConstraintName, "accounts_phone_key") {
 					return -1, errs.ErrEmailOrPhoneAlreadyUsed
 				}
 			}
@@ -145,11 +146,12 @@ func StoreAccountInfo(ctx context.Context, req models.AccountRegistrationRequest
 	return createdAccID, nil
 }
 
-func UpdatePassword(ctx context.Context, citizenID, newPassword string) error {
+func UpdatePassword(ctx context.Context, accID, newPassword string) error {
 	const query = `
 		UPDATE accounts
 		SET password_hash = $1
 		WHERE acc_id = $2
+		RETURNING acc_id
 	`
 	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
 		IsoLevel: pgx.Serializable,
@@ -159,12 +161,62 @@ func UpdatePassword(ctx context.Context, citizenID, newPassword string) error {
 	}
 	defer tx.Rollback(ctx)
 
-	_, err = tx.Exec(ctx, query, newPassword, citizenID)
+	var updatedAccID int
+	err = tx.QueryRow(ctx, query, newPassword, accID).Scan(&updatedAccID)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			return errs.ErrAccountNotExist
 		}
 		return err
 	}
-	return tx.Commit(ctx)
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateAccountInfo(ctx context.Context, accID string, req models.UpdateAccountInfoRequest) error {
+	query := fmt.Sprintf(`
+		UPDATE accounts
+		SET %s = $1
+		WHERE acc_id = $2
+		RETURNING acc_id
+	`, req.Field)
+
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	var updatedAccID int
+	err = tx.QueryRow(ctx, query, req.NewValue, accID).Scan(&updatedAccID)
+
+	println(updatedAccID)
+
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return errs.ErrAccountNotExist
+		}
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			switch pgErr.Code {
+			case "23505":
+				if strings.Contains(pgErr.ConstraintName, "accounts_citizen_id_key") {
+					return errs.ErrCitizenIDExists
+				}
+				if strings.Contains(pgErr.ConstraintName, "accounts_email_key") || strings.Contains(pgErr.ConstraintName, "accounts_phone_key") {
+					return errs.ErrEmailOrPhoneAlreadyUsed
+				}
+			}
+		}
+		return err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	return nil
 }

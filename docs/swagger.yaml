@@ -300,6 +300,16 @@ definitions:
       gender:
         type: string
     type: object
+  models.UpdateAccountInfoRequest:
+    properties:
+      field:
+        description: '"password", "email", "phone", "citizen_id" are possible choices'
+        type: string
+      new_value:
+        type: string
+      password:
+        type: string
+    type: object
   models.UpdateScheduleStatusRequest:
     properties:
       new_status:
@@ -402,6 +412,36 @@ paths:
       security:
       - BearerAuth: []
       summary: Get account info
+      tags:
+      - accounts
+    put:
+      consumes:
+      - application/json
+      description: Update account information such as citizen ID, phone, email, or
+        password
+      parameters:
+      - description: Account information to update
+        in: body
+        name: UpdateAccountInfoRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateAccountInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Update Account Info
       tags:
       - accounts
   /accounts/recovery:

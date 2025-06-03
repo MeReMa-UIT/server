@@ -18,3 +18,5 @@ var ErrMalformedToken = errors.New("Malformed token")
 var ErrPermissionDenied = errors.New("Permission denied. You are not allowed to perform this action")
 
 var ErrAccountAlreadyLinked = errors.New("Account already linked with other staff")
+
+var ErrInvalidField = errors.New("Invalid field")

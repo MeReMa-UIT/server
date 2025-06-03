@@ -15,4 +15,5 @@ func Routes(r *gin.RouterGroup) {
 	r.POST("/register/staffs", RegisterStaffHandler)
 	r.GET("", GetAccountListHandler)
 	r.GET("/profile", GetAccountInfoHandler)
+	r.PUT("/profile", UpdateAccountInfo)
 }

@@ -147,6 +147,52 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update account information such as citizen ID, phone, email, or password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Update Account Info",
+                "parameters": [
+                    {
+                        "description": "Account information to update",
+                        "name": "UpdateAccountInfoRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UpdateAccountInfoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
         "/accounts/recovery": {
@@ -1687,6 +1733,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "gender": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UpdateAccountInfoRequest": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "description": "\"password\", \"email\", \"phone\", \"citizen_id\" are possible choices",
+                    "type": "string"
+                },
+                "new_value": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }
