@@ -168,11 +168,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Account information to update",
-                        "name": "UpdateAccountInfoRequest",
+                        "name": "AccountInfoUpdateRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.UpdateAccountInfoRequest"
+                            "$ref": "#/definitions/models.AccountInfoUpdateRequest"
                         }
                     }
                 ],
@@ -188,6 +188,9 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -837,6 +840,62 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update patient info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "patients"
+                ],
+                "summary": "Update patient info (doctor, receptionist)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Patient ID",
+                        "name": "patient_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Patient Info Update Request",
+                        "name": "patient_info",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.PatientInfoUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
         "/prescriptions/new": {
@@ -1279,6 +1338,62 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update staff information by staff ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "staffs"
+                ],
+                "summary": "Update staff info (admin)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Staff ID",
+                        "name": "staff_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Staff info update request",
+                        "name": "StaffInfoUpdateRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.StaffInfoUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         }
     },
@@ -1302,6 +1417,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AccountInfoUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "description": "\"password\", \"email\", \"phone\", \"citizen_id\" are possible choices",
+                    "type": "string"
+                },
+                "new_value": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }
@@ -1541,6 +1671,38 @@ const docTemplate = `{
                 }
             }
         },
+        "models.PatientInfoUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "date_of_birth": {
+                    "type": "string"
+                },
+                "emergency_contact_info": {
+                    "type": "string"
+                },
+                "ethnicity": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "health_insurance_expired_date": {
+                    "type": "string"
+                },
+                "health_insurance_number": {
+                    "type": "string"
+                },
+                "nationality": {
+                    "type": "string"
+                }
+            }
+        },
         "models.PatientRegistrationRequest": {
             "type": "object",
             "properties": {
@@ -1717,6 +1879,23 @@ const docTemplate = `{
                 }
             }
         },
+        "models.StaffInfoUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "date_of_birth": {
+                    "type": "string"
+                },
+                "department": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                }
+            }
+        },
         "models.StaffRegistrationRequest": {
             "type": "object",
             "properties": {
@@ -1733,21 +1912,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "gender": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.UpdateAccountInfoRequest": {
-            "type": "object",
-            "properties": {
-                "field": {
-                    "description": "\"password\", \"email\", \"phone\", \"citizen_id\" are possible choices",
-                    "type": "string"
-                },
-                "new_value": {
-                    "type": "string"
-                },
-                "password": {
                     "type": "string"
                 }
             }

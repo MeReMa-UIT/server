@@ -178,7 +178,7 @@ func UpdatePassword(ctx context.Context, accID, newPassword string) error {
 	return nil
 }
 
-func UpdateAccountInfo(ctx context.Context, accID string, req models.UpdateAccountInfoRequest) error {
+func UpdateAccountInfo(ctx context.Context, accID string, req models.AccountInfoUpdateRequest) error {
 	query := fmt.Sprintf(`
 		UPDATE accounts
 		SET %s = $1

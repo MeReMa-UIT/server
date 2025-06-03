@@ -93,3 +93,56 @@ func GetPatientInfo(ctx context.Context, patientID string, accID string) (models
 	}
 	return info, nil
 }
+
+func UpdatePatientInfo(ctx context.Context, patientID string, req models.PatientInfoUpdateRequest) error {
+	const query = `
+		UPDATE patients
+		SET
+				full_name = COALESCE(NULLIF($1, ''), full_name),
+				date_of_birth = COALESCE(NULLIF($2, '0001-01-01 00:00:00'::timestamp), date_of_birth),
+				gender = COALESCE(NULLIF($3, ''), gender),
+				ethnicity = COALESCE(NULLIF($4, ''), ethnicity),
+				nationality = COALESCE(NULLIF($5, ''), nationality),
+				address = COALESCE(NULLIF($6, ''), address),
+				health_insurance_expired_date = COALESCE(NULLIF($7, '0001-01-01 00:00:00'::timestamp), health_insurance_expired_date),
+				health_insurance_number = COALESCE(NULLIF($8, ''), health_insurance_number),
+				emergency_contact_info = COALESCE(NULLIF($9, ''), emergency_contact_info)
+		WHERE patient_id = $10::BIGINT
+		RETURNING patient_id
+	`
+
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	var updatedPatientID int
+	err = tx.QueryRow(ctx, query,
+		req.FullName,
+		req.DateOfBirth,
+		req.Gender,
+		req.Ethnicity,
+		req.Nationality,
+		req.Address,
+		req.HealthInsuranceExpiredDate,
+		req.HealthInsuranceNumber,
+		req.EmergencyContactInfo,
+		patientID,
+	).Scan(&updatedPatientID)
+
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return errs.ErrPatientNotExist
+		}
+		return err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}

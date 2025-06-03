@@ -78,7 +78,7 @@ type PasswordResetRequest struct {
 	NewPassword string `json:"new_password"`
 }
 
-type UpdateAccountInfoRequest struct {
+type AccountInfoUpdateRequest struct {
 	// "password", "email", "phone", "citizen_id" are possible choices
 	Field    string `json:"field"`
 	NewValue string `json:"new_value"`

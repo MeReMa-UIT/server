@@ -17,7 +17,7 @@ var possibleFields = map[string]bool{
 	"password":   true,
 }
 
-func UpdateAccountInfo(ctx context.Context, authHeader string, req models.UpdateAccountInfoRequest) error {
+func UpdateAccountInfo(ctx context.Context, authHeader string, req models.AccountInfoUpdateRequest) error {
 	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return err

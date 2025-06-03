@@ -17,16 +17,17 @@ import (
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param UpdateAccountInfoRequest body models.UpdateAccountInfoRequest true "Account information to update"
+// @Param AccountInfoUpdateRequest body models.AccountInfoUpdateRequest true "Account information to update"
 // @Success 200
 // @Failure 400
 // @Failure 401
 // @Failure 403
+// @Failure 404
 // @Failure 500
 // @Router /accounts/profile [put]
 func UpdateAccountInfo(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	var req models.UpdateAccountInfoRequest
+	var req models.AccountInfoUpdateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
@@ -36,12 +37,14 @@ func UpdateAccountInfo(c *gin.Context) {
 		switch err {
 		case errs.ErrInvalidField, errs.ErrEmailOrPhoneAlreadyUsed:
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		case errs.ErrAccountNotExist, errs.ErrPasswordIncorrect:
+		case errs.ErrPasswordIncorrect:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		case errs.ErrInvalidToken, errs.ErrExpiredToken, errs.ErrMalformedToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		case errs.ErrPermissionDenied:
 			c.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
+		case errs.ErrAccountNotExist:
+			c.JSON(http.StatusNotFound, gin.H{"error": "Account not found"})
 		default:
 			utils.Logger.Error("Failed to update account info", "error", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})

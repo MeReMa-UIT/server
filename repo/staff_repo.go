@@ -82,3 +82,46 @@ func GetStaffInfo(ctx context.Context, staffID string, accID string) (models.Sta
 
 	return staffInfo, nil
 }
+
+func UpdateStaffInfo(ctx context.Context, staffID string, req models.StaffInfoUpdateRequest) error {
+	const query = `
+		UPDATE staffs
+		SET
+				full_name = COALESCE(NULLIF($1, ''), full_name),
+				date_of_birth = COALESCE(NULLIF($2, '0001-01-01 00:00:00'::timestamp), date_of_birth),
+				gender = COALESCE(NULLIF($3, ''), gender),
+				department = COALESCE(NULLIF($4, ''), department)
+		WHERE staff_id = $5::BIGINT
+		RETURNING staff_id
+	`
+
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	var updatedStaffID int
+	err = tx.QueryRow(ctx, query,
+		req.FullName,
+		req.DateOfBirth,
+		req.Gender,
+		req.Department,
+		staffID,
+	).Scan(&updatedStaffID)
+
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return errs.ErrStaffNotExist
+		}
+		return err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}

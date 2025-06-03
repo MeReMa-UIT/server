@@ -15,6 +15,16 @@ definitions:
       role:
         type: string
     type: object
+  models.AccountInfoUpdateRequest:
+    properties:
+      field:
+        description: '"password", "email", "phone", "citizen_id" are possible choices'
+        type: string
+      new_value:
+        type: string
+      password:
+        type: string
+    type: object
   models.AccountRecoverConfirmRequest:
     properties:
       citizen_id:
@@ -168,6 +178,27 @@ definitions:
       patient_id:
         type: integer
     type: object
+  models.PatientInfoUpdateRequest:
+    properties:
+      address:
+        type: string
+      date_of_birth:
+        type: string
+      emergency_contact_info:
+        type: string
+      ethnicity:
+        type: string
+      full_name:
+        type: string
+      gender:
+        type: string
+      health_insurance_expired_date:
+        type: string
+      health_insurance_number:
+        type: string
+      nationality:
+        type: string
+    type: object
   models.PatientRegistrationRequest:
     properties:
       acc_id:
@@ -287,6 +318,17 @@ definitions:
       staff_id:
         type: integer
     type: object
+  models.StaffInfoUpdateRequest:
+    properties:
+      date_of_birth:
+        type: string
+      department:
+        type: string
+      full_name:
+        type: string
+      gender:
+        type: string
+    type: object
   models.StaffRegistrationRequest:
     properties:
       acc_id:
@@ -298,16 +340,6 @@ definitions:
       full_name:
         type: string
       gender:
-        type: string
-    type: object
-  models.UpdateAccountInfoRequest:
-    properties:
-      field:
-        description: '"password", "email", "phone", "citizen_id" are possible choices'
-        type: string
-      new_value:
-        type: string
-      password:
         type: string
     type: object
   models.UpdateScheduleStatusRequest:
@@ -422,10 +454,10 @@ paths:
       parameters:
       - description: Account information to update
         in: body
-        name: UpdateAccountInfoRequest
+        name: AccountInfoUpdateRequest
         required: true
         schema:
-          $ref: '#/definitions/models.UpdateAccountInfoRequest'
+          $ref: '#/definitions/models.AccountInfoUpdateRequest'
       produces:
       - application/json
       responses:
@@ -437,6 +469,8 @@ paths:
           description: Unauthorized
         "403":
           description: Forbidden
+        "404":
+          description: Not Found
         "500":
           description: Internal Server Error
       security:
@@ -850,6 +884,42 @@ paths:
       summary: Get patient info (receptionist, doctor, patient)
       tags:
       - patients
+    put:
+      consumes:
+      - application/json
+      description: Update patient info
+      parameters:
+      - description: Patient ID
+        in: path
+        name: patient_id
+        required: true
+        type: string
+      - description: Patient Info Update Request
+        in: body
+        name: patient_info
+        required: true
+        schema:
+          $ref: '#/definitions/models.PatientInfoUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Update patient info (doctor, receptionist)
+      tags:
+      - patients
   /prescriptions/{prescription_id}:
     get:
       consumes:
@@ -1129,6 +1199,42 @@ paths:
       - BearerAuth: []
       summary: Get staff info (primary for admin; doctor, receptionist will only get
         their own info for whichever staff_id they set)
+      tags:
+      - staffs
+    put:
+      consumes:
+      - application/json
+      description: Update staff information by staff ID
+      parameters:
+      - description: Staff ID
+        in: path
+        name: staff_id
+        required: true
+        type: string
+      - description: Staff info update request
+        in: body
+        name: StaffInfoUpdateRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.StaffInfoUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Update staff info (admin)
       tags:
       - staffs
 securityDefinitions:
