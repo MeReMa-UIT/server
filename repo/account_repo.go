@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
@@ -22,10 +23,13 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 	const query = `
 		SELECT acc_id, password_hash, role
 		FROM accounts
-		WHERE citizen_id = $1 OR phone = $1 OR email = $1 OR acc_id = $1::BIGINT
+		WHERE citizen_id = $1 OR phone = $1 OR email = $1 OR acc_id = $2
 	`
 
-	rows, _ := dbpool.Query(ctx, query, accIdentifier)
+	accID, err := strconv.Atoi(accIdentifier)
+	println("accID:", accID)
+
+	rows, _ := dbpool.Query(ctx, query, accIdentifier, accID)
 	creds, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[Credentials])
 
 	if err != nil {
