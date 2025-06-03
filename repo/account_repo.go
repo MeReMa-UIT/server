@@ -27,7 +27,6 @@ func GetAccountCredentials(ctx context.Context, accIdentifier string) (Credentia
 	`
 
 	accID, err := strconv.Atoi(accIdentifier)
-	println("accID:", accID)
 
 	rows, _ := dbpool.Query(ctx, query, accIdentifier, accID)
 	creds, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[Credentials])
