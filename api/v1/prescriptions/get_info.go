@@ -17,7 +17,7 @@ import (
 // @Produce json
 // @Param patient_id path string true "Patient ID"
 // @Security BearerAuth
-// @Success 200
+// @Success 200 {array} models.PrescriptionInfo
 // @Failure 400
 // @Failure 401
 // @Failure 403
@@ -51,7 +51,7 @@ func GetPrescriptionListWithPatientIDHandler(c *gin.Context) {
 // @Produce json
 // @Param record_id path string true "Medical Record ID"
 // @Security BearerAuth
-// @Success 200
+// @Success 200 {array} models.PrescriptionInfo
 // @Failure 400
 // @Failure 401
 // @Failure 403
@@ -85,7 +85,7 @@ func GetPrescriptionListWithRecordIDHandler(c *gin.Context) {
 // @Produce json
 // @Param prescription_id path string true "Prescription ID"
 // @Security BearerAuth
-// @Success 200
+// @Success 200 {array} models.PrescriptionDetailInfo
 // @Failure 400
 // @Failure 401
 // @Failure 403

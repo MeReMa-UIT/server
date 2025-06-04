@@ -5,7 +5,27 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/merema-uit/server/models"
+	errs "github.com/merema-uit/server/models/errors"
 )
+
+func CheckPrescriptionExists(ctx context.Context, prescriptionID string) error {
+	const query = `
+		SELECT EXISTS (
+			SELECT 1
+			FROM prescriptions
+			WHERE prescription_id = $1
+		)
+	`
+	var exists bool
+	err := dbpool.QueryRow(ctx, query, prescriptionID).Scan(&exists)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errs.ErrPrescriptionNotFound
+	}
+	return nil
+}
 
 func GetPrescriptionIDListWithAccID(ctx context.Context, accID string) ([]int, error) {
 	const query = `
@@ -101,16 +121,122 @@ func GetPrescriptionListWithPatientID(ctx context.Context, patientID string) ([]
 	return list, nil
 }
 
-func GetPrescriptionDetails(ctx context.Context, prescriptionID string) ([]models.PrescriptionDetail, error) {
+func GetPrescriptionDetails(ctx context.Context, prescriptionID string) ([]models.PrescriptionDetailInfo, error) {
 	const query = `
-		SELECT med_id, morning_dosage, afternoon_dosage, evening_dosage, duration_days, total_dosage, dosage_unit, instructions
+		SELECT detail_id, med_id, morning_dosage, afternoon_dosage, evening_dosage, duration_days, total_dosage, dosage_unit, instructions
 		FROM prescription_details
 		WHERE prescription_id = $1
 	`
 	rows, _ := dbpool.Query(ctx, query, prescriptionID)
-	details, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.PrescriptionDetail])
+	details, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.PrescriptionDetailInfo])
 	if err != nil {
 		return nil, err
 	}
 	return details, nil
+}
+
+func UpdatePrescription(ctx context.Context, prescriptionID string, req models.PrescriptionUpdateRequest) error {
+	const query = `
+		UPDATE prescriptions
+		SET 
+			is_insurance_covered = $1, 
+			prescription_note = $2
+		WHERE prescription_id = $3 AND received_at IS NULL
+		RETURNING prescription_id
+	`
+	if err := CheckPrescriptionExists(ctx, prescriptionID); err != nil {
+		return err
+	}
+
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	var updatedPrescriptionID int
+	err = tx.QueryRow(ctx, query, req.IsInsuranceCovered, req.PrescriptionNote, prescriptionID).Scan(&updatedPrescriptionID)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return errs.ErrReceivedPrescription
+		}
+		return err
+	}
+
+	for _, detail := range req.Details {
+		const query2 = `
+			UPDATE prescription_details
+			SET 
+				med_id = $1,
+				morning_dosage = $2,
+				afternoon_dosage = $3,
+				evening_dosage = $4,
+				duration_days = $5,
+				total_dosage = $6,
+				dosage_unit = $7,
+				instructions = $8
+			WHERE detail_id = $9 AND prescription_id = $10
+		`
+
+		_, err = tx.Exec(ctx, query2,
+			detail.MedicationID,
+			detail.MorningDosage,
+			detail.AfternoonDosage,
+			detail.EveningDosage,
+			detail.DurationDays,
+			detail.TotalDosage,
+			detail.DosageUnit,
+			detail.Instructions,
+			detail.DetailID,
+			prescriptionID,
+		)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ComfirmReceivingPrescription(ctx context.Context, prescriptionID string) error {
+	const query = `
+		UPDATE prescriptions
+		SET received_at = NOW()
+		WHERE prescription_id = $1 AND received_at IS NULL
+		RETURNING prescription_id
+	`
+
+	if err := CheckPrescriptionExists(ctx, prescriptionID); err != nil {
+		return err
+	}
+
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	result, err := tx.Exec(ctx, query, prescriptionID)
+	if err != nil {
+		return err
+	}
+
+	if result.RowsAffected() == 0 {
+		return errs.ErrReceivedPrescription
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+
+	return nil
 }

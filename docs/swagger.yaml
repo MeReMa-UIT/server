@@ -241,6 +241,53 @@ definitions:
       total_dosage:
         type: number
     type: object
+  models.PrescriptionDetailInfo:
+    properties:
+      afternoon_dosage:
+        type: number
+      detail_id:
+        type: integer
+      dosage_unit:
+        type: string
+      duration_days:
+        type: integer
+      evening_dosage:
+        type: number
+      instructions:
+        type: string
+      med_id:
+        type: integer
+      morning_dosage:
+        type: number
+      total_dosage:
+        type: number
+    type: object
+  models.PrescriptionInfo:
+    properties:
+      created_at:
+        type: string
+      is_insurance_covered:
+        type: boolean
+      prescription_id:
+        type: integer
+      prescription_note:
+        type: string
+      received_at:
+        type: string
+      record_id:
+        type: integer
+    type: object
+  models.PrescriptionUpdateRequest:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/models.PrescriptionDetailInfo'
+        type: array
+      is_insurance_covered:
+        type: boolean
+      prescription_note:
+        type: string
+    type: object
   models.ScheduleBookingRequest:
     properties:
       examination_date:
@@ -936,6 +983,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PrescriptionDetailInfo'
+            type: array
         "400":
           description: Bad Request
         "401":
@@ -947,6 +998,71 @@ paths:
       security:
       - BearerAuth: []
       summary: Get prescription details (doctor, patient)
+      tags:
+      - prescriptions
+    put:
+      consumes:
+      - application/json
+      description: Update prescription
+      parameters:
+      - description: Prescription ID
+        in: path
+        name: prescription_id
+        required: true
+        type: string
+      - description: Prescription Update Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.PrescriptionUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Update prescription (doctor)
+      tags:
+      - prescriptions
+  /prescriptions/{prescription_id}/confirm:
+    put:
+      consumes:
+      - application/json
+      description: Confirm that the prescription has been received
+      parameters:
+      - description: Prescription ID
+        in: path
+        name: prescription_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Confirm receiving prescription (receptionist)
       tags:
       - prescriptions
   /prescriptions/new:
@@ -995,6 +1111,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PrescriptionInfo'
+            type: array
         "400":
           description: Bad Request
         "401":
@@ -1024,6 +1144,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PrescriptionInfo'
+            type: array
         "400":
           description: Bad Request
         "401":

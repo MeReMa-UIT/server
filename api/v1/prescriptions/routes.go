@@ -7,4 +7,6 @@ func Routes(r *gin.RouterGroup) {
 	r.GET("/patients/:patient_id", GetPrescriptionListWithPatientIDHandler)
 	r.GET("/records/:record_id", GetPrescriptionListWithRecordIDHandler)
 	r.GET("/:prescription_id", GetPrescriptionDetailsHandler)
+	r.PUT("/:prescription_id", UpdatePrescriptionHandler)
+	r.PUT("/:prescription_id/confirm", ConfirmReceivingPrescriptionHandler)
 }

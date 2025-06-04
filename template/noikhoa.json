@@ -1,28 +1,33 @@
 {
-  "thong_tin_chung": {
-    "thong_tin_benh_an": {
-      "ms": "01/BV1",
-      "loai_benh_an": "Bệnh án Nội khoa",
-      "so_y_te": "",
-      "benh_vien": "",
-      "khoa": "",
-      "giuong": "",
-      "ma_yt": "",
-      "so_luu_tru": ""
+  "Thông tin chung": {
+    "Thông tin bệnh án": {
+      "Loại bệnh án": "Bệnh án Nội khoa",
+      "MS": "01/BV1",
+      "Sở Y tế": "",
+      "Bệnh viện": "",
+      "Khoa": "",
+      "Giường": "",
+      "Mã YT": "",
+      "Số lưu trữ": ""
     },
-    "hanh_chinh": {
-      "ho_ten": "",
-      "ngay_sinh": "",
-      "gioi_tinh": "",
-      "nghe_nghiep": "",
-      "dan_toc": "",
-      "quoc_tich": "",
-      "dia_chi": "",
-      "noi_lam_viec": "",
-      "doi_tuong": "",
-      "bhyt": {
-        "so_the": "",
-        "gia_tri_den_ngay": ""
+    "Hành chính": {
+      "Họ và tên": "",
+      "Sinh ngày": "",
+      "Giới": "",
+      "Nghề nghiệp": "",
+      "Dân tộc": "",
+      "Ngoại kiều": "",
+      "Địa chỉ": {
+        "Số nhà": "",
+        "Thôn, phố": "",
+        "Xã, phường": "",
+        "Huyện (Q, Tx)": ""
+      },
+      "Nơi làm việc": "",
+      "Đối tượng": "",
+      "BHYT": {
+        "Số thẻ": "",
+        "Giá trị đến ngày": ""
       },
       "nguoi_lien_he": ""
     },

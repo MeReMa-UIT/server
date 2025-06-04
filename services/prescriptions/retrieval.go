@@ -73,13 +73,13 @@ func GetPrescriptionListWithPatientID(ctx context.Context, authHeader, patientID
 	return list, nil
 }
 
-func GetPrescriptionDetails(ctx context.Context, authHeader, prescriptionID string) ([]models.PrescriptionDetail, error) {
+func GetPrescriptionDetails(ctx context.Context, authHeader, prescriptionID string) ([]models.PrescriptionDetailInfo, error) {
 	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}
 
-	var list []models.PrescriptionDetail
+	var list []models.PrescriptionDetailInfo
 	switch claims.Permission {
 	case permission.Doctor.String():
 		list, err = repo.GetPrescriptionDetails(ctx, prescriptionID)

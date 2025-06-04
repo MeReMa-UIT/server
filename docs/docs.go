@@ -975,7 +975,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.PrescriptionInfo"
+                            }
+                        }
                     },
                     "400": {
                         "description": "Bad Request"
@@ -1021,7 +1027,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.PrescriptionInfo"
+                            }
+                        }
                     },
                     "400": {
                         "description": "Bad Request"
@@ -1067,6 +1079,65 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.PrescriptionDetailInfo"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update prescription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prescriptions"
+                ],
+                "summary": "Update prescription (doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Prescription ID",
+                        "name": "prescription_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Prescription Update Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.PrescriptionUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
                         "description": "OK"
                     },
                     "400": {
@@ -1077,6 +1148,55 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/prescriptions/{prescription_id}/confirm": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Confirm that the prescription has been received",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prescriptions"
+                ],
+                "summary": "Confirm receiving prescription (receptionist)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Prescription ID",
+                        "name": "prescription_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -1764,6 +1884,78 @@ const docTemplate = `{
                 },
                 "total_dosage": {
                     "type": "number"
+                }
+            }
+        },
+        "models.PrescriptionDetailInfo": {
+            "type": "object",
+            "properties": {
+                "afternoon_dosage": {
+                    "type": "number"
+                },
+                "detail_id": {
+                    "type": "integer"
+                },
+                "dosage_unit": {
+                    "type": "string"
+                },
+                "duration_days": {
+                    "type": "integer"
+                },
+                "evening_dosage": {
+                    "type": "number"
+                },
+                "instructions": {
+                    "type": "string"
+                },
+                "med_id": {
+                    "type": "integer"
+                },
+                "morning_dosage": {
+                    "type": "number"
+                },
+                "total_dosage": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.PrescriptionInfo": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "is_insurance_covered": {
+                    "type": "boolean"
+                },
+                "prescription_id": {
+                    "type": "integer"
+                },
+                "prescription_note": {
+                    "type": "string"
+                },
+                "received_at": {
+                    "type": "string"
+                },
+                "record_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.PrescriptionUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PrescriptionDetailInfo"
+                    }
+                },
+                "is_insurance_covered": {
+                    "type": "boolean"
+                },
+                "prescription_note": {
+                    "type": "string"
                 }
             }
         },
