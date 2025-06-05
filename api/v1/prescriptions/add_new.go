@@ -23,7 +23,7 @@ import (
 // @Failure 401
 // @Failure 403
 // @Failure 500
-// @Router /prescriptions/new [post]
+// @Router /prescriptions [post]
 func AddNewPrescriptionHandler(c *gin.Context) {
 	var req models.NewPrescriptionRequest
 	authHeader := c.GetHeader("Authorization")
