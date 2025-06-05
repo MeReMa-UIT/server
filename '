@@ -1,7 +1,0 @@
-package record_services
-
-import "context"
-
-func AddNewRecord(ctx context.Context, authHeader string) error {
-
-}

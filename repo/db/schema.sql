@@ -263,7 +263,8 @@ CREATE TABLE public.record_types (
     type_id character(6) NOT NULL,
     type_name text NOT NULL,
     description text,
-    template jsonb NOT NULL
+    template_path text NOT NULL,
+    schema_path text NOT NULL
 );
 
 
@@ -275,7 +276,7 @@ CREATE TABLE public.records (
     record_id bigint NOT NULL,
     patient_id bigint NOT NULL,
     doctor_id bigint NOT NULL,
-    type character(6) NOT NULL,
+    type_id character(6) NOT NULL,
     primary_diagnosis character varying(10),
     secondary_diagnosis character varying(10),
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -660,10 +661,10 @@ CREATE INDEX records_secondary_diagnosis_idx ON public.records USING btree (seco
 
 
 --
--- Name: records_type_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: records_type_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX records_type_idx ON public.records USING btree (type);
+CREATE INDEX records_type_id_idx ON public.records USING btree (type_id);
 
 
 --
@@ -769,11 +770,11 @@ ALTER TABLE ONLY public.records
 
 
 --
--- Name: records records_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: records records_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.records
-    ADD CONSTRAINT records_type_fkey FOREIGN KEY (type) REFERENCES public.record_types(type_id);
+    ADD CONSTRAINT records_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.record_types(type_id);
 
 
 --

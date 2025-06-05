@@ -1,7 +1,7 @@
 {
   "THÔNG TIN CHUNG": {
     "Thông tin bệnh án": {
-      "Loại bệnh án": "Bệnh án Nội khoa",
+      "Loại bệnh án": "BỆNH ÁN NỘI KHOA",
       "MS": "01/BV1",
       "Sở Y tế": "",
       "Bệnh viện": "",
@@ -44,7 +44,7 @@
         "Khoa": "",
         "Thời gian": ""
       },
-      "chuyen_khoa": [
+      "Chuyển khoa": [
         {
           "Khoa": "",
           "Thời gian": ""
@@ -154,13 +154,13 @@
     "Tóm tắt kết quả xét nghiệm cận lâm sàng có giá trị chẩn đoán": "",
     "Phương pháp điều trị": "",
     "Tình trạng người bệnh ra viện": "",
-    "Hướng điều trị và các chế độ tiếp theo": ""
-  },
-  "Hồ sơ, phim, ảnh": {
-    "X - quang": [],
-    "CT Scanner": [],
-    "Siêu âm": [],
-    "Xét nghiệm": [],
-    "Khác": []
+    "Hướng điều trị và các chế độ tiếp theo": "",
+    "Hồ sơ, phim, ảnh": {
+      "X - quang": [],
+      "CT Scanner": [],
+      "Siêu âm": [],
+      "Xét nghiệm": [],
+      "Khác": []
+    }
   }
 }

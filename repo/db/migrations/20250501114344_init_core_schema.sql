@@ -36,7 +36,7 @@ CREATE    TABLE "records" (
           "record_id" bigserial PRIMARY KEY NOT NULL,
           "patient_id" BIGINT NOT NULL,
           "doctor_id" BIGINT NOT NULL,
-          "type" CHAR(6) NOT NULL,
+          "type_id" CHAR(6) NOT NULL,
           "primary_diagnosis" VARCHAR(10),
           "secondary_diagnosis" VARCHAR(10),
           "created_at" timestamptz NOT NULL DEFAULT (now ()),
@@ -48,7 +48,8 @@ CREATE    TABLE "record_types" (
           "type_id" CHAR(6) PRIMARY KEY NOT NULL,
           "type_name" text NOT NULL,
           "description" text,
-          "template" jsonb NOT NULL
+          "template_path" text NOT NULL,
+          "schema_path" text NOT NULL
           );
 
 CREATE    TABLE "diagnoses" ("icd_code" VARCHAR(10) PRIMARY KEY NOT NULL, "name" text NOT NULL, "description" text);
@@ -118,7 +119,7 @@ CREATE INDEX ON "records" ("patient_id");
 
 CREATE INDEX ON "records" ("doctor_id");
 
-CREATE INDEX ON "records" ("type");
+CREATE INDEX ON "records" ("type_id");
 
 CREATE INDEX ON "records" ("primary_diagnosis");
 
@@ -142,7 +143,7 @@ ALTER     TABLE "records" ADD FOREIGN KEY ("patient_id") REFERENCES "patients" (
 
 ALTER     TABLE "records" ADD FOREIGN KEY ("doctor_id") REFERENCES "staffs" ("staff_id");
 
-ALTER     TABLE "records" ADD FOREIGN KEY ("type") REFERENCES "record_types" ("type_id");
+ALTER     TABLE "records" ADD FOREIGN KEY ("type_id") REFERENCES "record_types" ("type_id");
 
 ALTER     TABLE "records" ADD FOREIGN KEY ("primary_diagnosis") REFERENCES "diagnoses" ("icd_code");
 

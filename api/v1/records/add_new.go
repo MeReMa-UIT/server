@@ -8,6 +8,7 @@ import (
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
 	record_services "github.com/merema-uit/server/services/records"
+	"github.com/merema-uit/server/utils"
 )
 
 // Add new record godoc
@@ -30,14 +31,17 @@ func AddNewRecordHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
-	err := record_services.AddNewRecord(c, authHeader, req)
+	err := record_services.AddNewRecord(c, authHeader, &req)
 	if err != nil {
 		switch err {
+		case errs.ErrInvalidMedicalRecordStructure:
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid medical record structure"})
 		case errs.ErrExpiredToken, errs.ErrInvalidToken, errs.ErrMalformedToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		case errs.ErrPermissionDenied:
 			c.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
 		default:
+			utils.Logger.Error("Error adding new record:", "error", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		}
 		return

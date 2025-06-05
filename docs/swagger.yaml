@@ -100,6 +100,13 @@ definitions:
       token:
         type: string
     type: object
+  models.MedicalRecordType:
+    properties:
+      type_id:
+        type: string
+      type_name:
+        type: string
+    type: object
   models.MedicationInfo:
     properties:
       generic_name:
@@ -128,10 +135,12 @@ definitions:
     type: object
   models.NewMedicalRecordRequest:
     properties:
-      details:
-        type: object
       patient_id:
         type: integer
+      record_detail:
+        type: object
+      type_id:
+        type: string
     type: object
   models.NewPrescriptionRequest:
     properties:
@@ -769,6 +778,35 @@ paths:
       summary: Get Diagnosis List (doctor)
       tags:
       - catalogs
+  /catalog/diagnoses/{icd_code}:
+    get:
+      consumes:
+      - application/json
+      description: Get info of a diagnosis
+      parameters:
+      - description: ICD Code
+        in: path
+        name: icd_code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DiagnosisInfo'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get Diagnosis Info (doctor)
+      tags:
+      - catalogs
   /catalog/medications:
     get:
       consumes:
@@ -792,6 +830,88 @@ paths:
       security:
       - BearerAuth: []
       summary: Get Medication List (doctor)
+      tags:
+      - catalogs
+  /catalog/medications/{medication_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get info of a medication
+      parameters:
+      - description: Medication ID
+        in: path
+        name: medication_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MedicationInfo'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get Medication Info (doctor)
+      tags:
+      - catalogs
+  /catalog/record-types:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of medical record types
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.MedicalRecordType'
+            type: array
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get Medical Record Type List (doctor)
+      tags:
+      - catalogs
+  /catalog/record-types/{type_id}/template:
+    get:
+      consumes:
+      - application/json
+      description: Get a medical record template by type ID
+      parameters:
+      - description: Medical Record Type ID  (01BV1, 02BV2, ...)
+        in: path
+        name: type_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema: {}
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get Medical Record Template (doctor)
       tags:
       - catalogs
   /comms/contacts:

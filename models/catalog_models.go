@@ -15,3 +15,15 @@ type DiagnosisInfo struct {
 	Name        string  `json:"name" db:"name"`
 	Description *string `json:"description" db:"description"`
 }
+
+type MedicalRecordType struct {
+	TypeID   string `json:"type_id" db:"type_id"`
+	TypeName string `json:"type_name" db:"type_name"`
+}
+
+type MedicalRecordTypeInfo struct {
+	MedicalRecordType
+	Description  *string `json:"description" db:"description"`
+	TemplatePath string  `json:"template_path" db:"template_path"`
+	SchemaPath   string  `json:"schema_path" db:"schema_path"`
+}

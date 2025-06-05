@@ -1,0 +1,660 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "THÔNG TIN CHUNG",
+    "BỆNH ÁN",
+    "TỔNG KẾT BỆNH ÁN"
+  ],
+  "properties": {
+    "THÔNG TIN CHUNG": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Thông tin bệnh án",
+        "Hành chính",
+        "Quản lý người bệnh",
+        "Chẩn đoán",
+        "Tình trạng ra viện"
+      ],
+      "properties": {
+        "Thông tin bệnh án": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Loại bệnh án",
+            "MS",
+            "Sở Y tế",
+            "Bệnh viện",
+            "Khoa",
+            "Giường",
+            "Mã YT",
+            "Số lưu trữ"
+          ],
+          "properties": {
+            "Loại bệnh án": {
+              "type": "string"
+            },
+            "MS": {
+              "type": "string"
+            },
+            "Sở Y tế": {
+              "type": "string"
+            },
+            "Bệnh viện": {
+              "type": "string"
+            },
+            "Khoa": {
+              "type": "string"
+            },
+            "Giường": {
+              "type": "string"
+            },
+            "Mã YT": {
+              "type": "string"
+            },
+            "Số lưu trữ": {
+              "type": "string"
+            }
+          }
+        },
+        "Hành chính": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Họ và tên",
+            "Sinh ngày",
+            "Giới",
+            "Nghề nghiệp",
+            "Dân tộc",
+            "Ngoại kiều",
+            "Địa chỉ",
+            "Nơi làm việc",
+            "Đối tượng",
+            "BHYT",
+            "Liên hệ"
+          ],
+          "properties": {
+            "Họ và tên": {
+              "type": "string"
+            },
+            "Sinh ngày": {
+              "type": "string"
+            },
+            "Giới": {
+              "type": "string"
+            },
+            "Nghề nghiệp": {
+              "type": "string"
+            },
+            "Dân tộc": {
+              "type": "string"
+            },
+            "Ngoại kiều": {
+              "type": "string"
+            },
+            "Địa chỉ": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Số nhà",
+                "Thôn, phố",
+                "Xã, phường",
+                "Huyện (Q, Tx)"
+              ],
+              "properties": {
+                "Số nhà": {
+                  "type": "string"
+                },
+                "Thôn, phố": {
+                  "type": "string"
+                },
+                "Xã, phường": {
+                  "type": "string"
+                },
+                "Huyện (Q, Tx)": {
+                  "type": "string"
+                }
+              }
+            },
+            "Nơi làm việc": {
+              "type": "string"
+            },
+            "Đối tượng": {
+              "type": "string"
+            },
+            "BHYT": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Số thẻ",
+                "Giá trị đến ngày"
+              ],
+              "properties": {
+                "Số thẻ": {
+                  "type": "string"
+                },
+                "Giá trị đến ngày": {
+                  "type": "string"
+                }
+              }
+            },
+            "Liên hệ": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Họ và tên",
+                "Địa chỉ",
+                "Số điện thoại"
+              ],
+              "properties": {
+                "Họ và tên": {
+                  "type": "string"
+                },
+                "Địa chỉ": {
+                  "type": "string"
+                },
+                "Số điện thoại": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "Quản lý người bệnh": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Vào viện",
+            "Trực tiếp vào",
+            "Nơi giới thiệu",
+            "Vào viện do bệnh này lần thứ",
+            "Vào khoa",
+            "Chuyển khoa",
+            "Chuyển viện",
+            "Ra viện",
+            "Tổng số ngày điều trị"
+          ],
+          "properties": {
+            "Vào viện": {
+              "type": "string"
+            },
+            "Trực tiếp vào": {
+              "type": "string"
+            },
+            "Nơi giới thiệu": {
+              "type": "string"
+            },
+            "Vào viện do bệnh này lần thứ": {
+              "type": "integer"
+            },
+            "Vào khoa": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Khoa",
+                "Thời gian"
+              ],
+              "properties": {
+                "Khoa": {
+                  "type": "string"
+                },
+                "Thời gian": {
+                  "type": "string"
+                }
+              }
+            },
+            "Chuyển khoa": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "Khoa",
+                  "Thời gian"
+                ],
+                "properties": {
+                  "Khoa": {
+                    "type": "string"
+                  },
+                  "Thời gian": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "Chuyển viện": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Loại",
+                "Chuyển đến"
+              ],
+              "properties": {
+                "Loại": {
+                  "type": "string"
+                },
+                "Chuyển đến": {
+                  "type": "string"
+                }
+              }
+            },
+            "Ra viện": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Thời gian",
+                "Lý do"
+              ],
+              "properties": {
+                "Thời gian": {
+                  "type": "string"
+                },
+                "Lý do": {
+                  "type": "string"
+                }
+              }
+            },
+            "Tổng số ngày điều trị": {
+              "type": "integer"
+            }
+          }
+        },
+        "Chẩn đoán": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Nơi chuyển đến",
+            "KKB, Cấp cứu",
+            "Khi vào khoa điều trị",
+            "Thủ thuật",
+            "Phẫu thuật",
+            "Ra viện",
+            "Tai biến",
+            "Biến chứng"
+          ],
+          "properties": {
+            "Nơi chuyển đến": {
+              "type": "string"
+            },
+            "KKB, Cấp cứu": {
+              "type": "string"
+            },
+            "Khi vào khoa điều trị": {
+              "type": "string"
+            },
+            "Thủ thuật": {
+              "type": "boolean"
+            },
+            "Phẫu thuật": {
+              "type": "boolean"
+            },
+            "Ra viện": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Bệnh chính",
+                "Bệnh kèm theo"
+              ],
+              "properties": {
+                "Bệnh chính": {
+                  "type": "string"
+                },
+                "Bệnh kèm theo": {
+                  "type": "string"
+                }
+              }
+            },
+            "Tai biến": {
+              "type": "boolean"
+            },
+            "Biến chứng": {
+              "type": "boolean"
+            }
+          }
+        },
+        "Tình trạng ra viện": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Kết quả điều trị",
+            "Giải phẫu bệnh",
+            "Tình hình tử vong",
+            "Nguyên nhân chính tử vong",
+            "Khám nghiệm tử thi",
+            "Chẩn đoán giải phẫu tử thi"
+          ],
+          "properties": {
+            "Kết quả điều trị": {
+              "type": "string"
+            },
+            "Giải phẫu bệnh": {
+              "type": "string"
+            },
+            "Tình hình tử vong": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Thời gian",
+                "Nguyên nhân",
+                "Trong 24 giờ vào viện"
+              ],
+              "properties": {
+                "Thời gian": {
+                  "type": "string"
+                },
+                "Nguyên nhân": {
+                  "type": "string"
+                },
+                "Trong 24 giờ vào viện": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "Nguyên nhân chính tử vong": {
+              "type": "string"
+            },
+            "Khám nghiệm tử thi": {
+              "type": "boolean"
+            },
+            "Chẩn đoán giải phẫu tử thi": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "BỆNH ÁN": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Lý do vào viện",
+        "Hỏi bệnh",
+        "Khám bệnh",
+        "Chẩn đoán khi vào khoa điều trị",
+        "Tiên lượng",
+        "Hướng điều trị"
+      ],
+      "properties": {
+        "Lý do vào viện": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Lý do",
+            "Vào ngày thứ"
+          ],
+          "properties": {
+            "Lý do": {
+              "type": "string"
+            },
+            "Vào ngày thứ": {
+              "type": "string"
+            }
+          }
+        },
+        "Hỏi bệnh": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Quá trình bệnh lý",
+            "Tiền sử bệnh"
+          ],
+          "properties": {
+            "Quá trình bệnh lý": {
+              "type": "string"
+            },
+            "Tiền sử bệnh": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Bản thân",
+                "Đặc điểm liên quan bệnh",
+                "Gia đình"
+              ],
+              "properties": {
+                "Bản thân": {
+                  "type": "string"
+                },
+                "Đặc điểm liên quan bệnh": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "Dị ứng",
+                    "Ma túy",
+                    "Rượu bia",
+                    "Thuốc lá",
+                    "Thuốc lào",
+                    "Khác"
+                  ],
+                  "properties": {
+                    "Dị ứng": {
+                      "type": "string"
+                    },
+                    "Ma túy": {
+                      "type": "string"
+                    },
+                    "Rượu bia": {
+                      "type": "string"
+                    },
+                    "Thuốc lá": {
+                      "type": "string"
+                    },
+                    "Thuốc lào": {
+                      "type": "string"
+                    },
+                    "Khác": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "Gia đình": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "Khám bệnh": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Toàn thân",
+            "Các cơ quan",
+            "Các xét nghiệm cận lâm sàng cần làm",
+            "Tóm tắt bệnh án"
+          ],
+          "properties": {
+            "Toàn thân": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Nội dung",
+                "Mạch",
+                "Nhiệt độ",
+                "Huyết áp",
+                "Nhịp thở",
+                "Cân nặng"
+              ],
+              "properties": {
+                "Nội dung": {
+                  "type": "string"
+                },
+                "Mạch": {
+                  "type": "integer"
+                },
+                "Nhiệt độ": {
+                  "type": "number"
+                },
+                "Huyết áp": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "Tâm thu",
+                    "Tâm trương"
+                  ],
+                  "properties": {
+                    "Tâm thu": {
+                      "type": "integer"
+                    },
+                    "Tâm trương": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "Nhịp thở": {
+                  "type": "integer"
+                },
+                "Cân nặng": {
+                  "type": "number"
+                }
+              }
+            },
+            "Các cơ quan": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Tuần hoàn",
+                "Hô hấp",
+                "Tiêu hóa",
+                "Thận - Tiết niệu - Sinh dục",
+                "Thần kinh",
+                "Cơ - Xương - Khớp",
+                "Tai - Mũi - Họng",
+                "Răng - Hàm - Mặt",
+                "Mắt",
+                "Nội tiết, dinh dưỡng và các bệnh lý khác"
+              ],
+              "properties": {
+                "Tuần hoàn": {
+                  "type": "string"
+                },
+                "Hô hấp": {
+                  "type": "string"
+                },
+                "Tiêu hóa": {
+                  "type": "string"
+                },
+                "Thận - Tiết niệu - Sinh dục": {
+                  "type": "string"
+                },
+                "Thần kinh": {
+                  "type": "string"
+                },
+                "Cơ - Xương - Khớp": {
+                  "type": "string"
+                },
+                "Tai - Mũi - Họng": {
+                  "type": "string"
+                },
+                "Răng - Hàm - Mặt": {
+                  "type": "string"
+                },
+                "Mắt": {
+                  "type": "string"
+                },
+                "Nội tiết, dinh dưỡng và các bệnh lý khác": {
+                  "type": "string"
+                }
+              }
+            },
+            "Các xét nghiệm cận lâm sàng cần làm": {
+              "type": "string"
+            },
+            "Tóm tắt bệnh án": {
+              "type": "string"
+            }
+          }
+        },
+        "Chẩn đoán khi vào khoa điều trị": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "Bệnh chính",
+            "Bệnh kèm theo",
+            "Phân biệt"
+          ],
+          "properties": {
+            "Bệnh chính": {
+              "type": "string"
+            },
+            "Bệnh kèm theo": {
+              "type": "string"
+            },
+            "Phân biệt": {
+              "type": "string"
+            }
+          }
+        },
+        "Tiên lượng": {
+          "type": "string"
+        },
+        "Hướng điều trị": {
+          "type": "string"
+        }
+      }
+    },
+    "TỔNG KẾT BỆNH ÁN": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Quá trình bệnh lý và diễn biến lâm sàng",
+        "Tóm tắt kết quả xét nghiệm cận lâm sàng có giá trị chẩn đoán",
+        "Phương pháp điều trị",
+        "Tình trạng người bệnh ra viện",
+        "Hướng điều trị và các chế độ tiếp theo",
+        "Hồ sơ, phim, ảnh"
+      ],
+      "properties": {
+        "Quá trình bệnh lý và diễn biến lâm sàng": {
+          "type": "string"
+        },
+        "Tóm tắt kết quả xét nghiệm cận lâm sàng có giá trị chẩn đoán": {
+          "type": "string"
+        },
+        "Phương pháp điều trị": {
+          "type": "string"
+        },
+        "Tình trạng người bệnh ra viện": {
+          "type": "string"
+        },
+        "Hướng điều trị và các chế độ tiếp theo": {
+          "type": "string"
+        },
+        "Hồ sơ, phim, ảnh": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "X - quang",
+            "CT Scanner",
+            "Siêu âm",
+            "Xét nghiệm",
+            "Khác"
+          ],
+          "properties": {
+            "X - quang": {
+              "type": "array",
+              "items": {}
+            },
+            "CT Scanner": {
+              "type": "array",
+              "items": {}
+            },
+            "Siêu âm": {
+              "type": "array",
+              "items": {}
+            },
+            "Xét nghiệm": {
+              "type": "array",
+              "items": {}
+            },
+            "Khác": {
+              "type": "array",
+              "items": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

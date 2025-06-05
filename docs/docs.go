@@ -573,6 +573,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/catalog/diagnoses/{icd_code}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get info of a diagnosis",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "catalogs"
+                ],
+                "summary": "Get Diagnosis Info (doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ICD Code",
+                        "name": "icd_code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.DiagnosisInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/catalog/medications": {
             "get": {
                 "security": [
@@ -600,6 +646,136 @@ const docTemplate = `{
                                 "$ref": "#/definitions/models.MedicationInfo"
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/catalog/medications/{medication_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get info of a medication",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "catalogs"
+                ],
+                "summary": "Get Medication Info (doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Medication ID",
+                        "name": "medication_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.MedicationInfo"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/catalog/record-types": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a list of medical record types",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "catalogs"
+                ],
+                "summary": "Get Medical Record Type List (doctor)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.MedicalRecordType"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/catalog/record-types/{type_id}/template": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a medical record template by type ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "catalogs"
+                ],
+                "summary": "Get Medical Record Template (doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Medical Record Type ID  (01BV1, 02BV2, ...)",
+                        "name": "type_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {}
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -1716,6 +1892,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.MedicalRecordType": {
+            "type": "object",
+            "properties": {
+                "type_id": {
+                    "type": "string"
+                },
+                "type_name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.MedicationInfo": {
             "type": "object",
             "properties": {
@@ -1759,11 +1946,14 @@ const docTemplate = `{
         "models.NewMedicalRecordRequest": {
             "type": "object",
             "properties": {
-                "details": {
-                    "type": "object"
-                },
                 "patient_id": {
                     "type": "integer"
+                },
+                "record_detail": {
+                    "type": "object"
+                },
+                "type_id": {
+                    "type": "string"
                 }
             }
         },

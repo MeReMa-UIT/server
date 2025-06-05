@@ -9,23 +9,21 @@ import (
 	"github.com/merema-uit/server/utils"
 )
 
-// Get Medication Info godoc
-// @Summary      Get Medication Info (doctor)
-// @Description  Get info of a medication
+// Get Medication List godoc
+// @Summary      Get Medication List (doctor)
+// @Description  Get a list of medications
 // @Tags         catalogs
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        medication_id  path  string  true  "Medication ID"
-// @Success      200  {object}  models.MedicationInfo
+// @Success      200  {array}  models.MedicationInfo
 // @Failure      401
 // @Failure      403
 // @Failure      500
-// @Router       /catalog/medications/{medication_id} [get]
-func GetMedicationInfoHandler(c *gin.Context) {
+// @Router       /catalog/medications [get]
+func GetMedicationListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	medicationID := c.Param("medication_id")
-	medicationInfo, err := retrieval.GetMedicationInfo(c, authHeader, medicationID)
+	list, err := retrieval.GetMedicationList(c, authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrPermissionDenied:
@@ -33,32 +31,29 @@ func GetMedicationInfoHandler(c *gin.Context) {
 		case errs.ErrExpiredToken, errs.ErrMalformedToken, errs.ErrInvalidToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		default:
-			utils.Logger.Error("Error retrieving medication info", "error", err.Error())
+			utils.Logger.Error("Error retrieving medication list", "error", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		}
 		return
 	}
-	c.IndentedJSON(http.StatusOK, medicationInfo)
-
+	c.IndentedJSON(http.StatusOK, list)
 }
 
-// Get Diagnosis Info godoc
-// @Summary      Get Diagnosis Info (doctor)
-// @Description  Get info of a diagnosis
+// Get Diagnosis List godoc
+// @Summary      Get Diagnosis List (doctor)
+// @Description  Get a list of diagnoses
 // @Tags         catalogs
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        icd_code  path  string  true  "ICD Code"
-// @Success      200  {object}  models.DiagnosisInfo
+// @Success      200  {array}  models.DiagnosisInfo
 // @Failure      401
 // @Failure      403
 // @Failure      500
-// @Router       /catalog/diagnoses/{icd_code} [get]
-func GetDiagnosisInfoHandler(c *gin.Context) {
+// @Router       /catalog/diagnoses [get]
+func GetDiagnosisListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	icdCode := c.Param("icd_code")
-	diagnosisInfo, err := retrieval.GetDiagnosisInfo(c, authHeader, icdCode)
+	list, err := retrieval.GetDiagnosisList(c, authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrPermissionDenied:
@@ -66,31 +61,29 @@ func GetDiagnosisInfoHandler(c *gin.Context) {
 		case errs.ErrExpiredToken, errs.ErrMalformedToken, errs.ErrInvalidToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		default:
-			utils.Logger.Error("Error retrieving diagnosis info", "error", err.Error())
+			utils.Logger.Error("Error retrieving diagnosis list", "error", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		}
 		return
 	}
-	c.IndentedJSON(http.StatusOK, diagnosisInfo)
+	c.IndentedJSON(http.StatusOK, list)
 }
 
-// Get Medical Record Template godoc
-// @Summary      Get Medical Record Template (doctor)
-// @Description  Get a medical record template by type ID
+// Get Medical Record Type List godoc
+// @Summary      Get Medical Record Type List (doctor)
+// @Description  Get a list of medical record types
 // @Tags         catalogs
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        type_id  path  string  true  "Medical Record Type ID  (01BV1, 02BV2, ...)"
-// @Success      200  {object} interface{}
+// @Success      200  {array}  models.MedicalRecordType
 // @Failure      401
 // @Failure      403
 // @Failure      500
-// @Router       /catalog/record-types/{type_id}/template [get]
-func GetMedicalRecordTemplateHandler(c *gin.Context) {
+// @Router       /catalog/record-types [get]
+func GetMedicalRecordTypeListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	typeID := c.Param("type_id")
-	template, err := retrieval.GetMedicalRecordTemplate(c, authHeader, typeID)
+	list, err := retrieval.GetMedicalRecordTypeList(c, authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrPermissionDenied:
@@ -98,10 +91,10 @@ func GetMedicalRecordTemplateHandler(c *gin.Context) {
 		case errs.ErrExpiredToken, errs.ErrMalformedToken, errs.ErrInvalidToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		default:
-			utils.Logger.Error("Error retrieving record template", "error", err.Error())
+			utils.Logger.Error("Error retrieving medical record type list", "error", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		}
 		return
 	}
-	c.IndentedJSON(http.StatusOK, template)
+	c.IndentedJSON(http.StatusOK, list)
 }
