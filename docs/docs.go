@@ -533,40 +533,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/records": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Add a new record for a patient",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "records"
-                ],
-                "summary": "Add a new record (doctor)",
-                "responses": {
-                    "201": {
-                        "description": "Created"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
         "/catalog/diagnoses": {
             "get": {
                 "security": [
@@ -1238,6 +1204,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/records": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Add a new record for a patient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Add a new record (doctor)",
+                "parameters": [
+                    {
+                        "description": "New Medical Record Request",
+                        "name": "NewMedicalRecordRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.NewMedicalRecordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/schedules": {
             "get": {
                 "security": [
@@ -1742,6 +1753,17 @@ const docTemplate = `{
                 },
                 "sent_at": {
                     "type": "string"
+                }
+            }
+        },
+        "models.NewMedicalRecordRequest": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "object"
+                },
+                "patient_id": {
+                    "type": "integer"
                 }
             }
         },

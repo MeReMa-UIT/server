@@ -21,3 +21,25 @@ func GetRecordIDListByAccID(ctx context.Context, accID string) ([]int, error) {
 	}
 	return recordIDList, nil
 }
+
+func StoreMedicalRecord(ctx context.Context) error {
+	const query = `
+		INSERT INTO records (patient_id, doctor_id)
+		VALUES ()
+		ON CONFLICT () DO NOTHING
+	`
+
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.ReadCommitted,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	_, err = tx.Exec(ctx, query)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -256,6 +256,18 @@ ALTER SEQUENCE public.record_attachments_attachment_id_seq OWNED BY public.recor
 
 
 --
+-- Name: record_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.record_types (
+    type_id character(6) NOT NULL,
+    type_name text NOT NULL,
+    description text,
+    template jsonb NOT NULL
+);
+
+
+--
 -- Name: records; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -263,7 +275,7 @@ CREATE TABLE public.records (
     record_id bigint NOT NULL,
     patient_id bigint NOT NULL,
     doctor_id bigint NOT NULL,
-    type text NOT NULL,
+    type character(6) NOT NULL,
     primary_diagnosis character varying(10),
     secondary_diagnosis character varying(10),
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -520,6 +532,14 @@ ALTER TABLE ONLY public.prescriptions
 
 
 --
+-- Name: prescriptions prescriptions_record_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prescriptions
+    ADD CONSTRAINT prescriptions_record_id_key UNIQUE (record_id);
+
+
+--
 -- Name: queue_number queue_number_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -533,6 +553,14 @@ ALTER TABLE ONLY public.queue_number
 
 ALTER TABLE ONLY public.record_attachments
     ADD CONSTRAINT record_attachments_pkey PRIMARY KEY (attachment_id);
+
+
+--
+-- Name: record_types record_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.record_types
+    ADD CONSTRAINT record_types_pkey PRIMARY KEY (type_id);
 
 
 --
@@ -573,6 +601,83 @@ ALTER TABLE ONLY public.staffs
 
 ALTER TABLE ONLY public.staffs
     ADD CONSTRAINT staffs_pkey PRIMARY KEY (staff_id);
+
+
+--
+-- Name: patients_acc_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX patients_acc_id_idx ON public.patients USING btree (acc_id);
+
+
+--
+-- Name: prescription_details_med_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX prescription_details_med_id_idx ON public.prescription_details USING btree (med_id);
+
+
+--
+-- Name: prescription_details_prescription_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX prescription_details_prescription_id_idx ON public.prescription_details USING btree (prescription_id);
+
+
+--
+-- Name: record_attachments_record_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX record_attachments_record_id_idx ON public.record_attachments USING btree (record_id);
+
+
+--
+-- Name: records_doctor_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX records_doctor_id_idx ON public.records USING btree (doctor_id);
+
+
+--
+-- Name: records_patient_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX records_patient_id_idx ON public.records USING btree (patient_id);
+
+
+--
+-- Name: records_primary_diagnosis_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX records_primary_diagnosis_idx ON public.records USING btree (primary_diagnosis);
+
+
+--
+-- Name: records_secondary_diagnosis_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX records_secondary_diagnosis_idx ON public.records USING btree (secondary_diagnosis);
+
+
+--
+-- Name: records_type_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX records_type_idx ON public.records USING btree (type);
+
+
+--
+-- Name: schedules_acc_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX schedules_acc_id_idx ON public.schedules USING btree (acc_id);
+
+
+--
+-- Name: schedules_type_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX schedules_type_idx ON public.schedules USING btree (type);
 
 
 --
@@ -661,6 +766,14 @@ ALTER TABLE ONLY public.records
 
 ALTER TABLE ONLY public.records
     ADD CONSTRAINT records_secondary_diagnosis_fkey FOREIGN KEY (secondary_diagnosis) REFERENCES public.diagnoses(icd_code);
+
+
+--
+-- Name: records records_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.records
+    ADD CONSTRAINT records_type_fkey FOREIGN KEY (type) REFERENCES public.record_types(type_id);
 
 
 --
