@@ -804,7 +804,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get Diagnosis Info (doctor)
+      summary: Get Diagnosis Info (doctor, patient)
       tags:
       - catalogs
   /catalog/medications:
@@ -858,7 +858,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get Medication Info (doctor)
+      summary: Get Medication Info (doctor, patient)
       tags:
       - catalogs
   /catalog/record-types:
@@ -892,7 +892,7 @@ paths:
       - application/json
       description: Get a medical record template by type ID
       parameters:
-      - description: Medical Record Type ID  (01BV1, 02BV2, ...)
+      - description: Medical Record Type ID  (01BV1, 02BV1, ...)
         in: path
         name: type_id
         required: true

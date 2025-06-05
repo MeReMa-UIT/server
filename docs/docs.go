@@ -590,7 +590,7 @@ const docTemplate = `{
                 "tags": [
                     "catalogs"
                 ],
-                "summary": "Get Diagnosis Info (doctor)",
+                "summary": "Get Diagnosis Info (doctor, patient)",
                 "parameters": [
                     {
                         "type": "string",
@@ -676,7 +676,7 @@ const docTemplate = `{
                 "tags": [
                     "catalogs"
                 ],
-                "summary": "Get Medication Info (doctor)",
+                "summary": "Get Medication Info (doctor, patient)",
                 "parameters": [
                     {
                         "type": "string",
@@ -766,7 +766,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Medical Record Type ID  (01BV1, 02BV2, ...)",
+                        "description": "Medical Record Type ID  (01BV1, 02BV1, ...)",
                         "name": "type_id",
                         "in": "path",
                         "required": true
