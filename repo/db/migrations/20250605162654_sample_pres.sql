@@ -13,12 +13,48 @@ INSERT    INTO prescription_details (
           dosage_unit,
           instructions
           )
-VALUES    (3000000000, 1, 1.0, 1.0, 1.0, 3, 9.0, 'Viên', '1 viên một ngày nhá ku'),
-          (3000000000, 4, 2.0, 1.0, 2.0, 2, 10.0, 'Viên', '2 viên sáng, tối; trưa 1 viên nhá cưng');
+VALUES    (
+          (
+          SELECT    prescription_id
+          FROM      prescriptions
+          WHERE     record_id = 2000000000
+          ),
+          1,
+          1.0,
+          1.0,
+          1.0,
+          3,
+          9.0,
+          'Viên',
+          '1 viên một ngày nhá ku'
+          ),
+          (
+          (
+          SELECT    prescription_id
+          FROM      prescriptions
+          WHERE     record_id = 2000000000
+          ),
+          4,
+          2.0,
+          1.0,
+          2.0,
+          2,
+          10.0,
+          'Viên',
+          '2 viên sáng, tối; trưa 1 viên nhá cưng'
+          );
 
 -- migrate:down
 DELETE    FROM prescription_details
-WHERE     prescription_id = 3000000000;
+WHERE     prescription_id = (
+          SELECT    prescription_id
+          FROM      prescriptions
+          WHERE     record_id = 2000000000
+          );
 
-DELETE    FROM prescription_details
-WHERE     prescription_id = 3000000000;
+DELETE    FROM prescriptions
+WHERE     prescription_id = (
+          SELECT    prescription_id
+          FROM      prescriptions
+          WHERE     record_id = 2000000000
+          );
