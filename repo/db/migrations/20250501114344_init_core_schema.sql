@@ -180,6 +180,8 @@ DROP      TABLE if EXISTS "records";
 
 DROP      TABLE if EXISTS "diagnoses";
 
+DROP      TABLE if EXISTS "record_types";
+
 DROP      TABLE if EXISTS "patients";
 
 DROP      TABLE if EXISTS "staffs";
