@@ -8,13 +8,13 @@ INSERT    INTO prescription_details (
           morning_dosage,
           afternoon_dosage,
           evening_dosage,
-          total_dosage,
           duration_days,
+          total_dosage,
           dosage_unit,
           instructions
           )
-VALUES    (3000000000, 1, 1.0, 1.0, 1.0, 9.0, 3, 'Viên', '1 viên một ngày nhá ku'),
-          (3000000000, 4, 2.0, 1.0, 2.0, 10.0, 2, 'Viên', '2 viên sáng, tối; trưa 1 viên nhá cưng');
+VALUES    (3000000000, 1, 1.0, 1.0, 1.0, 3, 9.0, 'Viên', '1 viên một ngày nhá ku'),
+          (3000000000, 4, 2.0, 1.0, 2.0, 2, 10.0, 'Viên', '2 viên sáng, tối; trưa 1 viên nhá cưng');
 
 -- migrate:down
 DELETE    FROM prescription_details
