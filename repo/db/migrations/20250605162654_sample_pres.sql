@@ -14,7 +14,7 @@ INSERT    INTO prescription_details (
           instructions
           )
 VALUES    (3000000000, 1, 1.0, 1.0, 1.0, 9.0, 3, 'Viên', '1 viên một ngày nhá ku'),
-          (3000000000, 4, 2.0, 1.0, 2.0, 9.0, 3, 'Viên', '2 viên sáng, tối; trưa 1 viên nhá cưng');
+          (3000000000, 4, 2.0, 1.0, 2.0, 10.0, 2, 'Viên', '2 viên sáng, tối; trưa 1 viên nhá cưng');
 
 -- migrate:down
 DELETE    FROM prescription_details
