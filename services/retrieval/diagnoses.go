@@ -26,7 +26,7 @@ func GetDiagnosisInfo(ctx context.Context, authHeader, icdCode string) (models.D
 	if err != nil {
 		return models.DiagnosisInfo{}, err
 	}
-	if claims.Permission != permission.Doctor.String() {
+	if claims.Permission != permission.Doctor.String() && claims.Permission != permission.Patient.String() {
 		return models.DiagnosisInfo{}, errs.ErrPermissionDenied
 	}
 	return repo.GetDiagnosisInfo(ctx, icdCode)

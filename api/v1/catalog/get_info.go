@@ -10,7 +10,7 @@ import (
 )
 
 // Get Medication Info godoc
-// @Summary      Get Medication Info (doctor)
+// @Summary      Get Medication Info (doctor, patient)
 // @Description  Get info of a medication
 // @Tags         catalogs
 // @Accept       json
@@ -43,7 +43,7 @@ func GetMedicationInfoHandler(c *gin.Context) {
 }
 
 // Get Diagnosis Info godoc
-// @Summary      Get Diagnosis Info (doctor)
+// @Summary      Get Diagnosis Info (doctor, patient)
 // @Description  Get info of a diagnosis
 // @Tags         catalogs
 // @Accept       json
@@ -81,7 +81,7 @@ func GetDiagnosisInfoHandler(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        type_id  path  string  true  "Medical Record Type ID  (01BV1, 02BV2, ...)"
+// @Param        type_id  path  string  true  "Medical Record Type ID  (01BV1, 02BV1, ...)"
 // @Success      200  {object} interface{}
 // @Failure      401
 // @Failure      403

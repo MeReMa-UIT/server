@@ -26,7 +26,7 @@ func GetMedicationInfo(ctx context.Context, authHeader string, medicationID stri
 	if err != nil {
 		return models.MedicationInfo{}, err
 	}
-	if claims.Permission != permission.Doctor.String() {
+	if claims.Permission != permission.Doctor.String() && claims.Permission != permission.Patient.String() {
 		return models.MedicationInfo{}, errs.ErrPermissionDenied
 	}
 	medicationInfo, err := repo.GetMedicationInfo(ctx, medicationID)
