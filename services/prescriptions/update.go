@@ -15,7 +15,7 @@ func ConfirmReceivingPrescription(ctx context.Context, authHeader, prescriptionI
 	if err != nil {
 		return err
 	}
-	if claims.Permission != permission.Receptionist.String() {
+	if claims.Permission != permission.Doctor.String() {
 		return errs.ErrPermissionDenied
 	}
 	return repo.ComfirmReceivingPrescription(ctx, prescriptionID)
