@@ -21,6 +21,7 @@
 - `JWT_SESSION_EXPIRATION` (an integer, measured in minutes)
 - `JWT_RECOVERY_EXPIRATION` (an integer, measured in minutes)
 - `JWT_REGISTRATION_EXPIRATION` (an integer, measured in minutes)
+- `FILE_STORAGE_PATH` (an absolute path or relative path, where files, images will be stored)
 
 
 ### Setup
@@ -30,8 +31,7 @@
 - Run `go get -u github.com/swaggo/swag` (if `swag` hasn't been installed yet)
 - Run `go mod tidy`
 - Run `make run`
-- Check `/test` for testing cmd. Use swagger UI to test API
-- swagger is also available, check it for frontend dev
+- Swagger UI is also available, use it to test API and dev frontend
 
 ### To-Do
 - [x] Add mutex lock for repo layer

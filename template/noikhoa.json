@@ -1,5 +1,5 @@
 {
-  "Thông tin chung": {
+  "THÔNG TIN CHUNG": {
     "Thông tin bệnh án": {
       "Loại bệnh án": "Bệnh án Nội khoa",
       "MS": "01/BV1",
@@ -29,136 +29,138 @@
         "Số thẻ": "",
         "Giá trị đến ngày": ""
       },
-      "nguoi_lien_he": ""
+      "Liên hệ": {
+        "Họ và tên": "",
+        "Địa chỉ": "",
+        "Số điện thoại": ""
+      }
     },
-    "quan_ly_nguoi_benh": {
-      "vao_vien": "",
-      "truc_tiep_vao": "",
-      "noi_gioi_thieu": "",
-      "lan_vao_vien": 0,
-      "vao_khoa": {
-        "khoa": "",
-        "thoi_gian": ""
+    "Quản lý người bệnh": {
+      "Vào viện": "",
+      "Trực tiếp vào": "",
+      "Nơi giới thiệu": "",
+      "Vào viện do bệnh này lần thứ": 0,
+      "Vào khoa": {
+        "Khoa": "",
+        "Thời gian": ""
       },
       "chuyen_khoa": [
         {
-          "khoa": "",
-          "thoi_gian": ""
+          "Khoa": "",
+          "Thời gian": ""
         },
         {
-          "khoa": "",
-          "thoi_gian": ""
+          "Khoa": "",
+          "Thời gian": ""
         },
         {
-          "khoa": "",
-          "thoi_gian": ""
+          "Khoa": "",
+          "Thời gian": ""
         }
       ],
-      "chuyen_vien": {
-        "loai": "",
-        "chuyen_den": ""
+      "Chuyển viện": {
+        "Loại": "",
+        "Chuyển đến": ""
       },
-      "ra_vien": {
-        "thoi_gian": "",
-        "ly_do": ""
+      "Ra viện": {
+        "Thời gian": "",
+        "Lý do": ""
       },
-      "tong_ngay_dieu_tri": 0
+      "Tổng số ngày điều trị": 0
     },
-    "chan_doan": {
-      "noi_chuyen_den": "",
-      "kkb_cap_cuu": "",
-      "khi_vao_khoa_dieu_tri": "",
-      "thu_thuat": false,
-      "phau_thuat": false,
-      "ra_vien": {
-        "benh_chinh": "",
-        "benh_kem_theo": ""
+    "Chẩn đoán": {
+      "Nơi chuyển đến": "",
+      "KKB, Cấp cứu": "",
+      "Khi vào khoa điều trị": "",
+      "Thủ thuật": false,
+      "Phẫu thuật": false,
+      "Ra viện": {
+        "Bệnh chính": "",
+        "Bệnh kèm theo": ""
       },
-      "tai_bien": false,
-      "bien_chung": false
+      "Tai biến": false,
+      "Biến chứng": false
     },
-    "tinh_trang_ra_vien": {
-      "ket_qua_dieu_tri": "",
-      "giai_phau_benh": "",
-      "tinh_hinh_tu_vong": {
-        "thoi_gian": "",
-        "nguyen_nhan": "",
-        "trong_24h_vao_vien": false
+    "Tình trạng ra viện": {
+      "Kết quả điều trị": "",
+      "Giải phẫu bệnh": "",
+      "Tình hình tử vong": {
+        "Thời gian": "",
+        "Nguyên nhân": "",
+        "Trong 24 giờ vào viện": false
       },
-      "nguyen_nhan_chinh_tu_vong": "",
-      "kham_nghiem_tu_thi": false,
-      "chan_doan_giai_phau_tu_thi": ""
+      "Nguyên nhân chính tử vong": "",
+      "Khám nghiệm tử thi": false,
+      "Chẩn đoán giải phẫu tử thi": ""
     }
   },
-  "benh_an": {
-    "ly_do_vao_vien": {
-      "ly_do": "",
-      "vao_ngay_thu": ""
+  "BỆNH ÁN": {
+    "Lý do vào viện": {
+      "Lý do": "",
+      "Vào ngày thứ": ""
     },
-    "hoi_benh": {
-      "qua_trinh_benh_ly": "",
-      "tien_su_benh": {
-        "ban_than": "",
-        "dac_diem_lien_quan_benh": {
-          "di_ung": "",
-          "ruou_bia": "",
-          "ma_tuy": "",
-          "thuoc_la": "",
-          "thuoc_lao": "",
-          "khac": ""
+    "Hỏi bệnh": {
+      "Quá trình bệnh lý": "",
+      "Tiền sử bệnh": {
+        "Bản thân": "",
+        "Đặc điểm liên quan bệnh": {
+          "Dị ứng": "",
+          "Ma túy": "",
+          "Rượu bia": "",
+          "Thuốc lá": "",
+          "Thuốc lào": "",
+          "Khác": ""
         },
-        "gia_dinh": ""
+        "Gia đình": ""
       }
     },
-    "kham_benh": {
-      "toan_than": {
-        "noi_dung": "",
-        "mach": 0,
-        "nhiet_do": 0.0,
-        "huyet_ap": "",
-        "nhip_tho": 0,
-        "can_nang": 0.0
+    "Khám bệnh": {
+      "Toàn thân": {
+        "Nội dung": "",
+        "Mạch": 0,
+        "Nhiệt độ": 0.0,
+        "Huyết áp": {
+          "Tâm thu": 0,
+          "Tâm trương": 0
+        },
+        "Nhịp thở": 0,
+        "Cân nặng": 0.0
       },
-      "cac_co_quan": {
-        "tuan_hoan": "",
-        "ho_hap": "",
-        "tieu_hoa": "",
-        "than_tiet_nieu_sinh_duc": "",
-        "than_kinh": "",
-        "co_xuong_khop": "",
-        "tai_mui_hong": "",
-        "rang_ham_mat": "",
-        "mat": "",
-        "noi_tiet_dinh_duong": ""
+      "Các cơ quan": {
+        "Tuần hoàn": "",
+        "Hô hấp": "",
+        "Tiêu hóa": "",
+        "Thận - Tiết niệu - Sinh dục": "",
+        "Thần kinh": "",
+        "Cơ - Xương - Khớp": "",
+        "Tai - Mũi - Họng": "",
+        "Răng - Hàm - Mặt": "",
+        "Mắt": "",
+        "Nội tiết, dinh dưỡng và các bệnh lý khác": ""
       },
-      "chuyen_khoa": {
-        "tham_tri": "",
-        "ton_thuong": "",
-        "hinh_ve_mo_ta": ""
-      },
-      "can_lam_sang": "",
-      "tom_tat_benh_an": ""
+      "Các xét nghiệm cận lâm sàng cần làm": "",
+      "Tóm tắt bệnh án": ""
     },
-    "chan_doan_khi_vao_khoa_dieu_tri": {
-      "benh_chinh": "",
-      "benh_kem_theo": "",
-      "phan_biet": ""
+    "Chẩn đoán khi vào khoa điều trị": {
+      "Bệnh chính": "",
+      "Bệnh kèm theo": "",
+      "Phân biệt": ""
     },
-    "tien_luong": "",
-    "huong_dieu_tri": ""
+    "Tiên lượng": "",
+    "Hướng điều trị": ""
   },
-  "tong_ket_benh_an": {
-    "qua_trinh_benh_ly": "",
-    "tom_tat_can_lam_sang": "",
-    "phuong_phap_dieu_tri": "",
-    "tinh_trang_ra_vien": "",
-    "huong_dieu_tri_tiep_theo": ""
+  "TỔNG KẾT BỆNH ÁN": {
+    "Quá trình bệnh lý và diễn biến lâm sàng": "",
+    "Tóm tắt kết quả xét nghiệm cận lâm sàng có giá trị chẩn đoán": "",
+    "Phương pháp điều trị": "",
+    "Tình trạng người bệnh ra viện": "",
+    "Hướng điều trị và các chế độ tiếp theo": ""
   },
-  "ho_so_kem_theo": {
-    "x_quang": [],
-    "ct_scanner": [],
-    "sieu_am": [],
-    "xet_nghiem": [],
-    "khac": []
+  "Hồ sơ, phim, ảnh": {
+    "X - quang": [],
+    "CT Scanner": [],
+    "Siêu âm": [],
+    "Xét nghiệm": [],
+    "Khác": []
   }
 }
