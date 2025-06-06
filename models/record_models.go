@@ -7,3 +7,12 @@ type NewMedicalRecordRequest struct {
 	TypeID       string       `json:"type_id" `
 	RecordDetail pgtype.JSONB `json:"record_detail" swaggertype:"object"`
 }
+
+type NewMedicalRecordResponse struct {
+	RecordID int `json:"record_id"`
+}
+
+type ExtractedRecordInfo struct {
+	PrimaryDiagnosis   string `json:"primary_diagnosis"`
+	SecondaryDiagnosis string `json:"secondary_diagnosis"`
+}

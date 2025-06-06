@@ -83,6 +83,25 @@ func GetStaffInfo(ctx context.Context, staffID string, accID string) (models.Sta
 	return staffInfo, nil
 }
 
+func GetStaffIDByAccID(ctx context.Context, accID string) (int, error) {
+	const query = `
+		SELECT staff_id
+		FROM staffs
+		WHERE acc_id = $1
+	`
+
+	rows, _ := dbpool.Query(ctx, query, accID)
+	staffID, err := pgx.CollectExactlyOneRow(rows, pgx.RowTo[int])
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return 0, errs.ErrStaffNotExist
+		}
+		return 0, err
+	}
+
+	return staffID, nil
+}
+
 func UpdateStaffInfo(ctx context.Context, staffID string, req models.StaffInfoUpdateRequest) error {
 	const query = `
 		UPDATE staffs

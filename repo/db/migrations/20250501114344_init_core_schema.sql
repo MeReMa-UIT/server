@@ -37,10 +37,10 @@ CREATE    TABLE "records" (
           "patient_id" BIGINT NOT NULL,
           "doctor_id" BIGINT NOT NULL,
           "type_id" CHAR(6) NOT NULL,
-          "primary_diagnosis" VARCHAR(10),
+          "primary_diagnosis" VARCHAR(10) NOT NULL,
           "secondary_diagnosis" VARCHAR(10),
           "created_at" timestamptz NOT NULL DEFAULT (now ()),
-          "expired_at" timestamptz NOT NULL,
+          "expired_at" timestamptz NOT NULL DEFAULT (now () + INTERVAL '10 years'),
           "record_detail" jsonb
           );
 

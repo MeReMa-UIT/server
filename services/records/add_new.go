@@ -2,6 +2,8 @@ package record_services
 
 import (
 	"context"
+	"mime/multipart"
+	"strings"
 
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
@@ -11,7 +13,37 @@ import (
 	"github.com/merema-uit/server/utils/record_validation"
 )
 
-func AddNewRecord(ctx context.Context, authHeader string, req *models.NewMedicalRecordRequest) error {
+func AddNewRecord(ctx context.Context, authHeader string, req *models.NewMedicalRecordRequest) (models.NewMedicalRecordResponse, error) {
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	if err != nil {
+		return models.NewMedicalRecordResponse{}, err
+	}
+	if claims.Permission != permission.Doctor.String() {
+		return models.NewMedicalRecordResponse{}, errs.ErrPermissionDenied
+	}
+
+	recordTypeInfo, err := repo.GetMedicalRecordType(ctx, req.TypeID)
+
+	if err != nil {
+		return models.NewMedicalRecordResponse{}, err
+	}
+
+	additionalInfo, err := record_validation.Validate01BV1(&req.RecordDetail, recordTypeInfo.SchemaPath)
+
+	if err != nil {
+		return models.NewMedicalRecordResponse{}, err
+	}
+
+	if additionalInfo.PrimaryDiagnosis == "" {
+		return models.NewMedicalRecordResponse{}, errs.ErrPrimaryDiagnosisMissing
+	}
+
+	doctorID, _ := repo.GetStaffIDByAccID(ctx, claims.ID)
+
+	return repo.StoreMedicalRecord(ctx, doctorID, req, additionalInfo)
+}
+
+func AddRecordAttachments(ctx context.Context, authHeader, recordID string, attachments []*multipart.FileHeader) error {
 	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return err
@@ -20,18 +52,20 @@ func AddNewRecord(ctx context.Context, authHeader string, req *models.NewMedical
 		return errs.ErrPermissionDenied
 	}
 
-	recordTypeInfo, err := repo.GetMedicalRecordType(ctx, req.TypeID)
+	var prefixes = []string{"xray_", "ct_", "ultrasound_", "test_", "other_"}
 
-	if err != nil {
-		return err
+	for _, attachment := range attachments {
+		ok := false
+		for _, prefix := range prefixes {
+			if strings.HasPrefix(attachment.Filename, prefix) {
+				ok = true
+				break
+			}
+		}
+		if !ok {
+			return errs.ErrInvalidAttachmentPrefix
+		}
 	}
 
-	err = record_validation.Validate01BV1(&req.RecordDetail, recordTypeInfo.SchemaPath)
-
-	if err != nil {
-		return err
-	}
-
-	// return repo.StoreMedicalRecord(ctx)
-	return nil
+	return repo.StoreMedicalRecordAttachments(ctx, recordID, attachments)
 }

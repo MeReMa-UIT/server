@@ -277,10 +277,10 @@ CREATE TABLE public.records (
     patient_id bigint NOT NULL,
     doctor_id bigint NOT NULL,
     type_id character(6) NOT NULL,
-    primary_diagnosis character varying(10),
+    primary_diagnosis character varying(10) NOT NULL,
     secondary_diagnosis character varying(10),
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    expired_at timestamp with time zone NOT NULL,
+    expired_at timestamp with time zone DEFAULT (now() + '10 years'::interval) NOT NULL,
     record_detail jsonb
 );
 

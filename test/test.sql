@@ -34,6 +34,9 @@ SELECT    *
 FROM      records;
 
 SELECT    *
+FROM      record_attachments;
+
+SELECT    *
 FROM      prescriptions;
 
 SELECT    *
@@ -53,3 +56,5 @@ DELETE    FROM prescription_details;
 DELETE    FROM prescriptions;
 
 DROP      DATABASE IF EXISTS merema;
+
+DELETE    FROM record_attachments;

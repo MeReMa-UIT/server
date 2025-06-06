@@ -1411,6 +1411,62 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.NewMedicalRecordResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/records/{record_id}/attachments": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Add attachments to an existing record",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Add attachments to a record (doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Record ID",
+                        "name": "record_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Attachments, support 5 types of prefix: xray_, ct_, ultrasound_, test_, other_. Ex: xray_1.jpg",
+                        "name": "attachments",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
                         "description": "Created"
                     },
                     "400": {
@@ -1418,6 +1474,9 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -1954,6 +2013,14 @@ const docTemplate = `{
                 },
                 "type_id": {
                     "type": "string"
+                }
+            }
+        },
+        "models.NewMedicalRecordResponse": {
+            "type": "object",
+            "properties": {
+                "record_id": {
+                    "type": "integer"
                 }
             }
         },

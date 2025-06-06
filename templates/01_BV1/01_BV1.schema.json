@@ -633,24 +633,19 @@
           ],
           "properties": {
             "X - quang": {
-              "type": "array",
-              "items": {}
+              "type": "integer"
             },
             "CT Scanner": {
-              "type": "array",
-              "items": {}
+              "type": "integer"
             },
             "Siêu âm": {
-              "type": "array",
-              "items": {}
+              "type": "integer"
             },
             "Xét nghiệm": {
-              "type": "array",
-              "items": {}
+              "type": "integer"
             },
             "Khác": {
-              "type": "array",
-              "items": {}
+              "type": "integer"
             }
           }
         }

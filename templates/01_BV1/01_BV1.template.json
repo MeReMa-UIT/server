@@ -156,11 +156,11 @@
     "Tình trạng người bệnh ra viện": "",
     "Hướng điều trị và các chế độ tiếp theo": "",
     "Hồ sơ, phim, ảnh": {
-      "X - quang": [],
-      "CT Scanner": [],
-      "Siêu âm": [],
-      "Xét nghiệm": [],
-      "Khác": []
+      "X - quang": 0,
+      "CT Scanner": 0,
+      "Siêu âm": 0,
+      "Xét nghiệm": 0,
+      "Khác": 0
     }
   }
 }
