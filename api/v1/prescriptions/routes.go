@@ -9,4 +9,7 @@ func Routes(r *gin.RouterGroup) {
 	r.GET("/:prescription_id", GetPrescriptionDetailsHandler)
 	r.PUT("/:prescription_id", UpdatePrescriptionHandler)
 	r.PUT("/:prescription_id/confirm", ConfirmReceivingPrescriptionHandler)
+	r.POST("/:prescription_id/details", AddPrescriptionDetailHandler)
+	// r.PUT("/:prescription_id/:detail_id", DeletePrescriptionDetailHandler)
+	r.DELETE("/:prescription_id/:detail_id", DeletePrescriptionDetailHandler)
 }

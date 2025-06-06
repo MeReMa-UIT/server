@@ -28,3 +28,24 @@ func AddNewPrescription(ctx context.Context, authHeader string, req models.NewPr
 	}
 	return repo.StorePrescription(ctx, req)
 }
+
+func AddPrescriptionDetail(ctx context.Context, authHeader, prescriptionID string, detail []models.PrescriptionDetail) error {
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	if err != nil {
+		return err
+	}
+	if claims.Permission != permission.Doctor.String() {
+		return errs.ErrPermissionDenied
+	}
+
+	for _, detail := range detail {
+		if detail.MorningDosage < 0 || detail.AfternoonDosage < 0 || detail.EveningDosage < 0 || detail.DurationDays <= 0 || (detail.MorningDosage == 0 && detail.AfternoonDosage == 0 && detail.EveningDosage == 0) {
+			return errs.ErrInvalidDosage
+		}
+		if detail.TotalDosage != (detail.MorningDosage+detail.AfternoonDosage+detail.EveningDosage)*float32(detail.DurationDays) {
+			return errs.ErrWrongDosageCalulation
+		}
+	}
+
+	return repo.AddPrescriptionDetail(ctx, prescriptionID, detail)
+}

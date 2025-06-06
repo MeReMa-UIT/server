@@ -42,7 +42,7 @@ type PrescriptionDetailInfo struct {
 }
 
 type PrescriptionUpdateRequest struct {
-	IsInsuranceCovered bool                     `json:"is_insurance_covered" db:"is_insurance_covered"`
-	PrescriptionNote   string                   `json:"prescription_note" db:"prescription_note"`
-	Details            []PrescriptionDetailInfo `json:"details" db:"details"`
+	IsInsuranceCovered bool                 `json:"is_insurance_covered" db:"is_insurance_covered"`
+	PrescriptionNote   string               `json:"prescription_note" db:"prescription_note"`
+	Details            []PrescriptionDetail `json:"details" db:"details"`
 }

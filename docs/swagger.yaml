@@ -334,7 +334,7 @@ definitions:
     properties:
       details:
         items:
-          $ref: '#/definitions/models.PrescriptionDetailInfo'
+          $ref: '#/definitions/models.PrescriptionDetail'
         type: array
       is_insurance_covered:
         type: boolean
@@ -1230,6 +1230,40 @@ paths:
       summary: Update prescription (doctor)
       tags:
       - prescriptions
+  /prescriptions/{prescription_id}/{detail_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a detail from the prescription
+      parameters:
+      - description: Prescription ID
+        in: path
+        name: prescription_id
+        required: true
+        type: string
+      - description: Detail ID
+        in: path
+        name: detail_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Delete prescription detail (doctor)
+      tags:
+      - prescriptions
   /prescriptions/{prescription_id}/confirm:
     put:
       consumes:
@@ -1256,7 +1290,46 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Confirm receiving prescription (receptionist)
+      summary: Confirm receiving prescription (doctor)
+      tags:
+      - prescriptions
+  /prescriptions/{prescription_id}/details:
+    post:
+      consumes:
+      - application/json
+      description: Add a new detail to the prescription
+      parameters:
+      - description: Prescription ID
+        in: path
+        name: prescription_id
+        required: true
+        type: string
+      - description: Prescription Detail Adding request
+        in: body
+        name: body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/models.PrescriptionDetail'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Add prescription detail (doctor)
       tags:
       - prescriptions
   /prescriptions/patients/{patient_id}:
