@@ -1381,6 +1381,47 @@ const docTemplate = `{
             }
         },
         "/records": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a list of medical records for a patient or all records for a doctor",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Get record list (doctor, patient)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.MedicalRecordBriefInfo"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -1414,6 +1455,104 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/models.NewMedicalRecordResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/records/{recordID}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get detailed information about a specific medical record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Get record info (doctor, patient)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Record ID",
+                        "name": "recordID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.MedicalRecordInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/records/{recordID}/attachments": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all attachments of a specific medical record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/zip"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Get record attachments (doctor, patient)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Record ID",
+                        "name": "recordID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ZIP file containing all record's attachments",
+                        "schema": {
+                            "type": "file"
                         }
                     },
                     "400": {
@@ -1947,6 +2086,55 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.MedicalRecordBriefInfo": {
+            "type": "object",
+            "properties": {
+                "doctor_id": {
+                    "type": "integer"
+                },
+                "patient_id": {
+                    "type": "integer"
+                },
+                "primary_diagnosis": {
+                    "type": "string"
+                },
+                "record_id": {
+                    "type": "integer"
+                },
+                "secondary_diagnosis": {
+                    "type": "string"
+                },
+                "type_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.MedicalRecordInfo": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "doctor_id": {
+                    "type": "integer"
+                },
+                "expired_at": {
+                    "type": "string"
+                },
+                "patient_id": {
+                    "type": "integer"
+                },
+                "record_detail": {
+                    "type": "object"
+                },
+                "record_id": {
+                    "type": "integer"
+                },
+                "type_id": {
                     "type": "string"
                 }
             }

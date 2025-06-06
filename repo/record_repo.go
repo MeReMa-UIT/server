@@ -92,3 +92,36 @@ func StoreMedicalRecordAttachments(ctx context.Context, recordID string, attachm
 
 	return nil
 }
+
+func GetMedicalRecordList(ctx context.Context, patientID int) ([]models.MedicalRecordBriefInfo, error) {
+	const query = `
+		SELECT record_id, patient_id, doctor_id, type_id, primary_diagnosis, secondary_diagnosis
+		FROM records
+		WHERE (patient_id = $1 OR $1::BIGINT = 0)
+	`
+
+	rows, _ := dbpool.Query(ctx, query, patientID)
+	list, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.MedicalRecordBriefInfo])
+
+	if err != nil {
+		return nil, err
+	}
+
+	return list, nil
+}
+
+func GetMedicalRecordInfo(ctx context.Context, recordID string) (models.MedicalRecordInfo, error) {
+	const query = `
+		SELECT record_id, patient_id, doctor_id, type_id, record_detail, created_at, expired_at
+		FROM records
+		WHERE record_id = $1
+	`
+
+	rows, _ := dbpool.Query(ctx, query, recordID)
+	info, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.MedicalRecordInfo])
+
+	if err != nil {
+		return models.MedicalRecordInfo{}, err
+	}
+	return info, nil
+}
