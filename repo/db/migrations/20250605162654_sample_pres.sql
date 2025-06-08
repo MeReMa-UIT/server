@@ -19,7 +19,7 @@ VALUES    (
           FROM      prescriptions
           WHERE     record_id = 2000000000
           ),
-          1,
+          5000000000,
           1.0,
           1.0,
           1.0,
@@ -34,7 +34,7 @@ VALUES    (
           FROM      prescriptions
           WHERE     record_id = 2000000000
           ),
-          4,
+          5000000003,
           2.0,
           1.0,
           2.0,

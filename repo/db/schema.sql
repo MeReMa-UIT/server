@@ -148,7 +148,6 @@ ALTER SEQUENCE public.patients_patient_id_seq OWNED BY public.patients.patient_i
 --
 
 CREATE TABLE public.prescription_details (
-    detail_id bigint NOT NULL,
     prescription_id bigint NOT NULL,
     med_id bigint NOT NULL,
     morning_dosage numeric(10,2),
@@ -159,25 +158,6 @@ CREATE TABLE public.prescription_details (
     dosage_unit character varying(20) NOT NULL,
     instructions text NOT NULL
 );
-
-
---
--- Name: prescription_details_detail_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.prescription_details_detail_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: prescription_details_detail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.prescription_details_detail_id_seq OWNED BY public.prescription_details.detail_id;
 
 
 --
@@ -403,13 +383,6 @@ ALTER TABLE ONLY public.patients ALTER COLUMN patient_id SET DEFAULT nextval('pu
 
 
 --
--- Name: prescription_details detail_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.prescription_details ALTER COLUMN detail_id SET DEFAULT nextval('public.prescription_details_detail_id_seq'::regclass);
-
-
---
 -- Name: prescriptions prescription_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -521,7 +494,7 @@ ALTER TABLE ONLY public.patients
 --
 
 ALTER TABLE ONLY public.prescription_details
-    ADD CONSTRAINT prescription_details_pkey PRIMARY KEY (detail_id);
+    ADD CONSTRAINT prescription_details_pkey PRIMARY KEY (prescription_id, med_id);
 
 
 --
@@ -609,20 +582,6 @@ ALTER TABLE ONLY public.staffs
 --
 
 CREATE INDEX patients_acc_id_idx ON public.patients USING btree (acc_id);
-
-
---
--- Name: prescription_details_med_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX prescription_details_med_id_idx ON public.prescription_details USING btree (med_id);
-
-
---
--- Name: prescription_details_prescription_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX prescription_details_prescription_id_idx ON public.prescription_details USING btree (prescription_id);
 
 
 --

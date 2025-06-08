@@ -1075,6 +1075,47 @@ const docTemplate = `{
             }
         },
         "/prescriptions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get prescription list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prescriptions"
+                ],
+                "summary": "Get prescription list with medical record ID (doctor, patient)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.PrescriptionInfo"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -1181,7 +1222,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get prescription list",
+                "description": "Get prescription info by medical record ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -1191,7 +1232,7 @@ const docTemplate = `{
                 "tags": [
                     "prescriptions"
                 ],
-                "summary": "Get prescription list with medical record ID (doctor, patient)",
+                "summary": "Get prescription info by medical record ID (doctor, patient)",
                 "parameters": [
                     {
                         "type": "string",
@@ -1205,10 +1246,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.PrescriptionInfo"
-                            }
+                            "$ref": "#/definitions/models.PrescriptionInfo"
                         }
                     },
                     "400": {
@@ -1332,6 +1370,65 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Add a new detail to the prescription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prescriptions"
+                ],
+                "summary": "Add prescription detail (doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Prescription ID",
+                        "name": "prescription_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Prescription Detail Adding request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.PrescriptionDetailInfo"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
         "/prescriptions/{prescription_id}/confirm": {
@@ -1380,14 +1477,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/prescriptions/{prescription_id}/details": {
-            "post": {
+        "/prescriptions/{prescription_id}/{med_id}": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Add a new detail to the prescription",
+                "description": "Update prescription detail",
                 "consumes": [
                     "application/json"
                 ],
@@ -1397,7 +1494,7 @@ const docTemplate = `{
                 "tags": [
                     "prescriptions"
                 ],
-                "summary": "Add prescription detail (doctor)",
+                "summary": "Update prescription detail (doctor)",
                 "parameters": [
                     {
                         "type": "string",
@@ -1407,15 +1504,19 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Prescription Detail Adding request",
+                        "type": "string",
+                        "description": "Medication ID",
+                        "name": "med_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New Prescription Detail",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.PrescriptionDetail"
-                            }
+                            "$ref": "#/definitions/models.PrescriptionDetail"
                         }
                     }
                 ],
@@ -1439,9 +1540,7 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
-            }
-        },
-        "/prescriptions/{prescription_id}/{detail_id}": {
+            },
             "delete": {
                 "security": [
                     {
@@ -1469,8 +1568,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Detail ID",
-                        "name": "detail_id",
+                        "description": "Medication ID",
+                        "name": "med_id",
                         "in": "path",
                         "required": true
                     }
@@ -2329,12 +2428,6 @@ const docTemplate = `{
         "models.NewPrescriptionRequest": {
             "type": "object",
             "properties": {
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.PrescriptionDetail"
-                    }
-                },
                 "is_insurance_covered": {
                     "type": "boolean"
                 },
@@ -2491,9 +2584,6 @@ const docTemplate = `{
                 "instructions": {
                     "type": "string"
                 },
-                "med_id": {
-                    "type": "integer"
-                },
                 "morning_dosage": {
                     "type": "number"
                 },
@@ -2507,9 +2597,6 @@ const docTemplate = `{
             "properties": {
                 "afternoon_dosage": {
                     "type": "number"
-                },
-                "detail_id": {
-                    "type": "integer"
                 },
                 "dosage_unit": {
                     "type": "string"
@@ -2560,12 +2647,6 @@ const docTemplate = `{
         "models.PrescriptionUpdateRequest": {
             "type": "object",
             "properties": {
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.PrescriptionDetail"
-                    }
-                },
                 "is_insurance_covered": {
                     "type": "boolean"
                 },

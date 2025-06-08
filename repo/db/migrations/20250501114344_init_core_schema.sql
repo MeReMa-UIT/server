@@ -72,7 +72,6 @@ CREATE    TABLE "prescriptions" (
           );
 
 CREATE    TABLE "prescription_details" (
-          "detail_id" bigserial PRIMARY KEY NOT NULL,
           "prescription_id" BIGINT NOT NULL,
           "med_id" BIGINT NOT NULL,
           "morning_dosage" DECIMAL(10, 2),
@@ -81,7 +80,8 @@ CREATE    TABLE "prescription_details" (
           "duration_days" INT NOT NULL,
           "total_dosage" DECIMAL(10, 2) NOT NULL,
           "dosage_unit" VARCHAR(20) NOT NULL,
-          "instructions" text NOT NULL
+          "instructions" text NOT NULL,
+          PRIMARY KEY ("prescription_id", "med_id")
           );
 
 CREATE    TABLE "medications" (
@@ -126,10 +126,6 @@ CREATE INDEX ON "records" ("primary_diagnosis");
 CREATE INDEX ON "records" ("secondary_diagnosis");
 
 CREATE INDEX ON "record_attachments" ("record_id");
-
-CREATE INDEX ON "prescription_details" ("prescription_id");
-
-CREATE INDEX ON "prescription_details" ("med_id");
 
 CREATE INDEX ON "schedules" ("acc_id");
 

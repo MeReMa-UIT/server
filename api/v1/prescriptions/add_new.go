@@ -32,7 +32,7 @@ func AddNewPrescriptionHandler(c *gin.Context) {
 		return
 	}
 
-	err := prescription_services.AddNewPrescription(c, authHeader, req)
+	res, err := prescription_services.AddNewPrescription(c, authHeader, req)
 	if err != nil {
 		switch err {
 		case errs.ErrWrongDosageCalulation, errs.ErrInvalidDosage:
@@ -48,7 +48,7 @@ func AddNewPrescriptionHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Prescription added successfully"})
+	c.JSON(http.StatusCreated, res)
 }
 
 // Add prescription detail godoc
@@ -58,7 +58,7 @@ func AddNewPrescriptionHandler(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param prescription_id path string true "Prescription ID"
-// @Param body body []models.PrescriptionDetail true "Prescription Detail Adding request"
+// @Param body body []models.PrescriptionDetailInfo true "Prescription Detail Adding request"
 // @Security BearerAuth
 // @Success 200
 // @Failure 400
@@ -66,17 +66,17 @@ func AddNewPrescriptionHandler(c *gin.Context) {
 // @Failure 403
 // @Failure 404
 // @Failure 500
-// @Router /prescriptions/{prescription_id}/details [post]
-func AddPrescriptionDetailHandler(c *gin.Context) {
+// @Router /prescriptions/{prescription_id} [post]
+func AddPrescriptionDetailsHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	prescriptionID := c.Param("prescription_id")
-	var req []models.PrescriptionDetail
+	var req []models.PrescriptionDetailInfo
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
 
-	err := prescription_services.AddPrescriptionDetail(c, authHeader, prescriptionID, req)
+	err := prescription_services.AddPrescriptionDetails(c, authHeader, prescriptionID, req)
 	if err != nil {
 		switch err {
 		case errs.ErrWrongDosageCalulation, errs.ErrInvalidDosage:

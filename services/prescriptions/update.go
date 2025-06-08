@@ -30,32 +30,24 @@ func UpdatePrescription(ctx context.Context, authHeader, prescriptionID string, 
 		return errs.ErrPermissionDenied
 	}
 
-	for _, detail := range req.Details {
-		if detail.MorningDosage < 0 || detail.AfternoonDosage < 0 || detail.EveningDosage < 0 || detail.DurationDays <= 0 || (detail.MorningDosage == 0 && detail.AfternoonDosage == 0 && detail.EveningDosage == 0) {
-			return errs.ErrInvalidDosage
-		}
-		if detail.TotalDosage != (detail.MorningDosage+detail.AfternoonDosage+detail.EveningDosage)*float32(detail.DurationDays) {
-			return errs.ErrWrongDosageCalulation
-		}
-	}
 	return repo.UpdatePrescription(ctx, prescriptionID, req)
 }
 
-// func UpdatePrescriptionDetail(ctx context.Context, authHeader, prescriptionID string, detail models.PrescriptionDetailInfo) error {
-// 	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if claims.Permission != permission.Doctor.String() {
-// 		return errs.ErrPermissionDenied
-// 	}
+func UpdatePrescriptionDetail(ctx context.Context, authHeader, prescriptionID, medID string, detail models.PrescriptionDetailInfo) error {
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	if err != nil {
+		return err
+	}
+	if claims.Permission != permission.Doctor.String() {
+		return errs.ErrPermissionDenied
+	}
 
-// 	if detail.MorningDosage < 0 || detail.AfternoonDosage < 0 || detail.EveningDosage < 0 || detail.DurationDays <= 0 || (detail.MorningDosage == 0 && detail.AfternoonDosage == 0 && detail.EveningDosage == 0) {
-// 		return errs.ErrInvalidDosage
-// 	}
-// 	if detail.TotalDosage != (detail.MorningDosage+detail.AfternoonDosage+detail.EveningDosage)*float32(detail.DurationDays) {
-// 		return errs.ErrWrongDosageCalulation
-// 	}
+	if detail.MorningDosage < 0 || detail.AfternoonDosage < 0 || detail.EveningDosage < 0 || detail.DurationDays <= 0 || (detail.MorningDosage == 0 && detail.AfternoonDosage == 0 && detail.EveningDosage == 0) {
+		return errs.ErrInvalidDosage
+	}
+	if detail.TotalDosage != (detail.MorningDosage+detail.AfternoonDosage+detail.EveningDosage)*float32(detail.DurationDays) {
+		return errs.ErrWrongDosageCalulation
+	}
 
-// 	return repo.UpdatePrescriptionDetail(ctx, prescriptionID, detail)
-// }
+	return repo.UpdatePrescriptionDetail(ctx, prescriptionID, medID, detail)
+}

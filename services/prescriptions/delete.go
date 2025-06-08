@@ -9,7 +9,7 @@ import (
 	"github.com/merema-uit/server/services/auth"
 )
 
-func DeletePrescriptionDetail(ctx context.Context, authHeader, prescriptionID, detailID string) error {
+func DeletePrescriptionDetail(ctx context.Context, authHeader, prescriptionID, medID string) error {
 	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return err
@@ -18,5 +18,5 @@ func DeletePrescriptionDetail(ctx context.Context, authHeader, prescriptionID, d
 		return errs.ErrPermissionDenied
 	}
 
-	return repo.DeletePrescriptionDetail(ctx, prescriptionID, detailID)
+	return repo.DeletePrescriptionDetail(ctx, prescriptionID, medID)
 }

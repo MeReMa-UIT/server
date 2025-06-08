@@ -12,7 +12,7 @@ import (
 	"github.com/merema-uit/server/services/auth"
 )
 
-func GetPrescriptionListWithRecordID(ctx context.Context, authHeader, recordID string) ([]models.PrescriptionInfo, error) {
+func GetPrescriptionList(ctx context.Context, authHeader string) ([]models.PrescriptionInfo, error) {
 	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
@@ -21,17 +21,13 @@ func GetPrescriptionListWithRecordID(ctx context.Context, authHeader, recordID s
 	var list []models.PrescriptionInfo
 	switch claims.Permission {
 	case permission.Doctor.String():
-		list, err = repo.GetPrescriptionListWithRecordID(ctx, recordID)
+		list, err = repo.GetPrescriptionList(ctx, nil)
 	case permission.Patient.String():
 		recordIDList, err := repo.GetRecordIDListByAccID(ctx, claims.ID)
 		if err != nil {
 			return nil, err
 		}
-		id, _ := strconv.Atoi(recordID)
-		if !slices.Contains(recordIDList, id) {
-			return nil, errs.ErrPermissionDenied
-		}
-		list, err = repo.GetPrescriptionListWithRecordID(ctx, recordID)
+		list, err = repo.GetPrescriptionList(ctx, recordIDList)
 	default:
 		return nil, errs.ErrPermissionDenied
 	}
@@ -43,7 +39,7 @@ func GetPrescriptionListWithRecordID(ctx context.Context, authHeader, recordID s
 	return list, nil
 }
 
-func GetPrescriptionListWithPatientID(ctx context.Context, authHeader, patientID string) ([]models.PrescriptionInfo, error) {
+func GetPrescriptionListByPatientID(ctx context.Context, authHeader, patientID string) ([]models.PrescriptionInfo, error) {
 	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
@@ -52,7 +48,7 @@ func GetPrescriptionListWithPatientID(ctx context.Context, authHeader, patientID
 	var list []models.PrescriptionInfo
 	switch claims.Permission {
 	case permission.Doctor.String():
-		list, err = repo.GetPrescriptionListWithPatientID(ctx, patientID)
+		list, err = repo.GetPrescriptionListByPatientID(ctx, patientID)
 	case permission.Patient.String():
 		patientIDList, err := repo.GetPatientIDListByAccID(ctx, claims.ID)
 		if err != nil {
@@ -62,7 +58,7 @@ func GetPrescriptionListWithPatientID(ctx context.Context, authHeader, patientID
 		if !slices.Contains(patientIDList, id) {
 			return nil, errs.ErrPermissionDenied
 		}
-		list, err = repo.GetPrescriptionListWithPatientID(ctx, patientID)
+		list, err = repo.GetPrescriptionListByPatientID(ctx, patientID)
 	default:
 		return nil, errs.ErrPermissionDenied
 	}
@@ -71,6 +67,38 @@ func GetPrescriptionListWithPatientID(ctx context.Context, authHeader, patientID
 	}
 
 	return list, nil
+}
+
+func GetPrescriptionInfoByRecordID(ctx context.Context, authHeader, recordID string) (models.PrescriptionInfo, error) {
+	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	if err != nil {
+		return models.PrescriptionInfo{}, err
+	}
+
+	id, err := strconv.Atoi(recordID)
+
+	if err != nil {
+		return models.PrescriptionInfo{}, err
+	}
+
+	switch claims.Permission {
+	case permission.Doctor.String():
+	case permission.Patient.String():
+		recordIDList, err := repo.GetRecordIDListByAccID(ctx, claims.ID)
+		for _, recordID := range recordIDList {
+			println(recordID)
+		}
+		if err != nil {
+			return models.PrescriptionInfo{}, err
+		}
+		if !slices.Contains(recordIDList, id) {
+			return models.PrescriptionInfo{}, errs.ErrPermissionDenied
+		}
+	default:
+		return models.PrescriptionInfo{}, errs.ErrPermissionDenied
+	}
+
+	return repo.GetPrescriptionInfoByRecordID(ctx, id)
 }
 
 func GetPrescriptionDetails(ctx context.Context, authHeader, prescriptionID string) ([]models.PrescriptionDetailInfo, error) {
@@ -84,11 +112,14 @@ func GetPrescriptionDetails(ctx context.Context, authHeader, prescriptionID stri
 	case permission.Doctor.String():
 		list, err = repo.GetPrescriptionDetails(ctx, prescriptionID)
 	case permission.Patient.String():
-		prescriptionIDList, err := repo.GetPrescriptionIDListWithAccID(ctx, claims.ID)
+		id, _ := strconv.Atoi(prescriptionID)
+
+		prescriptionIDList, err := repo.GetPrescriptionIDListByAccID(ctx, claims.ID)
+
 		if err != nil {
 			return nil, err
 		}
-		id, _ := strconv.Atoi(prescriptionID)
+
 		if !slices.Contains(prescriptionIDList, id) {
 			return nil, errs.ErrPermissionDenied
 		}

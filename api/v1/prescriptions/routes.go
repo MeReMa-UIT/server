@@ -3,13 +3,14 @@ package prescriptions_api
 import "github.com/gin-gonic/gin"
 
 func Routes(r *gin.RouterGroup) {
+	r.GET("", GetPrescriptionListHandler)
 	r.POST("", AddNewPrescriptionHandler)
-	r.GET("/patients/:patient_id", GetPrescriptionListWithPatientIDHandler)
-	r.GET("/records/:record_id", GetPrescriptionListWithRecordIDHandler)
+	r.GET("/patients/:patient_id", GetPrescriptionListByPatientIDHandler)
+	r.GET("/records/:record_id", GetPrescriptionInfoByRecordIDHandler)
 	r.GET("/:prescription_id", GetPrescriptionDetailsHandler)
+	r.POST("/:prescription_id", AddPrescriptionDetailsHandler)
 	r.PUT("/:prescription_id", UpdatePrescriptionHandler)
 	r.PUT("/:prescription_id/confirm", ConfirmReceivingPrescriptionHandler)
-	r.POST("/:prescription_id/details", AddPrescriptionDetailHandler)
-	// r.PUT("/:prescription_id/:detail_id", DeletePrescriptionDetailHandler)
-	r.DELETE("/:prescription_id/:detail_id", DeletePrescriptionDetailHandler)
+	r.PUT("/:prescription_id/:med_id", UpdatePrescriptionDetailHandler)
+	r.DELETE("/:prescription_id/:med_id", DeletePrescriptionDetailHandler)
 }
