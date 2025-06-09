@@ -1,4 +1,4 @@
-package retrieval
+package retrieval_services
 
 import (
 	"context"
@@ -7,11 +7,11 @@ import (
 	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
-	"github.com/merema-uit/server/services/auth"
+	auth_services "github.com/merema-uit/server/services/auth"
 )
 
 func GetMedicationList(ctx context.Context, authHeader string) ([]models.MedicationInfo, error) {
-	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	claims, err := auth_services.ParseToken(auth_services.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func GetMedicationList(ctx context.Context, authHeader string) ([]models.Medicat
 }
 
 func GetMedicationInfo(ctx context.Context, authHeader string, medicationID string) (models.MedicationInfo, error) {
-	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	claims, err := auth_services.ParseToken(auth_services.ExtractToken(authHeader))
 	if err != nil {
 		return models.MedicationInfo{}, err
 	}

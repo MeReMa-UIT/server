@@ -1,4 +1,4 @@
-package retrieval
+package retrieval_services
 
 import (
 	"context"
@@ -8,12 +8,12 @@ import (
 	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
-	"github.com/merema-uit/server/services/auth"
+	auth_services "github.com/merema-uit/server/services/auth"
 	"github.com/merema-uit/server/utils"
 )
 
 func GetMedicalRecordTypeList(ctx context.Context, authHeader string) ([]models.MedicalRecordType, error) {
-	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	claims, err := auth_services.ParseToken(auth_services.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func GetMedicalRecordTypeList(ctx context.Context, authHeader string) ([]models.
 }
 
 func GetMedicalRecordTemplate(ctx context.Context, authHeader, typeID string) (*pgtype.JSONB, error) {
-	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	claims, err := auth_services.ParseToken(auth_services.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
 	}

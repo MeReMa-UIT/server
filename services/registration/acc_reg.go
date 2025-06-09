@@ -1,4 +1,4 @@
-package registration
+package registration_services
 
 import (
 	"context"
@@ -7,12 +7,12 @@ import (
 	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
-	"github.com/merema-uit/server/services/auth"
+	auth_services "github.com/merema-uit/server/services/auth"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func InitRegistration(ctx context.Context, req models.InitRegistrationRequest, authHeader string) (models.AccountRegistrationResponse, error) {
-	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	claims, err := auth_services.ParseToken(auth_services.ExtractToken(authHeader))
 	if err != nil {
 		return models.AccountRegistrationResponse{}, err
 	}
@@ -30,17 +30,17 @@ func InitRegistration(ctx context.Context, req models.InitRegistrationRequest, a
 	accID, err := repo.GetAccIDByCitizenID(ctx, req.CitizenID)
 	if err != nil {
 		if err == errs.ErrAccountNotExist {
-			token, _ := auth.GenerateToken(claims.ID, registrationType)
+			token, _ := auth_services.GenerateToken(claims.ID, registrationType)
 			return models.AccountRegistrationResponse{Token: token, AccID: -1}, nil
 		}
 		return models.AccountRegistrationResponse{}, err
 	}
-	token, _ := auth.GenerateToken(claims.ID, registrationType)
+	token, _ := auth_services.GenerateToken(claims.ID, registrationType)
 	return models.AccountRegistrationResponse{Token: token, AccID: accID}, nil
 }
 
 func RegisterAccount(ctx context.Context, req models.AccountRegistrationRequest, authHeader string) (models.AccountRegistrationResponse, error) {
-	claims, err := auth.ParseToken(auth.ExtractToken(authHeader))
+	claims, err := auth_services.ParseToken(auth_services.ExtractToken(authHeader))
 	if err != nil {
 		return models.AccountRegistrationResponse{}, err
 	}
@@ -63,5 +63,5 @@ func RegisterAccount(ctx context.Context, req models.AccountRegistrationRequest,
 	if err != nil {
 		return models.AccountRegistrationResponse{}, err
 	}
-	return models.AccountRegistrationResponse{Token: auth.ExtractToken(authHeader), AccID: createdAccID}, nil
+	return models.AccountRegistrationResponse{Token: auth_services.ExtractToken(authHeader), AccID: createdAccID}, nil
 }

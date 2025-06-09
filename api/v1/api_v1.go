@@ -2,26 +2,26 @@ package api_v1
 
 import (
 	"github.com/gin-gonic/gin"
-	accounts_api "github.com/merema-uit/server/api/v1/accounts"
-	catalogs_api "github.com/merema-uit/server/api/v1/catalog"
-	comms_api "github.com/merema-uit/server/api/v1/communications"
-	patients_api "github.com/merema-uit/server/api/v1/patients"
-	prescriptions_api "github.com/merema-uit/server/api/v1/prescriptions"
-	records_api "github.com/merema-uit/server/api/v1/records"
-	schedules_api "github.com/merema-uit/server/api/v1/schedules"
-	staffs_api "github.com/merema-uit/server/api/v1/staffs"
+	account_api "github.com/merema-uit/server/api/v1/account"
+	catalog_api "github.com/merema-uit/server/api/v1/catalog"
+	comm_api "github.com/merema-uit/server/api/v1/communication"
+	patient_api "github.com/merema-uit/server/api/v1/patient"
+	prescription_api "github.com/merema-uit/server/api/v1/prescription"
+	record_api "github.com/merema-uit/server/api/v1/record"
+	schedule_api "github.com/merema-uit/server/api/v1/schedule"
+	staff_api "github.com/merema-uit/server/api/v1/staff"
 )
 
 func RegisterRoutesV1(r *gin.Engine) {
 	v1 := r.Group("/api/v1")
 	{
-		accounts_api.Routes(v1.Group("/accounts"))
-		patients_api.Routes(v1.Group("/patients"))
-		staffs_api.Routes(v1.Group("/staffs"))
-		catalogs_api.Routes(v1.Group("/catalog"))
-		records_api.Routes(v1.Group("/records"))
-		schedules_api.Routes(v1.Group("/schedules"))
-		prescriptions_api.Routes(v1.Group("/prescriptions"))
-		comms_api.Routes(v1.Group("/comms"))
+		account_api.Routes(v1.Group("/accounts"))
+		patient_api.Routes(v1.Group("/patients"))
+		staff_api.Routes(v1.Group("/staffs"))
+		catalog_api.Routes(v1.Group("/catalog"))
+		record_api.Routes(v1.Group("/records"))
+		prescription_api.Routes(v1.Group("/prescriptions"))
+		schedule_api.Routes(v1.Group("/schedules"))
+		comm_api.Routes(v1.Group("/comms"))
 	}
 }

@@ -1,11 +1,11 @@
-package catalogs_api
+package catalog_api
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	errs "github.com/merema-uit/server/models/errors"
-	"github.com/merema-uit/server/services/retrieval"
+	retrieval_services "github.com/merema-uit/server/services/retrieval"
 	"github.com/merema-uit/server/utils"
 )
 
@@ -23,7 +23,7 @@ import (
 // @Router       /catalog/medications [get]
 func GetMedicationListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	list, err := retrieval.GetMedicationList(c, authHeader)
+	list, err := retrieval_services.GetMedicationList(c, authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrPermissionDenied:
@@ -53,7 +53,7 @@ func GetMedicationListHandler(c *gin.Context) {
 // @Router       /catalog/diagnoses [get]
 func GetDiagnosisListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	list, err := retrieval.GetDiagnosisList(c, authHeader)
+	list, err := retrieval_services.GetDiagnosisList(c, authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrPermissionDenied:
@@ -83,7 +83,7 @@ func GetDiagnosisListHandler(c *gin.Context) {
 // @Router       /catalog/record-types [get]
 func GetMedicalRecordTypeListHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	list, err := retrieval.GetMedicalRecordTypeList(c, authHeader)
+	list, err := retrieval_services.GetMedicalRecordTypeList(c, authHeader)
 	if err != nil {
 		switch err {
 		case errs.ErrPermissionDenied:
