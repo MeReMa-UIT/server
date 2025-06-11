@@ -20,6 +20,9 @@ RESTART   WITH 4000000000;
 ALTER     SEQUENCE medications_med_id_seq
 RESTART   WITH 5000000000;
 
+ALTER     SEQUENCE conversations_conversation_id_seq
+RESTART   WITH 6000000000;
+
 -- migrate:down
 ALTER     SEQUENCE accounts_acc_id_seq
 RESTART   WITH 1;
@@ -40,4 +43,7 @@ ALTER     SEQUENCE schedules_schedule_id_seq
 RESTART   WITH 1;
 
 ALTER     SEQUENCE medications_med_id_seq
+RESTART   WITH 1;
+
+ALTER     SEQUENCE conversations_conversation_id_seq
 RESTART   WITH 1;

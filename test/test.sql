@@ -40,6 +40,9 @@ SELECT    *
 FROM      prescriptions;
 
 SELECT    *
+FROM      conversations;
+
+SELECT    *
 FROM      prescription_details;
 
 SELECT    *

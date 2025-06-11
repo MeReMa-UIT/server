@@ -2,10 +2,15 @@ package comm_api
 
 import (
 	"github.com/gin-gonic/gin"
+	comm_services "github.com/merema-uit/server/services/communication"
 )
 
 func Routes(r *gin.RouterGroup) {
-	r.GET("/contacts", GetContactListHandler)
-	r.POST("/messages", SendMessageHandler)
-	r.GET("/messages/:contact_id", LoadConversationHandler)
+	chatHub := comm_services.NewHub()
+	go chatHub.Run()
+
+	var chatService comm_services.Service = chatHub
+	wsHandler := NewWebSocketHandler(chatService)
+
+	r.GET("/chat", wsHandler.ServeWS)
 }

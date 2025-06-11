@@ -13,6 +13,20 @@ VALUES    (1100000000, 1200000001, '01/BV1', 'M47.9', 'T78.4', '2025-05-26 09:04
 INSERT    INTO records (patient_id, doctor_id, type_id, primary_diagnosis, secondary_diagnosis, created_at, expired_at)
 VALUES    (1100000001, 1200000001, '01/BV1', 'M47.9', 'T78.4', '2025-05-26 09:04:15', '2025-06-26 09:04:15');
 
+INSERT    INTO conversations (acc_id_1, acc_id_2)
+VALUES    (
+          (
+          SELECT    acc_id
+          FROM      accounts
+          WHERE     citizen_id = '000000001113'
+          ),
+          (
+          SELECT    acc_id
+          FROM      accounts
+          WHERE     citizen_id = '000000001112'
+          )
+          );
+
 -- migrate:down
 DELETE    FROM records
 WHERE     doctor_id = 1200000001;

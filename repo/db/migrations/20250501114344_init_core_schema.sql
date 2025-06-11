@@ -94,12 +94,20 @@ CREATE    TABLE "medications" (
           "manufacturer" text NOT NULL
           );
 
+CREATE    TABLE "conversations" (
+          "conversation_id" bigserial PRIMARY KEY NOT NULL,
+          "acc_id_1" bigserial NOT NULL,
+          "acc_id_2" bigserial NOT NULL,
+          "last_message_at" timestamptz
+          );
+
 CREATE    TABLE "messages" (
-          "from_acc_id" BIGINT NOT NULL,
-          "to_acc_id" BIGINT NOT NULL,
+          "message_id" bigserial PRIMARY KEY NOT NULL,
+          "conversation_id" bigserial NOT NULL,
+          "sender_acc_id" bigserial NOT NULL,
           "sent_at" timestamptz NOT NULL DEFAULT (now ()),
-          "content" text NOT NULL,
-          PRIMARY KEY ("from_acc_id", "to_acc_id", "sent_at")
+          "is_read" bool NOT NULL DEFAULT (FALSE),
+          "content" text NOT NULL
           );
 
 CREATE    TABLE "schedules" (
@@ -127,6 +135,10 @@ CREATE INDEX ON "records" ("secondary_diagnosis");
 
 CREATE INDEX ON "record_attachments" ("record_id");
 
+CREATE INDEX ON "conversations" ("acc_id_1");
+
+CREATE INDEX ON "conversations" ("acc_id_2");
+
 CREATE INDEX ON "schedules" ("acc_id");
 
 CREATE INDEX ON "schedules" ("type");
@@ -153,9 +165,13 @@ ALTER     TABLE "prescription_details" ADD FOREIGN KEY ("prescription_id") REFER
 
 ALTER     TABLE "prescription_details" ADD FOREIGN KEY ("med_id") REFERENCES "medications" ("med_id");
 
-ALTER     TABLE "messages" ADD FOREIGN KEY ("from_acc_id") REFERENCES "accounts" ("acc_id");
+ALTER     TABLE "conversations" ADD FOREIGN KEY ("acc_id_1") REFERENCES "accounts" ("acc_id");
 
-ALTER     TABLE "messages" ADD FOREIGN KEY ("to_acc_id") REFERENCES "accounts" ("acc_id");
+ALTER     TABLE "conversations" ADD FOREIGN KEY ("acc_id_2") REFERENCES "accounts" ("acc_id");
+
+ALTER     TABLE "messages" ADD FOREIGN KEY ("conversation_id") REFERENCES "conversations" ("conversation_id");
+
+ALTER     TABLE "messages" ADD FOREIGN KEY ("sender_acc_id") REFERENCES "accounts" ("acc_id");
 
 ALTER     TABLE "schedules" ADD FOREIGN KEY ("acc_id") REFERENCES "accounts" ("acc_id");
 

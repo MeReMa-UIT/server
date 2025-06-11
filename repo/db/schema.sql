@@ -49,6 +49,75 @@ ALTER SEQUENCE public.accounts_acc_id_seq OWNED BY public.accounts.acc_id;
 
 
 --
+-- Name: conversations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.conversations (
+    conversation_id bigint NOT NULL,
+    acc_id_1 bigint NOT NULL,
+    acc_id_2 bigint NOT NULL,
+    last_message_at timestamp with time zone
+);
+
+
+--
+-- Name: conversations_acc_id_1_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.conversations_acc_id_1_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: conversations_acc_id_1_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.conversations_acc_id_1_seq OWNED BY public.conversations.acc_id_1;
+
+
+--
+-- Name: conversations_acc_id_2_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.conversations_acc_id_2_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: conversations_acc_id_2_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.conversations_acc_id_2_seq OWNED BY public.conversations.acc_id_2;
+
+
+--
+-- Name: conversations_conversation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.conversations_conversation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: conversations_conversation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.conversations_conversation_id_seq OWNED BY public.conversations.conversation_id;
+
+
+--
 -- Name: diagnoses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -98,11 +167,70 @@ ALTER SEQUENCE public.medications_med_id_seq OWNED BY public.medications.med_id;
 --
 
 CREATE TABLE public.messages (
-    from_acc_id bigint NOT NULL,
-    to_acc_id bigint NOT NULL,
+    message_id bigint NOT NULL,
+    conversation_id bigint NOT NULL,
+    sender_acc_id bigint NOT NULL,
     sent_at timestamp with time zone DEFAULT now() NOT NULL,
+    is_read boolean DEFAULT false NOT NULL,
     content text NOT NULL
 );
+
+
+--
+-- Name: messages_conversation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.messages_conversation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_conversation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.messages_conversation_id_seq OWNED BY public.messages.conversation_id;
+
+
+--
+-- Name: messages_message_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.messages_message_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.messages_message_id_seq OWNED BY public.messages.message_id;
+
+
+--
+-- Name: messages_sender_acc_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.messages_sender_acc_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_sender_acc_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.messages_sender_acc_id_seq OWNED BY public.messages.sender_acc_id;
 
 
 --
@@ -369,10 +497,52 @@ ALTER TABLE ONLY public.accounts ALTER COLUMN acc_id SET DEFAULT nextval('public
 
 
 --
+-- Name: conversations conversation_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.conversations ALTER COLUMN conversation_id SET DEFAULT nextval('public.conversations_conversation_id_seq'::regclass);
+
+
+--
+-- Name: conversations acc_id_1; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.conversations ALTER COLUMN acc_id_1 SET DEFAULT nextval('public.conversations_acc_id_1_seq'::regclass);
+
+
+--
+-- Name: conversations acc_id_2; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.conversations ALTER COLUMN acc_id_2 SET DEFAULT nextval('public.conversations_acc_id_2_seq'::regclass);
+
+
+--
 -- Name: medications med_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.medications ALTER COLUMN med_id SET DEFAULT nextval('public.medications_med_id_seq'::regclass);
+
+
+--
+-- Name: messages message_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages ALTER COLUMN message_id SET DEFAULT nextval('public.messages_message_id_seq'::regclass);
+
+
+--
+-- Name: messages conversation_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages ALTER COLUMN conversation_id SET DEFAULT nextval('public.messages_conversation_id_seq'::regclass);
+
+
+--
+-- Name: messages sender_acc_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages ALTER COLUMN sender_acc_id SET DEFAULT nextval('public.messages_sender_acc_id_seq'::regclass);
 
 
 --
@@ -450,6 +620,14 @@ ALTER TABLE ONLY public.accounts
 
 
 --
+-- Name: conversations conversations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.conversations
+    ADD CONSTRAINT conversations_pkey PRIMARY KEY (conversation_id);
+
+
+--
 -- Name: diagnoses diagnoses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -470,7 +648,7 @@ ALTER TABLE ONLY public.medications
 --
 
 ALTER TABLE ONLY public.messages
-    ADD CONSTRAINT messages_pkey PRIMARY KEY (from_acc_id, to_acc_id, sent_at);
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (message_id);
 
 
 --
@@ -578,6 +756,20 @@ ALTER TABLE ONLY public.staffs
 
 
 --
+-- Name: conversations_acc_id_1_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX conversations_acc_id_1_idx ON public.conversations USING btree (acc_id_1);
+
+
+--
+-- Name: conversations_acc_id_2_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX conversations_acc_id_2_idx ON public.conversations USING btree (acc_id_2);
+
+
+--
 -- Name: patients_acc_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -641,19 +833,35 @@ CREATE INDEX schedules_type_idx ON public.schedules USING btree (type);
 
 
 --
--- Name: messages messages_from_acc_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: conversations conversations_acc_id_1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.conversations
+    ADD CONSTRAINT conversations_acc_id_1_fkey FOREIGN KEY (acc_id_1) REFERENCES public.accounts(acc_id);
+
+
+--
+-- Name: conversations conversations_acc_id_2_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.conversations
+    ADD CONSTRAINT conversations_acc_id_2_fkey FOREIGN KEY (acc_id_2) REFERENCES public.accounts(acc_id);
+
+
+--
+-- Name: messages messages_conversation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.messages
-    ADD CONSTRAINT messages_from_acc_id_fkey FOREIGN KEY (from_acc_id) REFERENCES public.accounts(acc_id);
+    ADD CONSTRAINT messages_conversation_id_fkey FOREIGN KEY (conversation_id) REFERENCES public.conversations(conversation_id);
 
 
 --
--- Name: messages messages_to_acc_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: messages messages_sender_acc_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.messages
-    ADD CONSTRAINT messages_to_acc_id_fkey FOREIGN KEY (to_acc_id) REFERENCES public.accounts(acc_id);
+    ADD CONSTRAINT messages_sender_acc_id_fkey FOREIGN KEY (sender_acc_id) REFERENCES public.accounts(acc_id);
 
 
 --
