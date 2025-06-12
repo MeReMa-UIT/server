@@ -12,5 +12,5 @@ func Routes(r *gin.RouterGroup) {
 	var chatService comm_services.Service = chatHub
 	wsHandler := NewWebSocketHandler(chatService)
 
-	r.GET("/chat", wsHandler.ServeWS)
+	r.GET("/chat", wsHandler.ServeWSHandler)
 }

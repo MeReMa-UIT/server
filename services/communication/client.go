@@ -1,6 +1,7 @@
 package comm_services
 
 import (
+	"context"
 	"log"
 	"time"
 
@@ -27,6 +28,7 @@ type Client struct {
 	Hub  *Hub            // Reference to the Hub that manages this client
 	Conn *websocket.Conn // The WebSocket connection itself
 	Send chan []byte     // Buffered channel of outbound messages for this client
+	Ctx  context.Context
 }
 
 // NewClient creates a new Client instance.
@@ -36,6 +38,7 @@ func NewClient(id string, hub *Hub, conn *websocket.Conn) *Client {
 		Hub:  hub,
 		Conn: conn,
 		Send: make(chan []byte, 256),
+		Ctx:  context.Background(), // Initialize with a background context
 	}
 }
 

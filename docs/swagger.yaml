@@ -65,14 +65,14 @@ definitions:
           new account, otherwise token will allow user to add new patient or staff
         type: string
     type: object
-  models.ContactInfo:
+  models.Conversation:
     properties:
-      acc_id:
+      conversation_id:
         type: integer
-      full_name:
+      last_message_at:
         type: string
-      role:
-        type: string
+      partner_acc_id:
+        type: integer
     type: object
   models.DiagnosisInfo:
     properties:
@@ -81,6 +81,30 @@ definitions:
       icd_code:
         type: string
       name:
+        type: string
+    type: object
+  models.InboundMessage:
+    properties:
+      conversation_id:
+        description: For sendMessage, loadHistory, markSeenMessage
+        type: integer
+      limit:
+        description: For loadHistory
+        type: integer
+      offset:
+        description: For loadHistory
+        type: integer
+      partner_acc_id:
+        description: For sendMessage, markSeenMessage
+        type: integer
+      read_time:
+        description: For markSeenMessage
+        type: string
+      text:
+        description: For sendMessage
+        type: string
+      type:
+        description: e.g., "sendMessage", "loadHistory", "markSeenMessage"
         type: string
     type: object
   models.InitRegistrationRequest:
@@ -160,7 +184,13 @@ definitions:
     properties:
       content:
         type: string
-      sender_id:
+      conversation_id:
+        type: integer
+      is_seen:
+        type: boolean
+      message_id:
+        type: integer
+      sender_acc_id:
         type: integer
       sent_at:
         type: string
@@ -187,6 +217,38 @@ definitions:
         type: string
       record_id:
         type: integer
+    type: object
+  models.OutboundMessage:
+    properties:
+      conversation_id:
+        description: for "newMessage", "seenMessage", "messageHistory"
+        type: integer
+      conversations:
+        description: For "conversationList"
+        items:
+          $ref: '#/definitions/models.Conversation'
+        type: array
+      id:
+        description: For "yourID"
+        type: string
+      message:
+        allOf:
+        - $ref: '#/definitions/models.Message'
+        description: For "newMessage"
+      messages:
+        description: For "messageHistory"
+        items:
+          $ref: '#/definitions/models.Message'
+        type: array
+      read_time:
+        description: For "seenMessage"
+        type: string
+      text:
+        description: For "error"
+        type: string
+      type:
+        description: e.g., "yourID", "newMessage", "messageHistory", "conversationList",  "error"
+        type: string
     type: object
   models.PasswordResetRequest:
     properties:
@@ -384,13 +446,6 @@ definitions:
         enum:
         - 1
         - 2
-        type: integer
-    type: object
-  models.SendingMessage:
-    properties:
-      content:
-        type: string
-      to_acc_id:
         type: integer
     type: object
   models.StaffInfo:
@@ -939,94 +994,6 @@ paths:
       summary: Get Medical Record Template (doctor)
       tags:
       - catalogs
-  /comms/contacts:
-    get:
-      consumes:
-      - application/json
-      description: Get contact list for the authenticated user
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.ContactInfo'
-            type: array
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "500":
-          description: Internal Server Error
-      security:
-      - BearerAuth: []
-      summary: Get contact list (doctor, patient)
-      tags:
-      - communications
-  /comms/messages:
-    post:
-      consumes:
-      - application/json
-      description: Send message to a doctor or patient
-      parameters:
-      - description: Message to send
-        in: body
-        name: message
-        required: true
-        schema:
-          $ref: '#/definitions/models.SendingMessage'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "500":
-          description: Internal Server Error
-      security:
-      - BearerAuth: []
-      summary: Send message (patient, doctor)
-      tags:
-      - communications
-  /comms/messages/{contact_id}:
-    get:
-      consumes:
-      - application/json
-      description: Load conversation with a doctor or patient
-      parameters:
-      - description: Contact ID
-        in: path
-        name: contact_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Message'
-            type: array
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "500":
-          description: Internal Server Error
-      security:
-      - BearerAuth: []
-      summary: Load conversation (patient, doctor)
-      tags:
-      - communications
   /patients:
     get:
       consumes:
@@ -1806,6 +1773,32 @@ paths:
       summary: Update staff info (admin)
       tags:
       - staffs
+  /v1/communication/chat:
+    get:
+      consumes:
+      - application/json
+      description: Establish a WebSocket connection for real-time chat between doctor
+        and patient.
+      parameters:
+      - description: Comm request (type = {'sendMessage', 'loadHistory', 'markSeenMessage'})
+        in: body
+        name: rqeuest
+        required: true
+        schema:
+          $ref: '#/definitions/models.InboundMessage'
+      produces:
+      - application/json
+      responses:
+        "101":
+          description: type = {'yourID', 'newMessage', 'messageHistory', 'conversationList',
+            'error'}
+          schema:
+            $ref: '#/definitions/models.OutboundMessage'
+      security:
+      - BearerAuth: []
+      summary: WebSocket connection for chat (doctor, patient)
+      tags:
+      - communications
 securityDefinitions:
   BearerAuth:
     description: Provide the JWT token as a header with format "Bearer \<token\>"

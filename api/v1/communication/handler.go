@@ -40,7 +40,16 @@ type WebSocketHandler struct {
 	ChatService comm_services.Service // The core chat service (Hub)
 }
 
-// NewWebSocketHandler creates a new WebSocketHandler.
+// Chat service godoc
+// @Summary WebSocket connection for chat (doctor, patient)
+// @Description Establish a WebSocket connection for real-time chat between doctor and patient.
+// @Tags communications
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param rqeuest body models.InboundMessage true "Comm request (type = {'sendMessage', 'loadHistory', 'markSeenMessage'})"
+// @Success 101 {object} models.OutboundMessage "type = {'yourID', 'newMessage', 'messageHistory', 'conversationList', 'error'}"
+// @Router /v1/communication/chat [get]
 func NewWebSocketHandler(chatService comm_services.Service) *WebSocketHandler {
 	if chatService == nil {
 		log.Fatal("WebSocketHandler: ChatService cannot be nil")
@@ -50,33 +59,17 @@ func NewWebSocketHandler(chatService comm_services.Service) *WebSocketHandler {
 	}
 }
 
-// ServeWS is the Gin handler function for WebSocket connection requests.
-// It expects a 'token' query parameter containing the JWT.
-// Example URL: ws://localhost:8080/ws?token=YOUR_JWT_HERE
-func (h *WebSocketHandler) ServeWS(c *gin.Context) {
-	// 1. Extract JWT from query parameter
-	tokenString := c.Query("token")
-	if tokenString == "" {
-		log.Println("API: WebSocket connection attempt without 'token' query parameter.")
-		// For WebSockets, returning JSON before upgrade might not be seen by all clients.
-		// It's often better to let the upgrader handle the error response if CheckOrigin fails,
-		// or simply close the underlying connection if a token is mandatory for the upgrade attempt itself.
-		// However, Gin expects a response to be written.
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing authentication token in query parameter"})
-		c.Abort() // Abort further processing by Gin
-		return
-	}
+func (h *WebSocketHandler) ServeWSHandler(c *gin.Context) {
+	token := c.GetHeader("Authorization")
 	log.Printf("API: Received WebSocket connection attempt with token.")
 
 	// 2. Validate token and extract acc_id
-	claims, err := auth_services.ParseToken(tokenString)
+	claims, err := auth_services.ParseToken(token)
 	if err != nil {
-		log.Printf("API: WebSocket token validation failed for token '%s': %v", tokenString, err)
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		c.Abort()
 		return
 	}
-	log.Printf("API: WebSocket token validated. AccID: %s", claims.ID)
 
 	// 3. Upgrade HTTP connection to WebSocket connection
 	// The upgrader.Upgrade method will write an HTTP error response to the client if

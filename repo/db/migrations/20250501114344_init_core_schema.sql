@@ -106,7 +106,7 @@ CREATE    TABLE "messages" (
           "conversation_id" bigserial NOT NULL,
           "sender_acc_id" bigserial NOT NULL,
           "sent_at" timestamptz NOT NULL DEFAULT (now ()),
-          "is_read" bool NOT NULL DEFAULT (FALSE),
+          "is_seen" bool NOT NULL DEFAULT (FALSE),
           "content" text NOT NULL
           );
 

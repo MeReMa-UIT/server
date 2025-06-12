@@ -783,146 +783,6 @@
                 }
             }
         },
-        "/comms/contacts": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get contact list for the authenticated user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "communications"
-                ],
-                "summary": "Get contact list (doctor, patient)",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.ContactInfo"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/comms/messages": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Send message to a doctor or patient",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "communications"
-                ],
-                "summary": "Send message (patient, doctor)",
-                "parameters": [
-                    {
-                        "description": "Message to send",
-                        "name": "message",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.SendingMessage"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/comms/messages/{contact_id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Load conversation with a doctor or patient",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "communications"
-                ],
-                "summary": "Load conversation (patient, doctor)",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Contact ID",
-                        "name": "contact_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Message"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
         "/patients": {
             "get": {
                 "security": [
@@ -2141,6 +2001,45 @@
                     }
                 }
             }
+        },
+        "/v1/communication/chat": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Establish a WebSocket connection for real-time chat between doctor and patient.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "communications"
+                ],
+                "summary": "WebSocket connection for chat (doctor, patient)",
+                "parameters": [
+                    {
+                        "description": "Comm request (type = {'sendMessage', 'loadHistory', 'markSeenMessage'})",
+                        "name": "rqeuest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.InboundMessage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "101": {
+                        "description": "type = {'yourID', 'newMessage', 'messageHistory', 'conversationList', 'error'}",
+                        "schema": {
+                            "$ref": "#/definitions/models.OutboundMessage"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -2242,17 +2141,17 @@
                 }
             }
         },
-        "models.ContactInfo": {
+        "models.Conversation": {
             "type": "object",
             "properties": {
-                "acc_id": {
+                "conversation_id": {
                     "type": "integer"
                 },
-                "full_name": {
+                "last_message_at": {
                     "type": "string"
                 },
-                "role": {
-                    "type": "string"
+                "partner_acc_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -2266,6 +2165,39 @@
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.InboundMessage": {
+            "type": "object",
+            "properties": {
+                "conversation_id": {
+                    "description": "For sendMessage, loadHistory, markSeenMessage",
+                    "type": "integer"
+                },
+                "limit": {
+                    "description": "For loadHistory",
+                    "type": "integer"
+                },
+                "offset": {
+                    "description": "For loadHistory",
+                    "type": "integer"
+                },
+                "partner_acc_id": {
+                    "description": "For sendMessage, markSeenMessage",
+                    "type": "integer"
+                },
+                "read_time": {
+                    "description": "For markSeenMessage",
+                    "type": "string"
+                },
+                "text": {
+                    "description": "For sendMessage",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "e.g., \"sendMessage\", \"loadHistory\", \"markSeenMessage\"",
                     "type": "string"
                 }
             }
@@ -2389,7 +2321,16 @@
                 "content": {
                     "type": "string"
                 },
-                "sender_id": {
+                "conversation_id": {
+                    "type": "integer"
+                },
+                "is_seen": {
+                    "type": "boolean"
+                },
+                "message_id": {
+                    "type": "integer"
+                },
+                "sender_acc_id": {
                     "type": "integer"
                 },
                 "sent_at": {
@@ -2430,6 +2371,53 @@
                 },
                 "record_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.OutboundMessage": {
+            "type": "object",
+            "properties": {
+                "conversation_id": {
+                    "description": "for \"newMessage\", \"seenMessage\", \"messageHistory\"",
+                    "type": "integer"
+                },
+                "conversations": {
+                    "description": "For \"conversationList\"",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Conversation"
+                    }
+                },
+                "id": {
+                    "description": "For \"yourID\"",
+                    "type": "string"
+                },
+                "message": {
+                    "description": "For \"newMessage\"",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.Message"
+                        }
+                    ]
+                },
+                "messages": {
+                    "description": "For \"messageHistory\"",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Message"
+                    }
+                },
+                "read_time": {
+                    "description": "For \"seenMessage\"",
+                    "type": "string"
+                },
+                "text": {
+                    "description": "For \"error\"",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "e.g., \"yourID\", \"newMessage\", \"messageHistory\", \"conversationList\",  \"error\"",
+                    "type": "string"
                 }
             }
         },
@@ -2727,17 +2715,6 @@
                         1,
                         2
                     ]
-                }
-            }
-        },
-        "models.SendingMessage": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "to_acc_id": {
-                    "type": "integer"
                 }
             }
         },

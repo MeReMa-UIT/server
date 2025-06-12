@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/merema-uit/server/models"
@@ -31,9 +32,15 @@ func CheckConversationExists(ctx context.Context, accID1, accID2 int64) error {
 
 func GetConversationList(ctx context.Context, accID string) ([]models.Conversation, error) {
 	const query = `
-		SELECT conversation_id, acc_id_1, acc_id_2, last_message_at
+		SELECT
+			conversation_id,
+			CASE
+				WHEN acc_id_1 = $1 THEN acc_id_2
+				ELSE acc_id_1
+			END AS partner_acc_id,
+			last_message_at
 		FROM conversations
-		WHERE acc_id_1 = $1 or acc_id_2 = $1
+		WHERE acc_id_1 = $1 OR acc_id_2 = $1;
 	`
 	rows, _ := dbpool.Query(ctx, query, accID)
 	list, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Conversation])
@@ -86,11 +93,11 @@ func StoreMessage(ctx context.Context, message models.NewMessage, senderAccID st
 	return storedMessage, nil
 }
 
-func UpdateConversationLastMessage(ctx context.Context, conversationID int64) error {
+func UpdateConversationLastMessage(ctx context.Context, conversationID int64, lastMessageTime time.Time) error {
 	const query = `
 		UPDATE conversations
-		SET last_message_at = NOW()
-		WHERE conversation_id = $1
+		SET last_message_at = $1
+		WHERE conversation_id = $2
 	`
 	tx, err := dbpool.Begin(ctx)
 	if err != nil {
@@ -98,7 +105,30 @@ func UpdateConversationLastMessage(ctx context.Context, conversationID int64) er
 	}
 	defer tx.Rollback(ctx)
 
-	if _, err := tx.Exec(ctx, query, conversationID); err != nil {
+	if _, err := tx.Exec(ctx, query, lastMessageTime, conversationID); err != nil {
+		return err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateMessageSeenStatus(ctx context.Context, conversationID int64, partnerAccID int64, readTime time.Time) error {
+	const query = `
+		UPDATE messages
+		SET is_seen = TRUE
+		WHERE conversation_id = $1 AND sender_acc_id = $2 AND is_seen = FALSE AND sent_at <= $3 
+	`
+	tx, err := dbpool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	if _, err := tx.Exec(ctx, query, conversationID, partnerAccID, readTime); err != nil {
 		return err
 	}
 

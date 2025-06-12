@@ -171,7 +171,7 @@ CREATE TABLE public.messages (
     conversation_id bigint NOT NULL,
     sender_acc_id bigint NOT NULL,
     sent_at timestamp with time zone DEFAULT now() NOT NULL,
-    is_read boolean DEFAULT false NOT NULL,
+    is_seen boolean DEFAULT false NOT NULL,
     content text NOT NULL
 );
 
