@@ -49,7 +49,7 @@ type WebSocketHandler struct {
 // @Security BearerAuth
 // @Param rqeuest body models.InboundMessage true "Comm request (type = {'sendMessage', 'loadHistory', 'markSeenMessage'})"
 // @Success 101 {object} models.OutboundMessage "type = {'yourID', 'newMessage', 'messageHistory', 'conversationList', 'error'}"
-// @Router /v1/communication/chat [get]
+// @Router /comms/chat [get]
 func NewWebSocketHandler(chatService comm_services.Service) *WebSocketHandler {
 	if chatService == nil {
 		log.Fatal("WebSocketHandler: ChatService cannot be nil")

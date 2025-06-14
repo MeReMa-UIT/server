@@ -73,6 +73,8 @@ definitions:
         type: string
       partner_acc_id:
         type: integer
+      partner_name:
+        type: string
     type: object
   models.DiagnosisInfo:
     properties:
@@ -994,6 +996,32 @@ paths:
       summary: Get Medical Record Template (doctor)
       tags:
       - catalogs
+  /comms/chat:
+    get:
+      consumes:
+      - application/json
+      description: Establish a WebSocket connection for real-time chat between doctor
+        and patient.
+      parameters:
+      - description: Comm request (type = {'sendMessage', 'loadHistory', 'markSeenMessage'})
+        in: body
+        name: rqeuest
+        required: true
+        schema:
+          $ref: '#/definitions/models.InboundMessage'
+      produces:
+      - application/json
+      responses:
+        "101":
+          description: type = {'yourID', 'newMessage', 'messageHistory', 'conversationList',
+            'error'}
+          schema:
+            $ref: '#/definitions/models.OutboundMessage'
+      security:
+      - BearerAuth: []
+      summary: WebSocket connection for chat (doctor, patient)
+      tags:
+      - communications
   /patients:
     get:
       consumes:
@@ -1773,32 +1801,6 @@ paths:
       summary: Update staff info (admin)
       tags:
       - staffs
-  /v1/communication/chat:
-    get:
-      consumes:
-      - application/json
-      description: Establish a WebSocket connection for real-time chat between doctor
-        and patient.
-      parameters:
-      - description: Comm request (type = {'sendMessage', 'loadHistory', 'markSeenMessage'})
-        in: body
-        name: rqeuest
-        required: true
-        schema:
-          $ref: '#/definitions/models.InboundMessage'
-      produces:
-      - application/json
-      responses:
-        "101":
-          description: type = {'yourID', 'newMessage', 'messageHistory', 'conversationList',
-            'error'}
-          schema:
-            $ref: '#/definitions/models.OutboundMessage'
-      security:
-      - BearerAuth: []
-      summary: WebSocket connection for chat (doctor, patient)
-      tags:
-      - communications
 securityDefinitions:
   BearerAuth:
     description: Provide the JWT token as a header with format "Bearer \<token\>"

@@ -7,6 +7,7 @@ import "time" // For mock repository structs
 type Conversation struct {
 	ConversationID int64      `json:"conversation_id"`
 	PartnerAccID   int64      `json:"partner_acc_id"`
+	PartnerName    string     `json:"partner_name"`
 	LastMessageAt  *time.Time `json:"last_message_at"`
 }
 

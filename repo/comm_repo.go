@@ -32,15 +32,41 @@ func CheckConversationExists(ctx context.Context, accID1, accID2 int64) error {
 
 func GetConversationList(ctx context.Context, accID string) ([]models.Conversation, error) {
 	const query = `
-		SELECT
-			conversation_id,
-			CASE
-				WHEN acc_id_1 = $1 THEN acc_id_2
-				ELSE acc_id_1
-			END AS partner_acc_id,
-			last_message_at
-		FROM conversations
-		WHERE acc_id_1 = $1 OR acc_id_2 = $1;
+		WITH base_conversation AS (
+				SELECT
+						conversation_id,
+						CASE
+								WHEN acc_id_1 = $1 THEN acc_id_2
+								ELSE acc_id_1
+						END AS partner_acc_id,
+						last_message_at
+				FROM conversations
+				WHERE acc_id_1 = $1 OR acc_id_2 = $1
+		),
+		patient_names AS (
+				SELECT acc_id, full_name
+				FROM (
+						SELECT acc_id, full_name, 
+									ROW_NUMBER() OVER (PARTITION BY acc_id ORDER BY date_of_birth) AS rn
+						FROM patients
+				) p
+				WHERE p.rn = 1
+		),
+		partner_names AS (
+				SELECT acc_id, full_name FROM patient_names
+				UNION
+				SELECT acc_id, full_name FROM staffs
+		)
+
+		SELECT 
+				bc.conversation_id,
+				bc.partner_acc_id,
+				pn.full_name AS partner_name,
+				bc.last_message_at
+		FROM base_conversation bc
+		JOIN partner_names pn
+				ON bc.partner_acc_id = pn.acc_id
+		ORDER BY bc.last_message_at DESC;
 	`
 	rows, _ := dbpool.Query(ctx, query, accID)
 	list, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Conversation])
@@ -50,6 +76,35 @@ func GetConversationList(ctx context.Context, accID string) ([]models.Conversati
 	}
 
 	return list, nil
+}
+
+func GetNameByAccID(ctx context.Context, accID string) (string, error) {
+	const queryPatient = `
+		SELECT full_name
+		FROM patients 
+		WHERE acc_id = $1
+		ORDER BY date_of_birth
+		LIMIT 1
+	`
+	const queryStaff = `
+		SELECT full_name
+		FROM staffs
+		WHERE acc_id = $1
+	`
+
+	var name string
+	err := dbpool.QueryRow(ctx, queryPatient, accID).Scan(&name)
+	if err != nil {
+		err = dbpool.QueryRow(ctx, queryPatient, accID).Scan(&name)
+		if err != nil {
+			if err == pgx.ErrNoRows {
+				return "", errs.ErrAccountNotExist
+			}
+			return "", err
+		}
+	}
+
+	return name, nil
 }
 
 func GetConversationMessage(ctx context.Context, conversationID string) ([]models.Message, error) {

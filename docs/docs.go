@@ -789,6 +789,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/comms/chat": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Establish a WebSocket connection for real-time chat between doctor and patient.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "communications"
+                ],
+                "summary": "WebSocket connection for chat (doctor, patient)",
+                "parameters": [
+                    {
+                        "description": "Comm request (type = {'sendMessage', 'loadHistory', 'markSeenMessage'})",
+                        "name": "rqeuest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.InboundMessage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "101": {
+                        "description": "type = {'yourID', 'newMessage', 'messageHistory', 'conversationList', 'error'}",
+                        "schema": {
+                            "$ref": "#/definitions/models.OutboundMessage"
+                        }
+                    }
+                }
+            }
+        },
         "/patients": {
             "get": {
                 "security": [
@@ -2007,45 +2046,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/v1/communication/chat": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Establish a WebSocket connection for real-time chat between doctor and patient.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "communications"
-                ],
-                "summary": "WebSocket connection for chat (doctor, patient)",
-                "parameters": [
-                    {
-                        "description": "Comm request (type = {'sendMessage', 'loadHistory', 'markSeenMessage'})",
-                        "name": "rqeuest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.InboundMessage"
-                        }
-                    }
-                ],
-                "responses": {
-                    "101": {
-                        "description": "type = {'yourID', 'newMessage', 'messageHistory', 'conversationList', 'error'}",
-                        "schema": {
-                            "$ref": "#/definitions/models.OutboundMessage"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -2158,6 +2158,9 @@ const docTemplate = `{
                 },
                 "partner_acc_id": {
                     "type": "integer"
+                },
+                "partner_name": {
+                    "type": "string"
                 }
             }
         },
