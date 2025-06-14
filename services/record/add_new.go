@@ -28,7 +28,7 @@ func AddNewRecord(ctx context.Context, authHeader string, req *models.NewMedical
 		return models.NewMedicalRecordResponse{}, err
 	}
 
-	additionalInfo, err := record_validation.Validate01BV1(&req.RecordDetail, recordTypeInfo.SchemaPath)
+	additionalInfo, err := record_validation.ValidateRecordDetail(&req.RecordDetail, recordTypeInfo.TypeID, recordTypeInfo.SchemaPath)
 
 	if err != nil {
 		return models.NewMedicalRecordResponse{}, err

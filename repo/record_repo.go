@@ -9,6 +9,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/merema-uit/server/models"
+	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/utils"
 )
 
@@ -128,4 +129,57 @@ func GetMedicalRecordInfo(ctx context.Context, recordID string) (models.MedicalR
 		return models.MedicalRecordInfo{}, err
 	}
 	return info, nil
+}
+
+func GetMedicalRecordTypeByRecordID(ctx context.Context, recordID string) (models.MedicalRecordTypeInfo, error) {
+	const query = `
+		SELECT *
+		FROM record_types
+		WHERE type_id IN (SELECT type_id FROM records WHERE record_id = $1::BIGINT)
+	`
+
+	rows, _ := dbpool.Query(ctx, query, recordID)
+	typeInfo, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.MedicalRecordTypeInfo])
+
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return models.MedicalRecordTypeInfo{}, errs.ErrRecordNotFound
+		}
+		return models.MedicalRecordTypeInfo{}, err
+	}
+
+	return typeInfo, nil
+}
+
+func UpdateMedicalRecord(ctx context.Context, recordID string, newDetail models.UpdateMedicalRecordRequest, additionalInfo models.ExtractedRecordInfo) error {
+	const query = `
+		UPDATE records
+		SET record_detail = $1,
+				primary_diagnosis = $2, 
+				secondary_diagnosis = NULLIF($3, '')
+		WHERE record_id = $4
+	`
+
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	res, err := tx.Exec(ctx, query, newDetail.NewRecordDetail, additionalInfo.PrimaryDiagnosis, additionalInfo.SecondaryDiagnosis, recordID)
+	if err != nil {
+		return err
+	}
+
+	if res.RowsAffected() == 0 {
+		return errs.ErrRecordNotFound
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+
+	return nil
 }

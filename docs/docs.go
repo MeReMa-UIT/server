@@ -1606,7 +1606,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Record ID",
-                        "name": "recordID",
+                        "name": "record_id",
                         "in": "path",
                         "required": true
                     }
@@ -1655,7 +1655,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Record ID",
-                        "name": "recordID",
+                        "name": "record_id",
                         "in": "path",
                         "required": true
                     }
@@ -1666,6 +1666,61 @@ const docTemplate = `{
                         "schema": {
                             "type": "file"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/records/{record_id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a medical record by record ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Update a medical record (doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Record ID",
+                        "name": "record_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update medical record request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UpdateMedicalRecordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request"
@@ -2781,6 +2836,14 @@ const docTemplate = `{
                 },
                 "gender": {
                     "type": "string"
+                }
+            }
+        },
+        "models.UpdateMedicalRecordRequest": {
+            "type": "object",
+            "properties": {
+                "new_record_detail": {
+                    "type": "object"
                 }
             }
         },

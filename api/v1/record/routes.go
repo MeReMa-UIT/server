@@ -6,6 +6,7 @@ func Routes(r *gin.RouterGroup) {
 	r.POST("", AddNewRecordHandler)
 	r.POST("/:record_id/attachments", AddRecordAttachmentsHandler)
 	r.GET("", GetRecordListHandler)
-	r.GET("/:recordID", GetRecordInfoHandler)
-	r.GET("/:recordID/attachments", GetRecordAttachmentsHandler)
+	r.GET("/:record_id", GetRecordInfoHandler)
+	r.PUT("/:record_id", UpdateMedicalRecordHandler)
+	r.GET("/:record_id/attachments", GetRecordAttachmentsHandler)
 }

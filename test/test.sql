@@ -52,6 +52,9 @@ SELECT    *
 FROM      medications;
 
 SELECT    *
+FROM      diagnoses;
+
+SELECT    *
 FROM      record_types;
 
 DELETE    FROM prescription_details;

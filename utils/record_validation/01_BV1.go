@@ -10,7 +10,7 @@ import (
 	_ "github.com/santhosh-tekuri/jsonschema/v6"
 )
 
-func Validate01BV1(record *pgtype.JSONB, schemaPath string) (models.ExtractedRecordInfo, error) {
+func validate01BV1(record *pgtype.JSONB, schemaPath string) (models.ExtractedRecordInfo, error) {
 	schema, err := utils.LoadJSONFileToJSONB(schemaPath)
 	if err != nil {
 		return models.ExtractedRecordInfo{}, fmt.Errorf("Failed to load schema: %w", err)
@@ -29,19 +29,21 @@ func Validate01BV1(record *pgtype.JSONB, schemaPath string) (models.ExtractedRec
 
 	diagnosisPredictions := recordData["THÔNG TIN CHUNG"].(map[string]interface{})["Chẩn đoán"].(map[string]interface{})
 
+	if pred, ok := diagnosisPredictions["Khi vào khoa điều trị"].(string); ok && pred != "" {
+		additionalInfo.PrimaryDiagnosis = pred
+	} else if pred, ok := diagnosisPredictions["KKB, Cấp cứu"].(string); ok && pred != "" {
+		additionalInfo.PrimaryDiagnosis = pred
+	} else if pred, ok := diagnosisPredictions["Nơi chuyển đến"].(string); ok && pred != "" {
+		additionalInfo.PrimaryDiagnosis = pred
+	}
+
 	if pred, ok := diagnosisPredictions["Ra viện"].(map[string]interface{}); ok {
-		if primary, ok := pred["Bệnh chính"].(string); ok {
+		if primary, ok := pred["Bệnh chính"].(string); ok && primary != "" {
 			additionalInfo.PrimaryDiagnosis = primary
 		}
-		if secondary, ok := pred["Bệnh kèm theo"].(string); ok {
+		if secondary, ok := pred["Bệnh kèm theo"].(string); ok && secondary != "" {
 			additionalInfo.SecondaryDiagnosis = secondary
 		}
-	} else if pred, ok := diagnosisPredictions["Khi vào khoa điều trị"].(string); ok {
-		additionalInfo.PrimaryDiagnosis = pred
-	} else if pred, ok := diagnosisPredictions["KKB, Cấp cứu"].(string); ok {
-		additionalInfo.PrimaryDiagnosis = pred
-	} else if pred, ok := diagnosisPredictions["Nơi chuyển đến"].(string); ok {
-		additionalInfo.PrimaryDiagnosis = pred
 	}
 
 	// primary diagnosis, secondary diagnosis

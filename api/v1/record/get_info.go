@@ -17,7 +17,7 @@ import (
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param recordID path string true "Record ID"
+// @Param record_id path string true "Record ID"
 // @Success 200 {object} models.MedicalRecordInfo
 // @Failure 400
 // @Failure 401
@@ -26,7 +26,7 @@ import (
 // @Router /records/{recordID} [get]
 func GetRecordInfoHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	recordID := c.Param("recordID")
+	recordID := c.Param("record_id")
 
 	res, err := record_services.GetRecordInfo(c, authHeader, recordID)
 	if err != nil {
@@ -52,7 +52,7 @@ func GetRecordInfoHandler(c *gin.Context) {
 // @Accept json
 // @Produce application/zip
 // @Security BearerAuth
-// @Param recordID path string true "Record ID"
+// @Param record_id path string true "Record ID"
 // @Success 200 {file} file "ZIP file containing all record's attachments"
 // @Failure 400
 // @Failure 401
@@ -61,7 +61,7 @@ func GetRecordInfoHandler(c *gin.Context) {
 // @Router /records/{recordID}/attachments [get]
 func GetRecordAttachmentsHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
-	recordID := c.Param("recordID")
+	recordID := c.Param("record_id")
 
 	attachments, err := record_services.GetRecordAttachments(c, authHeader, recordID)
 	if err != nil {

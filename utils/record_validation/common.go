@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgtype"
+	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
 	"github.com/santhosh-tekuri/jsonschema"
 )
@@ -24,4 +25,13 @@ func validateJSON(record, schema *pgtype.JSONB) error {
 		return errs.ErrInvalidMedicalRecordStructure
 	}
 	return nil
+}
+
+func ValidateRecordDetail(record *pgtype.JSONB, typeID, schemaPath string) (models.ExtractedRecordInfo, error) {
+	switch typeID {
+	case "01/BV1":
+		return validate01BV1(record, schemaPath)
+	default:
+		return models.ExtractedRecordInfo{}, fmt.Errorf("Unsupported record type: %s", typeID)
+	}
 }

@@ -487,6 +487,11 @@ definitions:
       gender:
         type: string
     type: object
+  models.UpdateMedicalRecordRequest:
+    properties:
+      new_record_detail:
+        type: object
+    type: object
   models.UpdateScheduleStatusRequest:
     properties:
       new_status:
@@ -1504,6 +1509,41 @@ paths:
       summary: Add a new record (doctor)
       tags:
       - records
+  /records/{record_id}:
+    put:
+      consumes:
+      - application/json
+      description: Update a medical record by record ID
+      parameters:
+      - description: Record ID
+        in: path
+        name: record_id
+        required: true
+        type: string
+      - description: Update medical record request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateMedicalRecordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Update a medical record (doctor)
+      tags:
+      - records
   /records/{record_id}/attachments:
     post:
       consumes:
@@ -1547,7 +1587,7 @@ paths:
       parameters:
       - description: Record ID
         in: path
-        name: recordID
+        name: record_id
         required: true
         type: string
       produces:
@@ -1578,7 +1618,7 @@ paths:
       parameters:
       - description: Record ID
         in: path
-        name: recordID
+        name: record_id
         required: true
         type: string
       produces:
