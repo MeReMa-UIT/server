@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"os"
+	"path"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/merema-uit/server/models"
@@ -55,7 +56,7 @@ func StoreMedicalRecord(ctx context.Context, doctorID int, req *models.NewMedica
 	return models.NewMedicalRecordResponse{RecordID: createdRecordID}, nil
 }
 
-func StoreMedicalRecordAttachments(ctx context.Context, recordID string, attachments []*multipart.FileHeader) error {
+func StoreMedicalRecordAttachments(ctx context.Context, recordID string, attachments []*multipart.FileHeader, attType string) error {
 	const query = `
 		INSERT INTO record_attachments (record_id, type, file_path)
 		VALUES ($1, $2, $3)
@@ -69,7 +70,7 @@ func StoreMedicalRecordAttachments(ctx context.Context, recordID string, attachm
 	}
 	defer tx.Rollback(ctx)
 
-	storagePath := os.ExpandEnv(utils.EnvVars["FILE_STORAGE_PATH"]) + "/records/" + recordID
+	storagePath := path.Join(os.ExpandEnv(utils.EnvVars["FILE_STORAGE_PATH"]), "records", recordID, attType)
 
 	if err := os.MkdirAll(storagePath, 0755); err != nil {
 		return fmt.Errorf("Failed to create storage directory: %w", err)
@@ -77,10 +78,13 @@ func StoreMedicalRecordAttachments(ctx context.Context, recordID string, attachm
 
 	for _, attachment := range attachments {
 
-		attPath := storagePath + "/" + attachment.Filename
+		attPath := path.Join(storagePath, attachment.Filename)
 		err := utils.StoreFile(attachment, attPath)
+		if err != nil {
+			return err
+		}
 
-		_, err = tx.Exec(ctx, query, recordID, "Shit", attPath)
+		_, err = tx.Exec(ctx, query, recordID, attType, attPath)
 		if err != nil {
 			return err
 		}

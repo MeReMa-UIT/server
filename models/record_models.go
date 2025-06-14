@@ -39,3 +39,6 @@ type MedicalRecordBriefInfo struct {
 	PrimaryDiagnosis   string  `json:"primary_diagnosis" db:"primary_diagnosis"`
 	SecondaryDiagnosis *string `json:"secondary_diagnosis" db:"secondary_diagnosis"`
 }
+
+type UpdateMedicalRecordRequest struct {
+}

@@ -3,13 +3,13 @@ package record_services
 import (
 	"context"
 	"mime/multipart"
-	"strings"
 
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
 	"github.com/merema-uit/server/models/permission"
 	"github.com/merema-uit/server/repo"
 	auth_services "github.com/merema-uit/server/services/auth"
+	"github.com/merema-uit/server/utils"
 	"github.com/merema-uit/server/utils/record_validation"
 )
 
@@ -52,20 +52,11 @@ func AddRecordAttachments(ctx context.Context, authHeader, recordID string, atta
 		return errs.ErrPermissionDenied
 	}
 
-	var prefixes = []string{"xray_", "ct_", "ultrasound_", "test_", "other_"}
+	prefix := utils.GetAttachmentPrefix(attachments[0].Filename)
 
-	for _, attachment := range attachments {
-		ok := false
-		for _, prefix := range prefixes {
-			if strings.HasPrefix(attachment.Filename, prefix) {
-				ok = true
-				break
-			}
-		}
-		if !ok {
-			return errs.ErrInvalidAttachmentPrefix
-		}
+	if prefix == "" {
+		return errs.ErrInvalidAttachmentPrefix
 	}
 
-	return repo.StoreMedicalRecordAttachments(ctx, recordID, attachments)
+	return repo.StoreMedicalRecordAttachments(ctx, recordID, attachments, prefix)
 }
