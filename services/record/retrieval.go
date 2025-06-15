@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"os"
+	"path"
 
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
@@ -61,6 +62,6 @@ func GetRecordAttachments(ctx context.Context, authHeader, recordID string) (*by
 	if claims.Permission != permission.Doctor.String() && claims.Permission != permission.Patient.String() {
 		return nil, errs.ErrPermissionDenied
 	}
-	storagePath := os.ExpandEnv(utils.EnvVars["FILE_STORAGE_PATH"]) + "/records/" + recordID
+	storagePath := path.Join(os.ExpandEnv(utils.EnvVars["FILE_STORAGE_PATH"]), "records", recordID)
 	return utils.ZipDirectory(storagePath)
 }

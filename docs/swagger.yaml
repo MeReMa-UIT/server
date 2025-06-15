@@ -76,6 +76,11 @@ definitions:
       partner_name:
         type: string
     type: object
+  models.DeleteRecordAttachmentRequest:
+    properties:
+      attachment_file_name:
+        type: string
+    type: object
   models.DiagnosisInfo:
     properties:
       description:
@@ -1510,6 +1515,36 @@ paths:
       tags:
       - records
   /records/{record_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed information about a specific medical record
+      parameters:
+      - description: Record ID
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MedicalRecordInfo'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get record info (doctor, patient)
+      tags:
+      - records
     put:
       consumes:
       - application/json
@@ -1545,6 +1580,72 @@ paths:
       tags:
       - records
   /records/{record_id}/attachments:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a record attachment by record ID and file name
+      parameters:
+      - description: Record ID
+        in: path
+        name: record_id
+        required: true
+        type: string
+      - description: Attachment file name to delete
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.DeleteRecordAttachmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Delete record attachment (doctor)
+      tags:
+      - records
+    get:
+      consumes:
+      - application/json
+      description: Get all attachments of a specific medical record
+      parameters:
+      - description: Record ID
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/zip
+      responses:
+        "200":
+          description: ZIP file containing all record's attachments
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Get record attachments (doctor, patient)
+      tags:
+      - records
     post:
       consumes:
       - multipart/form-data
@@ -1577,68 +1678,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Add attachments to a record (doctor)
-      tags:
-      - records
-  /records/{recordID}:
-    get:
-      consumes:
-      - application/json
-      description: Get detailed information about a specific medical record
-      parameters:
-      - description: Record ID
-        in: path
-        name: record_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.MedicalRecordInfo'
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "500":
-          description: Internal Server Error
-      security:
-      - BearerAuth: []
-      summary: Get record info (doctor, patient)
-      tags:
-      - records
-  /records/{recordID}/attachments:
-    get:
-      consumes:
-      - application/json
-      description: Get all attachments of a specific medical record
-      parameters:
-      - description: Record ID
-        in: path
-        name: record_id
-        required: true
-        type: string
-      produces:
-      - application/zip
-      responses:
-        "200":
-          description: ZIP file containing all record's attachments
-          schema:
-            type: file
-        "400":
-          description: Bad Request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "500":
-          description: Internal Server Error
-      security:
-      - BearerAuth: []
-      summary: Get record attachments (doctor, patient)
       tags:
       - records
   /schedules:

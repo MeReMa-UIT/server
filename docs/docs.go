@@ -1584,7 +1584,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/records/{recordID}": {
+        "/records/{record_id}": {
             "get": {
                 "security": [
                     {
@@ -1631,58 +1631,7 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
-            }
-        },
-        "/records/{recordID}/attachments": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all attachments of a specific medical record",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/zip"
-                ],
-                "tags": [
-                    "records"
-                ],
-                "summary": "Get record attachments (doctor, patient)",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Record ID",
-                        "name": "record_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ZIP file containing all record's attachments",
-                        "schema": {
-                            "type": "file"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/records/{record_id}": {
+            },
             "put": {
                 "security": [
                     {
@@ -1738,6 +1687,53 @@ const docTemplate = `{
             }
         },
         "/records/{record_id}/attachments": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all attachments of a specific medical record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/zip"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Get record attachments (doctor, patient)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Record ID",
+                        "name": "record_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ZIP file containing all record's attachments",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -1783,6 +1779,62 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a record attachment by record ID and file name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "Delete record attachment (doctor)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Record ID",
+                        "name": "record_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Attachment file name to delete",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.DeleteRecordAttachmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -2215,6 +2267,14 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "partner_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.DeleteRecordAttachmentRequest": {
+            "type": "object",
+            "properties": {
+                "attachment_file_name": {
                     "type": "string"
                 }
             }

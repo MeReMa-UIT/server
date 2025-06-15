@@ -23,7 +23,7 @@ import (
 // @Failure 401
 // @Failure 403
 // @Failure 500
-// @Router /records/{recordID} [get]
+// @Router /records/{record_id} [get]
 func GetRecordInfoHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	recordID := c.Param("record_id")
@@ -58,7 +58,7 @@ func GetRecordInfoHandler(c *gin.Context) {
 // @Failure 401
 // @Failure 403
 // @Failure 500
-// @Router /records/{recordID}/attachments [get]
+// @Router /records/{record_id}/attachments [get]
 func GetRecordAttachmentsHandler(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	recordID := c.Param("record_id")

@@ -183,3 +183,40 @@ func UpdateMedicalRecord(ctx context.Context, recordID string, newDetail models.
 
 	return nil
 }
+
+func DeleteRecordAttachment(ctx context.Context, recordID, prefix string, req models.DeleteRecordAttachmentRequest) error {
+	const query = `
+		DELETE FROM record_attachments
+		WHERE record_id = $1 AND file_path = $2
+	`
+
+	tx, err := dbpool.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel: pgx.Serializable,
+	})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	filePath := path.Join(os.ExpandEnv(utils.EnvVars["FILE_STORAGE_PATH"]), "records", recordID, prefix, req.AttachmentFileName)
+	println("Deleting file at path:", filePath)
+
+	res, err := tx.Exec(ctx, query, recordID, filePath)
+	if err != nil {
+		return err
+	}
+
+	if res.RowsAffected() == 0 {
+		return errs.ErrRecordNotFound
+	}
+
+	if err := os.Remove(filePath); err != nil {
+		return err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}

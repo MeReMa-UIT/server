@@ -43,3 +43,7 @@ type MedicalRecordBriefInfo struct {
 type UpdateMedicalRecordRequest struct {
 	NewRecordDetail pgtype.JSONB `json:"new_record_detail" swaggertype:"object"`
 }
+
+type DeleteRecordAttachmentRequest struct {
+	AttachmentFileName string `json:"attachment_file_name"`
+}
