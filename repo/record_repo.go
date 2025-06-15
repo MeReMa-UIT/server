@@ -207,7 +207,7 @@ func DeleteRecordAttachment(ctx context.Context, recordID, prefix string, req mo
 	}
 
 	if res.RowsAffected() == 0 {
-		return errs.ErrRecordNotFound
+		return errs.ErrAttachmentNotFound
 	}
 
 	if err := os.Remove(filePath); err != nil {

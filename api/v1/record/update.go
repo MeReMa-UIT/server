@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/merema-uit/server/models"
+	errs "github.com/merema-uit/server/models/errors"
 	record_services "github.com/merema-uit/server/services/record"
 	"github.com/merema-uit/server/utils"
 )
@@ -37,8 +38,19 @@ func UpdateMedicalRecordHandler(c *gin.Context) {
 	err := record_services.UpdateMedicalRecord(c, authHeader, recordID, req)
 
 	if err != nil {
-		utils.Logger.Error("Failed to update medical record:", "error", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		switch err {
+		case errs.ErrInvalidAttachmentPrefix:
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid attachment prefix"})
+		case errs.ErrInvalidToken, errs.ErrExpiredToken, errs.ErrMalformedToken:
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		case errs.ErrPermissionDenied:
+			c.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
+		case errs.ErrRecordNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		default:
+			utils.Logger.Error("Failed to update medical record:", "error", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		}
 		return
 	}
 

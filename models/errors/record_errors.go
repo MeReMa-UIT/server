@@ -6,3 +6,4 @@ var ErrInvalidMedicalRecordStructure = errors.New("Invalid medical record struct
 var ErrPrimaryDiagnosisMissing = errors.New("Primary diagnosis is missing")
 var ErrInvalidAttachmentPrefix = errors.New("Invalid attachment prefix (must start with xray_, ct_, ultrasound_, test_, or other_)")
 var ErrRecordNotFound = errors.New("Medical record not found")
+var ErrAttachmentNotFound = errors.New("Attachment not found in the medical record")

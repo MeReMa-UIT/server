@@ -7,6 +7,7 @@ import (
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
 	record_services "github.com/merema-uit/server/services/record"
+	"github.com/merema-uit/server/utils"
 )
 
 // Delete record attachment godoc
@@ -43,9 +44,10 @@ func DeleteRecordAttachmentHandler(c *gin.Context) {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		case errs.ErrPermissionDenied:
 			c.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
-		case errs.ErrRecordNotFound:
+		case errs.ErrAttachmentNotFound:
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		default:
+			utils.Logger.Error("Failed to delete attachment", "error", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete attachment", "details": err.Error()})
 		}
 		return
