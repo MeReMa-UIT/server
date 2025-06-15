@@ -118,13 +118,13 @@
       "Toàn thân": {
         "Nội dung": "",
         "Mạch": 0,
-        "Nhiệt độ": 0.0,
+        "Nhiệt độ": -0.1,
         "Huyết áp": {
           "Tâm thu": 0,
           "Tâm trương": 0
         },
         "Nhịp thở": 0,
-        "Cân nặng": 0.0
+        "Cân nặng": -0.1
       },
       "Các cơ quan": {
         "Tuần hoàn": "",
