@@ -2153,6 +2153,168 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/statistic/records": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Compile record statistics based on time",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statistic"
+                ],
+                "summary": "Compile Record Statistic by time (admin)",
+                "parameters": [
+                    {
+                        "description": "Record Statistic Request",
+                        "name": "RecordStatisticRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.RecordStatisticRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AmountOfRecordsByTime"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/statistic/records/diagnosis": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Compile record statistics based on diagnosis and time",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statistic"
+                ],
+                "summary": "Compile Record Statistic by Diagnosis (admin)",
+                "parameters": [
+                    {
+                        "description": "Record Statistic Request",
+                        "name": "RecordStatisticRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.RecordStatisticRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AmountOfRecordsByDiagnosis"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/statistic/records/doctor": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Compile record statistics based on doctor and time",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statistic"
+                ],
+                "summary": "Compile Record Statistic by Doctor (admin)",
+                "parameters": [
+                    {
+                        "description": "Record Statistic Request",
+                        "name": "RecordStatisticRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.RecordStatisticRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AmountOfRecordsByDoctor"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -2250,6 +2412,45 @@ const docTemplate = `{
                 },
                 "token": {
                     "description": "JWT token. If acc ID = -1, token will allow user to register new account, otherwise token will allow user to add new patient or staff",
+                    "type": "string"
+                }
+            }
+        },
+        "models.AmountOfRecordsByDiagnosis": {
+            "type": "object",
+            "properties": {
+                "amount_by_time": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AmountOfRecordsByTime"
+                    }
+                },
+                "diagnosis_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AmountOfRecordsByDoctor": {
+            "type": "object",
+            "properties": {
+                "amount_by_time": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AmountOfRecordsByTime"
+                    }
+                },
+                "doctor_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.AmountOfRecordsByTime": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "timestamp_start": {
                     "type": "string"
                 }
             }
@@ -2757,6 +2958,18 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "prescription_note": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.RecordStatisticRequest": {
+            "type": "object",
+            "properties": {
+                "time_unit": {
+                    "description": "\"day\", \"week\", \"month\", \"year\"",
+                    "type": "string"
+                },
+                "timestamp": {
                     "type": "string"
                 }
             }

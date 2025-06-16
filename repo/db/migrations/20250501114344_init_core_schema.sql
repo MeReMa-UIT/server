@@ -133,6 +133,8 @@ CREATE INDEX ON "records" ("primary_diagnosis");
 
 CREATE INDEX ON "records" ("secondary_diagnosis");
 
+CREATE INDEX ON "records" ("created_at");
+
 CREATE INDEX ON "record_attachments" ("record_id");
 
 CREATE INDEX ON "conversations" ("acc_id_1");

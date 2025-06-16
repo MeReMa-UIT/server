@@ -65,6 +65,31 @@ definitions:
           new account, otherwise token will allow user to add new patient or staff
         type: string
     type: object
+  models.AmountOfRecordsByDiagnosis:
+    properties:
+      amount_by_time:
+        items:
+          $ref: '#/definitions/models.AmountOfRecordsByTime'
+        type: array
+      diagnosis_id:
+        type: string
+    type: object
+  models.AmountOfRecordsByDoctor:
+    properties:
+      amount_by_time:
+        items:
+          $ref: '#/definitions/models.AmountOfRecordsByTime'
+        type: array
+      doctor_id:
+        type: integer
+    type: object
+  models.AmountOfRecordsByTime:
+    properties:
+      amount:
+        type: integer
+      timestamp_start:
+        type: string
+    type: object
   models.Conversation:
     properties:
       conversation_id:
@@ -396,6 +421,14 @@ definitions:
       is_insurance_covered:
         type: boolean
       prescription_note:
+        type: string
+    type: object
+  models.RecordStatisticRequest:
+    properties:
+      time_unit:
+        description: '"day", "week", "month", "year"'
+        type: string
+      timestamp:
         type: string
     type: object
   models.ScheduleBookingRequest:
@@ -1880,6 +1913,108 @@ paths:
       summary: Update staff info (admin)
       tags:
       - staffs
+  /statistic/records:
+    post:
+      consumes:
+      - application/json
+      description: Compile record statistics based on time
+      parameters:
+      - description: Record Statistic Request
+        in: body
+        name: RecordStatisticRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.RecordStatisticRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AmountOfRecordsByTime'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Compile Record Statistic by time (admin)
+      tags:
+      - statistic
+  /statistic/records/diagnosis:
+    post:
+      consumes:
+      - application/json
+      description: Compile record statistics based on diagnosis and time
+      parameters:
+      - description: Record Statistic Request
+        in: body
+        name: RecordStatisticRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.RecordStatisticRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AmountOfRecordsByDiagnosis'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Compile Record Statistic by Diagnosis (admin)
+      tags:
+      - statistic
+  /statistic/records/doctor:
+    post:
+      consumes:
+      - application/json
+      description: Compile record statistics based on doctor and time
+      parameters:
+      - description: Record Statistic Request
+        in: body
+        name: RecordStatisticRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.RecordStatisticRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AmountOfRecordsByDoctor'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Compile Record Statistic by Doctor (admin)
+      tags:
+      - statistic
 securityDefinitions:
   BearerAuth:
     description: Provide the JWT token as a header with format "Bearer \<token\>"

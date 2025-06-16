@@ -784,6 +784,13 @@ CREATE INDEX record_attachments_record_id_idx ON public.record_attachments USING
 
 
 --
+-- Name: records_created_at_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX records_created_at_idx ON public.records USING btree (created_at);
+
+
+--
 -- Name: records_doctor_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 

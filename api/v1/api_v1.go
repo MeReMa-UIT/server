@@ -10,6 +10,7 @@ import (
 	record_api "github.com/merema-uit/server/api/v1/record"
 	schedule_api "github.com/merema-uit/server/api/v1/schedule"
 	staff_api "github.com/merema-uit/server/api/v1/staff"
+	statistic_api "github.com/merema-uit/server/api/v1/statistic"
 )
 
 func RegisterRoutesV1(r *gin.Engine) {
@@ -23,5 +24,6 @@ func RegisterRoutesV1(r *gin.Engine) {
 		prescription_api.Routes(v1.Group("/prescriptions"))
 		schedule_api.Routes(v1.Group("/schedules"))
 		comm_api.Routes(v1.Group("/comms"))
+		statistic_api.Routes(v1.Group("/statistic"))
 	}
 }
