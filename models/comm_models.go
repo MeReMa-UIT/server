@@ -1,9 +1,7 @@
 package models
 
-import "time" // For mock repository structs
+import "time"
 
-// --- Mock Repository Structs (to avoid direct dependency on actual repository package) ---
-// These would normally be in your repository package. We define simplified versions here.
 type Conversation struct {
 	ConversationID int64      `json:"conversation_id"`
 	PartnerAccID   int64      `json:"partner_acc_id"`
@@ -25,16 +23,13 @@ type Message struct {
 }
 
 type InboundMessage struct {
-	Type           string     `json:"type"`                      // e.g., "sendMessage", "loadHistory", "markSeenMessage"
-	ConversationID int64      `json:"conversation_id,omitempty"` // For sendMessage, loadHistory, markSeenMessage
-	PartnerAccID   int64      `json:"partner_acc_id,omitempty"`  // For sendMessage, markSeenMessage
-	Text           string     `json:"text,omitempty"`            // For sendMessage
-	Limit          int        `json:"limit,omitempty"`           // For loadHistory
-	Offset         int        `json:"offset,omitempty"`          // For loadHistory
-	ReadTime       *time.Time `json:"read_time,omitempty"`       // For markSeenMessage
+	Type           string     `json:"type"`                      //  "sendMessage", "loadHistory", "markSeenMessage"
+	ConversationID int64      `json:"conversation_id,omitempty"` // For "sendMessage", "loadHistory", "markSeenMessage"
+	PartnerAccID   int64      `json:"partner_acc_id,omitempty"`  // For "sendMessage", "markSeenMessage"
+	Text           string     `json:"text,omitempty"`            // For "sendMessage"
+	ReadTime       *time.Time `json:"read_time,omitempty"`       // For "markSeenMessage"
 }
 
-// OutboundMessage represents messages going FROM the server TO the client.
 type OutboundMessage struct {
 	Type           string         `json:"type"`                      // e.g., "yourID", "newMessage", "messageHistory", "conversationList",  "error"
 	ID             string         `json:"id,omitempty"`              // For "yourID"
@@ -45,5 +40,3 @@ type OutboundMessage struct {
 	ConversationID int64          `json:"conversation_id,omitempty"` // for "newMessage", "seenMessage", "messageHistory"
 	ReadTime       *time.Time     `json:"read_time,omitempty"`       // For "seenMessage"
 }
-
-// --- End Mock Repository Structs ---

@@ -45,12 +45,10 @@ func (h *Hub) handleRegister(client *Client) {
 	h.clientsMux.Lock()
 	h.clients[client.ID] = client
 	h.clientsMux.Unlock()
-	// utils.Logger.Info("Hub: Client registered: %s. Total clients: %d", client.ID, len(h.clients))
 
 	idMsg := models.OutboundMessage{Type: "yourID", ID: client.ID}
 	h.sendToClient(client, idMsg)
 	h.sendUserConversations(client)
-	// h.broadcastOnlineUserList()
 }
 
 func (h *Hub) handleUnregister(client *Client) {
@@ -164,14 +162,6 @@ func (h *Hub) handleLoadHistory(sender *Client, msg models.InboundMessage) {
 		h.sendErrorToClient(sender, "Missing conversation ID for load history.")
 		return
 	}
-	limit := msg.Limit
-	if limit <= 0 || limit > 50 {
-		limit = 20 // Default/max limit
-	}
-	offset := msg.Offset
-	if offset < 0 {
-		offset = 0
-	}
 
 	convoMessages, err := repo.GetConversationMessage(sender.Ctx, strconv.FormatInt(msg.ConversationID, 10))
 
@@ -181,70 +171,9 @@ func (h *Hub) handleLoadHistory(sender *Client, msg models.InboundMessage) {
 		return
 	}
 
-	// Verify sender is part of this conversation (simplified)
-	// In a real scenario, you'd check convo.DoctorAccID or convo.PatientAccID against sender.ID
-
-	messagesSlice := []models.Message{}
-	totalMessages := len(convoMessages)
-
-	// Paginate from the end of the list (most recent)
-	start := totalMessages - offset - limit
-	end := totalMessages - offset
-
-	if start < 0 {
-		start = 0
-	}
-	if end < 0 { // Should not happen if offset is reasonable
-		end = 0
-	}
-	if end > totalMessages {
-		end = totalMessages
-	}
-	if start >= end { // No messages in range or invalid range
-		// send empty list
-	} else {
-		for i := start; i < end; i++ {
-			messagesSlice = append(messagesSlice, convoMessages[i]) // Dereference and copy
-		}
-	}
-
-	outMsg := models.OutboundMessage{Type: "messageHistory", Messages: messagesSlice, ConversationID: msg.ConversationID}
+	outMsg := models.OutboundMessage{Type: "messageHistory", Messages: convoMessages, ConversationID: msg.ConversationID}
 	h.sendToClient(sender, outMsg)
 }
-
-// // rehandling
-// func (h *Hub) handleStartConversation(sender *Client, msg models.InboundMessage) {
-// 	senderAccID, _ := strconv.ParseInt(sender.ID, 10, 64)
-// 	recipientAccID := msg.RecipientAccID
-
-// 	if senderAccID == recipientAccID {
-// 		h.sendErrorToClient(sender, "Cannot start a conversation with yourself.")
-// 		return
-// 	}
-
-// 	// Find existing or create new conversation (simplified for doctor/patient)
-// 	// For simplicity, assume sender is Patient, recipient is Doctor for pair uniqueness.
-// 	// A real app needs robust role handling.
-// 	accID1, accID2 := senderAccID, recipientAccID
-// 	if accID1 > accID2 {
-// 		accID1, accID2 = accID2, accID1
-// 	}
-
-// 	var existingConvo *models.Conversation
-
-// 	// Notify sender
-// 	outMsgSender := models.OutboundMessage{Type: "conversationCreated", Conversation: existingConvo}
-// 	h.sendToClient(sender, outMsgSender)
-
-//		// Notify recipient if they are online
-//		h.clientsMux.RLock()
-//		recipientClient, isRecipientOnline := h.clients[strconv.FormatInt(recipientAccID, 10)]
-//		h.clientsMux.RUnlock()
-//		if isRecipientOnline {
-//			outMsgRecipient := models.OutboundMessage{Type: "conversationCreated", Conversation: existingConvo}
-//			h.sendToClient(recipientClient, outMsgRecipient)
-//		}
-//	}
 
 func (h *Hub) handleMarkSeenMessage(client *Client, msg models.InboundMessage) {
 	if msg.ConversationID == 0 || msg.ReadTime == nil {
@@ -292,44 +221,15 @@ func (h *Hub) sendToClient(client *Client, msg models.OutboundMessage) {
 	}
 }
 
-// func (h *Hub) broadcastToAll(msg models.OutboundMessage) {
-// 	jsonData, err := json.Marshal(msg)
-// 	if err != nil {
-// 		log.Printf("Hub: Error marshalling broadcast message: %v", err)
-// 		return
-// 	}
-// 	h.clientsMux.RLock()
-// 	for _, client := range h.clients {
-// 		select {
-// 		case client.Send <- jsonData:
-// 		default:
-// 			log.Printf("Hub: Broadcast to client %s send channel full. Dropping message.", client.ID)
-// 		}
-// 	}
-// 	h.clientsMux.RUnlock()
-// }
-
 func (h *Hub) sendErrorToClient(client *Client, errorText string) {
 	errMsg := models.OutboundMessage{Type: "error", Text: errorText}
 	h.sendToClient(client, errMsg)
 }
 
-// --- Service Interface Methods ---
-// These methods allow the API layer (or other parts of the system) to interact with the Hub.
-
-// Register is called by the API layer when a new WebSocket connection is established and authenticated.
 func (h *Hub) Register(client *Client) {
 	h.registerCh <- client
 }
 
-// Unregister is called by a Client's ReadPump when its connection closes.
 func (h *Hub) Unregister(client *Client) {
 	h.unregisterCh <- client
 }
-
-// ProcessMessage is called by a Client's ReadPump to forward a message to the Hub.
-// This is not typically called directly from outside, but is part of the internal flow.
-// The API layer would call HandleNewConnection, which creates the client and starts its pumps.
-// func (h *Hub) ProcessMessage(envelope *ClientMessageEnvelope) {
-// 	h.processMsgCh <- envelope
-// }
