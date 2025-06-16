@@ -30,6 +30,26 @@ func CheckConversationExists(ctx context.Context, accID1, accID2 int64) error {
 	return nil
 }
 
+func AddNewConversation(ctx context.Context, accID1, accID2 int64) error {
+	const query = `
+		INSERT INTO conversations (acc_id_1, acc_id_2)
+		VALUES ($1, $2)
+	`
+	tx, err := dbpool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	if _, err := tx.Exec(ctx, query, accID1, accID2); err != nil {
+		return err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func GetConversationList(ctx context.Context, accID string) ([]models.Conversation, error) {
 	const query = `
 		WITH base_conversation AS (

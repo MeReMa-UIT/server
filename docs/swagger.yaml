@@ -248,6 +248,11 @@ definitions:
       record_id:
         type: integer
     type: object
+  models.NewPrescriptionResponse:
+    properties:
+      prescription_id:
+        type: integer
+    type: object
   models.OutboundMessage:
     properties:
       conversation_id:
@@ -1208,6 +1213,8 @@ paths:
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/models.NewPrescriptionResponse'
         "400":
           description: Bad Request
         "401":

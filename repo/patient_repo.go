@@ -24,6 +24,24 @@ func GetPatientIDListByAccID(ctx context.Context, accID string) ([]int, error) {
 	return patientIDList, nil
 }
 
+func GetAccIDByPatientID(ctx context.Context, patientID int) (int64, error) {
+	const query = `
+		SELECT acc_id
+		FROM patients
+		WHERE patient_id = $1::BIGINT
+	`
+
+	var accID int64
+	row := dbpool.QueryRow(ctx, query, patientID)
+	if err := row.Scan(&accID); err != nil {
+		if err == pgx.ErrNoRows {
+			return 0, errs.ErrPatientNotExist
+		}
+		return 0, err
+	}
+	return accID, nil
+}
+
 func StorePatientInfo(ctx context.Context, req models.PatientRegistrationRequest) error {
 	const query = `
 		INSERT INTO patients (acc_id, full_name, date_of_birth, gender, ethnicity, nationality, address,

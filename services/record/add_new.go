@@ -3,6 +3,7 @@ package record_services
 import (
 	"context"
 	"mime/multipart"
+	"strconv"
 
 	"github.com/merema-uit/server/models"
 	errs "github.com/merema-uit/server/models/errors"
@@ -40,7 +41,25 @@ func AddNewRecord(ctx context.Context, authHeader string, req *models.NewMedical
 
 	doctorID, _ := repo.GetStaffIDByAccID(ctx, claims.ID)
 
-	return repo.StoreMedicalRecord(ctx, doctorID, req, additionalInfo)
+	res, err := repo.StoreMedicalRecord(ctx, doctorID, req, additionalInfo)
+	if err != nil {
+		return models.NewMedicalRecordResponse{}, err
+	}
+
+	patientAccID, err := repo.GetAccIDByPatientID(ctx, req.PatientID)
+	if err != nil {
+		return models.NewMedicalRecordResponse{}, err
+	}
+
+	doctorAccID, _ := strconv.ParseInt(claims.ID, 10, 64)
+
+	if err := repo.CheckConversationExists(ctx, patientAccID, doctorAccID); err != nil {
+		if err := repo.AddNewConversation(ctx, min(patientAccID, doctorAccID), max(patientAccID, doctorAccID)); err != nil {
+			return models.NewMedicalRecordResponse{}, err
+		}
+	}
+
+	return res, nil
 }
 
 func AddRecordAttachments(ctx context.Context, authHeader, recordID string, attachments []*multipart.FileHeader) error {

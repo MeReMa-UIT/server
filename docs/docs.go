@@ -1045,7 +1045,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.NewPrescriptionResponse"
+                        }
                     },
                     "400": {
                         "description": "Bad Request"
@@ -2693,6 +2696,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "record_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.NewPrescriptionResponse": {
+            "type": "object",
+            "properties": {
+                "prescription_id": {
                     "type": "integer"
                 }
             }

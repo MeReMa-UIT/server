@@ -18,7 +18,7 @@ import (
 // @Produce json
 // @Security BearerAuth
 // @Param request body models.NewPrescriptionRequest true "Add New Prescription Request"
-// @Success 201
+// @Success 201 {object} models.NewPrescriptionResponse
 // @Failure 400
 // @Failure 401
 // @Failure 403

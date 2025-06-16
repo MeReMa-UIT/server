@@ -61,6 +61,8 @@ DELETE    FROM prescription_details;
 
 DELETE    FROM prescriptions;
 
+DELETE    FROM conversations;
+
 DROP      DATABASE IF EXISTS merema;
 
 DELETE    FROM record_attachments;
