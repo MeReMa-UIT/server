@@ -550,7 +550,7 @@ const docTemplate = `{
                 "tags": [
                     "catalogs"
                 ],
-                "summary": "Get Diagnosis List (doctor)",
+                "summary": "Get Diagnosis List",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -590,7 +590,7 @@ const docTemplate = `{
                 "tags": [
                     "catalogs"
                 ],
-                "summary": "Get Diagnosis Info (doctor, patient)",
+                "summary": "Get Diagnosis Info",
                 "parameters": [
                     {
                         "type": "string",
@@ -636,7 +636,7 @@ const docTemplate = `{
                 "tags": [
                     "catalogs"
                 ],
-                "summary": "Get Medication List (doctor)",
+                "summary": "Get Medication List",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -676,7 +676,7 @@ const docTemplate = `{
                 "tags": [
                     "catalogs"
                 ],
-                "summary": "Get Medication Info (doctor, patient)",
+                "summary": "Get Medication Info",
                 "parameters": [
                     {
                         "type": "string",
@@ -722,7 +722,7 @@ const docTemplate = `{
                 "tags": [
                     "catalogs"
                 ],
-                "summary": "Get Medical Record Type List (doctor)",
+                "summary": "Get Medical Record Type List",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -762,7 +762,7 @@ const docTemplate = `{
                 "tags": [
                     "catalogs"
                 ],
-                "summary": "Get Medical Record Template (doctor)",
+                "summary": "Get Medical Record Template",
                 "parameters": [
                     {
                         "type": "string",

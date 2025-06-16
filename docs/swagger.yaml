@@ -908,7 +908,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get Diagnosis List (doctor)
+      summary: Get Diagnosis List
       tags:
       - catalogs
   /catalog/diagnoses/{icd_code}:
@@ -937,7 +937,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get Diagnosis Info (doctor, patient)
+      summary: Get Diagnosis Info
       tags:
       - catalogs
   /catalog/medications:
@@ -962,7 +962,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get Medication List (doctor)
+      summary: Get Medication List
       tags:
       - catalogs
   /catalog/medications/{medication_id}:
@@ -991,7 +991,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get Medication Info (doctor, patient)
+      summary: Get Medication Info
       tags:
       - catalogs
   /catalog/record-types:
@@ -1016,7 +1016,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get Medical Record Type List (doctor)
+      summary: Get Medical Record Type List
       tags:
       - catalogs
   /catalog/record-types/{type_id}/template:
@@ -1044,7 +1044,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get Medical Record Template (doctor)
+      summary: Get Medical Record Template
       tags:
       - catalogs
   /comms/chat:
