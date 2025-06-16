@@ -35,7 +35,7 @@ func CompileRecordStatisticByTimeHandler(c *gin.Context) {
 	res, err := statistic_services.CompileRecordStatistic(c, authHeader, req, "time")
 	if err != nil {
 		switch err {
-		case errs.ErrInvalidCompileType, errs.ErrInvalidTimeUnit, errs.ErrInvalidTimestamp:
+		case errs.ErrInvalidCompileType, errs.ErrInvalidTimeUnit:
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		case errs.ErrInvalidToken, errs.ErrExpiredToken, errs.ErrMalformedToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
@@ -75,7 +75,7 @@ func CompileRecordStatisticByDoctorHandler(c *gin.Context) {
 	res, err := statistic_services.CompileRecordStatistic(c, authHeader, req, "doctor")
 	if err != nil {
 		switch err {
-		case errs.ErrInvalidCompileType, errs.ErrInvalidTimeUnit, errs.ErrInvalidTimestamp:
+		case errs.ErrInvalidCompileType, errs.ErrInvalidTimeUnit:
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		case errs.ErrInvalidToken, errs.ErrExpiredToken, errs.ErrMalformedToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
@@ -115,7 +115,7 @@ func CompileRecordStatisticByDiagnosisHandler(c *gin.Context) {
 	res, err := statistic_services.CompileRecordStatistic(c, authHeader, req, "diagnosis")
 	if err != nil {
 		switch err {
-		case errs.ErrInvalidCompileType, errs.ErrInvalidTimeUnit, errs.ErrInvalidTimestamp:
+		case errs.ErrInvalidCompileType, errs.ErrInvalidTimeUnit:
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		case errs.ErrInvalidToken, errs.ErrExpiredToken, errs.ErrMalformedToken:
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})

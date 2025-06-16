@@ -34,7 +34,11 @@ func CompileRecordStatistic(ctx context.Context, authHeader string, req models.R
 		timestampEnd = timestampStart.AddDate(0, 0, 1)
 	case "week":
 		if req.Timestamp.Weekday() != time.Monday {
-			return nil, errs.ErrInvalidTimestamp
+			if req.Timestamp.Weekday() == time.Sunday {
+				req.Timestamp = req.Timestamp.AddDate(0, 0, -6)
+			} else {
+				req.Timestamp = req.Timestamp.AddDate(0, 0, -int(req.Timestamp.Weekday()-time.Monday))
+			}
 		}
 		year, month, day := req.Timestamp.Date()
 		timestampStart = time.Date(year, month, day, 0, 0, 0, 0, req.Timestamp.UTC().Location())
@@ -141,6 +145,7 @@ func compileRecordStatisticByDoctor(ctx context.Context, recordList []models.Rec
 		ret = append(ret, models.AmountOfRecordsByDoctor{
 			DoctorID:     doctorID,
 			AmountByTime: list,
+			TotalAmount:  len(records),
 		})
 	}
 
@@ -154,6 +159,7 @@ func compileRecordStatisticByDoctor(ctx context.Context, recordList []models.Rec
 			ret = append(ret, models.AmountOfRecordsByDoctor{
 				DoctorID:     doctorID,
 				AmountByTime: nil,
+				TotalAmount:  0,
 			})
 		}
 	}
@@ -175,6 +181,7 @@ func compileRecordStatisticByRecordType(ctx context.Context, recordList []models
 		ret = append(ret, models.AmountOfRecordsByDiagnosis{
 			DiagnosisID:  diagnosisID,
 			AmountByTime: list,
+			TotalAmount:  len(records),
 		})
 	}
 
@@ -188,6 +195,7 @@ func compileRecordStatisticByRecordType(ctx context.Context, recordList []models
 			ret = append(ret, models.AmountOfRecordsByDiagnosis{
 				DiagnosisID:  diagnosis.ICDCode,
 				AmountByTime: nil,
+				TotalAmount:  0,
 			})
 		}
 	}

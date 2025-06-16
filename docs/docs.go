@@ -2427,6 +2427,9 @@ const docTemplate = `{
                 },
                 "diagnosis_id": {
                     "type": "string"
+                },
+                "total_amount": {
+                    "type": "integer"
                 }
             }
         },
@@ -2440,6 +2443,9 @@ const docTemplate = `{
                     }
                 },
                 "doctor_id": {
+                    "type": "integer"
+                },
+                "total_amount": {
                     "type": "integer"
                 }
             }
@@ -2498,31 +2504,23 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "conversation_id": {
-                    "description": "For sendMessage, loadHistory, markSeenMessage",
-                    "type": "integer"
-                },
-                "limit": {
-                    "description": "For loadHistory",
-                    "type": "integer"
-                },
-                "offset": {
-                    "description": "For loadHistory",
+                    "description": "For \"sendMessage\", \"loadHistory\", \"markSeenMessage\"",
                     "type": "integer"
                 },
                 "partner_acc_id": {
-                    "description": "For sendMessage, markSeenMessage",
+                    "description": "For \"sendMessage\", \"markSeenMessage\"",
                     "type": "integer"
                 },
                 "read_time": {
-                    "description": "For markSeenMessage",
+                    "description": "For \"markSeenMessage\"",
                     "type": "string"
                 },
                 "text": {
-                    "description": "For sendMessage",
+                    "description": "For \"sendMessage\"",
                     "type": "string"
                 },
                 "type": {
-                    "description": "e.g., \"sendMessage\", \"loadHistory\", \"markSeenMessage\"",
+                    "description": "\"sendMessage\", \"loadHistory\", \"markSeenMessage\"",
                     "type": "string"
                 }
             }
@@ -2741,7 +2739,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "description": "e.g., \"yourID\", \"newMessage\", \"messageHistory\", \"conversationList\",  \"error\"",
+                    "description": "\"yourID\", \"newMessage\", \"messageHistory\", \"conversationList\",  \"error\"",
                     "type": "string"
                 }
             }
@@ -2970,6 +2968,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "timestamp": {
+                    "description": "This use for determine the period of time we want to compile, must be time in RFC3339 format.\n\t\tIf time unit is \"day\", the d-m-y you provide in timestamp will determine that exactly date (e.g, the d-m-y itself).\n\t\tIf time unit is \"week\", the d-m-y you provide in timestamp will determine the week which that date belong to (e.g, determine the nearest Monday and nearest Sunday which that date sit in between).\n\t\tIf time unit is \"month\", the d-m-y you provide in timestamp will determine the month which that date belong to (e.g, the month m in year y).\n\t\tIf time unit is \"week\", the d-m-y you provide in timestamp will determine the year which that date belong to (e.g, the year y).",
                     "type": "string"
                 }
             }

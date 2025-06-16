@@ -23,7 +23,7 @@ type Message struct {
 }
 
 type InboundMessage struct {
-	Type           string     `json:"type"`                      //  "sendMessage", "loadHistory", "markSeenMessage"
+	Type           string     `json:"type"`                      // "sendMessage", "loadHistory", "markSeenMessage"
 	ConversationID int64      `json:"conversation_id,omitempty"` // For "sendMessage", "loadHistory", "markSeenMessage"
 	PartnerAccID   int64      `json:"partner_acc_id,omitempty"`  // For "sendMessage", "markSeenMessage"
 	Text           string     `json:"text,omitempty"`            // For "sendMessage"
@@ -31,7 +31,7 @@ type InboundMessage struct {
 }
 
 type OutboundMessage struct {
-	Type           string         `json:"type"`                      // e.g., "yourID", "newMessage", "messageHistory", "conversationList",  "error"
+	Type           string         `json:"type"`                      // "yourID", "newMessage", "messageHistory", "conversationList",  "error"
 	ID             string         `json:"id,omitempty"`              // For "yourID"
 	Message        *Message       `json:"message,omitempty"`         // For "newMessage"
 	Messages       []Message      `json:"messages,omitempty"`        // For "messageHistory"
