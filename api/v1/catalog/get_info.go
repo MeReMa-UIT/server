@@ -10,7 +10,7 @@ import (
 )
 
 // Get Medication Info godoc
-// @Summary      Get Medication Info (doctor, patient)
+// @Summary      Get Medication Info
 // @Description  Get info of a medication
 // @Tags         catalogs
 // @Accept       json
@@ -43,7 +43,7 @@ func GetMedicationInfoHandler(c *gin.Context) {
 }
 
 // Get Diagnosis Info godoc
-// @Summary      Get Diagnosis Info (doctor, patient)
+// @Summary      Get Diagnosis Info
 // @Description  Get info of a diagnosis
 // @Tags         catalogs
 // @Accept       json
@@ -75,7 +75,7 @@ func GetDiagnosisInfoHandler(c *gin.Context) {
 }
 
 // Get Medical Record Template godoc
-// @Summary      Get Medical Record Template (doctor)
+// @Summary      Get Medical Record Template
 // @Description  Get a medical record template by type ID
 // @Tags         catalogs
 // @Accept       json
