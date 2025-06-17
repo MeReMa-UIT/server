@@ -7,9 +7,9 @@ import (
 )
 
 type NewMedicalRecordRequest struct {
-	PatientID    int          `json:"patient_id" `
-	TypeID       string       `json:"type_id" `
-	RecordDetail pgtype.JSONB `json:"record_detail" swaggertype:"object"`
+	PatientID    int         `json:"patient_id" `
+	TypeID       string      `json:"type_id" `
+	RecordDetail pgtype.JSON `json:"record_detail" swaggertype:"object"`
 }
 
 type NewMedicalRecordResponse struct {
@@ -22,13 +22,13 @@ type ExtractedRecordInfo struct {
 }
 
 type MedicalRecordInfo struct {
-	RecordID     int          `json:"record_id" db:"record_id"`
-	PatientID    int          `json:"patient_id" db:"patient_id"`
-	DoctorID     int          `json:"doctor_id" db:"doctor_id"`
-	TypeID       string       `json:"type_id" db:"type_id"`
-	RecordDetail pgtype.JSONB `json:"record_detail" db:"record_detail" swaggertype:"object"`
-	CreatedAt    time.Time    `json:"created_at" db:"created_at"`
-	ExpiredAt    time.Time    `json:"expired_at" db:"expired_at"`
+	RecordID     int         `json:"record_id" db:"record_id"`
+	PatientID    int         `json:"patient_id" db:"patient_id"`
+	DoctorID     int         `json:"doctor_id" db:"doctor_id"`
+	TypeID       string      `json:"type_id" db:"type_id"`
+	RecordDetail pgtype.JSON `json:"record_detail" db:"record_detail" swaggertype:"object"`
+	CreatedAt    time.Time   `json:"created_at" db:"created_at"`
+	ExpiredAt    time.Time   `json:"expired_at" db:"expired_at"`
 }
 
 type MedicalRecordBriefInfo struct {
@@ -41,7 +41,7 @@ type MedicalRecordBriefInfo struct {
 }
 
 type UpdateMedicalRecordRequest struct {
-	NewRecordDetail pgtype.JSONB `json:"new_record_detail" swaggertype:"object"`
+	NewRecordDetail pgtype.JSON `json:"new_record_detail" swaggertype:"object"`
 }
 
 type DeleteRecordAttachmentRequest struct {

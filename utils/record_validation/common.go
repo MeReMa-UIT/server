@@ -10,7 +10,7 @@ import (
 	"github.com/santhosh-tekuri/jsonschema"
 )
 
-func validateJSON(record, schema *pgtype.JSONB) error {
+func validateJSON(record, schema *pgtype.JSON) error {
 	compiler := jsonschema.NewCompiler()
 	if err := compiler.AddResource("mem://schema.json",
 		bytes.NewReader(schema.Bytes)); err != nil {
@@ -27,7 +27,7 @@ func validateJSON(record, schema *pgtype.JSONB) error {
 	return nil
 }
 
-func ValidateRecordDetail(record *pgtype.JSONB, typeID, schemaPath string) (models.ExtractedRecordInfo, error) {
+func ValidateRecordDetail(record *pgtype.JSON, typeID, schemaPath string) (models.ExtractedRecordInfo, error) {
 	switch typeID {
 	case "01/BV1":
 		return validate01BV1(record, schemaPath)

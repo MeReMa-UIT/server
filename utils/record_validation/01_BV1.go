@@ -10,8 +10,8 @@ import (
 	_ "github.com/santhosh-tekuri/jsonschema/v6"
 )
 
-func validate01BV1(record *pgtype.JSONB, schemaPath string) (models.ExtractedRecordInfo, error) {
-	schema, err := utils.LoadJSONFileToJSONB(schemaPath)
+func validate01BV1(record *pgtype.JSON, schemaPath string) (models.ExtractedRecordInfo, error) {
+	schema, err := utils.LoadJSONFileToJSON(schemaPath)
 	if err != nil {
 		return models.ExtractedRecordInfo{}, fmt.Errorf("Failed to load schema: %w", err)
 	}

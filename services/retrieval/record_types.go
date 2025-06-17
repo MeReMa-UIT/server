@@ -19,7 +19,7 @@ func GetMedicalRecordTypeList(ctx context.Context, authHeader string) ([]models.
 	return repo.GetMedicalRecordTypeList(ctx)
 }
 
-func GetMedicalRecordTemplate(ctx context.Context, authHeader, typeID string) (*pgtype.JSONB, error) {
+func GetMedicalRecordTemplate(ctx context.Context, authHeader, typeID string) (*pgtype.JSON, error) {
 	_, err := auth_services.ParseToken(auth_services.ExtractToken(authHeader))
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func GetMedicalRecordTemplate(ctx context.Context, authHeader, typeID string) (*
 		return nil, err
 	}
 
-	template, err := utils.LoadJSONFileToJSONB(typeInfo.TemplatePath)
+	template, err := utils.LoadJSONFileToJSON(typeInfo.TemplatePath)
 	if err != nil {
 		return nil, err
 	}

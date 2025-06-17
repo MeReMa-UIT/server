@@ -389,7 +389,7 @@ CREATE TABLE public.records (
     secondary_diagnosis character varying(10),
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     expired_at timestamp with time zone DEFAULT (now() + '10 years'::interval) NOT NULL,
-    record_detail jsonb
+    record_detail json
 );
 
 

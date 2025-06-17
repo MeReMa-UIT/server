@@ -41,7 +41,7 @@ CREATE    TABLE "records" (
           "secondary_diagnosis" VARCHAR(10),
           "created_at" timestamptz NOT NULL DEFAULT (now ()),
           "expired_at" timestamptz NOT NULL DEFAULT (now () + INTERVAL '10 years'),
-          "record_detail" jsonb
+          "record_detail" json
           );
 
 CREATE    TABLE "record_types" (
