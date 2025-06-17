@@ -85,9 +85,6 @@ func GetPrescriptionInfoByRecordID(ctx context.Context, authHeader, recordID str
 	case permission.Doctor.String():
 	case permission.Patient.String():
 		recordIDList, err := repo.GetRecordIDListByAccID(ctx, claims.ID)
-		for _, recordID := range recordIDList {
-			println(recordID)
-		}
 		if err != nil {
 			return models.PrescriptionInfo{}, err
 		}

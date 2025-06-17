@@ -9,8 +9,8 @@ import (
 	"github.com/merema-uit/server/utils"
 )
 
-// Get prescription list with medical record ID godoc
-// @Summary Get prescription list with medical record ID (doctor, patient)
+// Get prescription list godoc
+// @Summary Get prescription list based on your account role (doctor, patient)
 // @Description Get prescription list
 // @Tags prescriptions
 // @Accept json

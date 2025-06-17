@@ -1194,7 +1194,7 @@ paths:
           description: Internal Server Error
       security:
       - BearerAuth: []
-      summary: Get prescription list with medical record ID (doctor, patient)
+      summary: Get prescription list based on your account role (doctor, patient)
       tags:
       - prescriptions
     post:

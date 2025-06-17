@@ -990,7 +990,7 @@ const docTemplate = `{
                 "tags": [
                     "prescriptions"
                 ],
-                "summary": "Get prescription list with medical record ID (doctor, patient)",
+                "summary": "Get prescription list based on your account role (doctor, patient)",
                 "responses": {
                     "200": {
                         "description": "OK",
