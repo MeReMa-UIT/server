@@ -93,10 +93,10 @@ VALUES    (
           'Nam',
           'Kinh',
           'Việt Nam',
-          '123 Đường ABC, Phường 1, Quận 1, TP.HCM',
+          '123 Đường ABC;; Phường 1; Quận 1; TP.HCM',
           '2025-01-01',
-          '123456789012',
-          'Nguyễn Thị B, 0987654321'
+          'GD1479222222222',
+          'Nguyễn Thị B;; 0987654321'
           );
 
 INSERT    INTO patients (
@@ -122,19 +122,13 @@ VALUES    (
           'Nam',
           'Kinh',
           'Việt Nam',
-          '123 Đường ABC, Phường 2, Tp. Thủ Đức, TP.HCM',
+          '123 Đường ABC;; Phường 2; Tp. Thủ Đức; TP.HCM',
           '2026-01-01',
-          '123456789013',
-          'Nguyễn Thị B, 0987654322'
+          'GD1479111111111',
+          'Nguyễn Thị B;; 0987654322'
           );
 
 -- migrate:down
-DELETE    FROM accounts
-WHERE     citizen_id = '123123123123';
-
-DELETE    FROM accounts
-WHERE     citizen_id = '123412341234';
-
 DELETE    FROM staffs
 WHERE     acc_id = (
           SELECT    acc_id
@@ -142,18 +136,12 @@ WHERE     acc_id = (
           WHERE     citizen_id = '000000001111'
           );
 
-DELETE    FROM accounts
-WHERE     citizen_id = '000000001111';
-
 DELETE    FROM staffs
 WHERE     acc_id = (
           SELECT    acc_id
           FROM      accounts
           WHERE     citizen_id = '000000001112'
           );
-
-DELETE    FROM accounts
-WHERE     citizen_id = '000000001112';
 
 DELETE    FROM patients
 WHERE     acc_id = (
@@ -163,4 +151,4 @@ WHERE     acc_id = (
           );
 
 DELETE    FROM accounts
-WHERE     citizen_id = '000000001113';
+WHERE     citizen_id IN ('123123123123', '123412341234', '000000001111', '000000001112', '000000001113');
